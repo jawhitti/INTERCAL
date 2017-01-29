@@ -164,7 +164,7 @@ app
 in a RESUME or GIVE UP.
 * Multiple libraries can be specified via a comma-delimeted list
 * If any referenced label cannot be found in the list of  referenced assembly compilation will fail with the message
-**"E129 PROGRAM HAS GOTTEN LOST ON THE WAY TO *(<label>)* **".
+**"E129 PROGRAM HAS GOTTEN LOST ON THE WAY TO <label>"**".
 
 * If any referenced assembly cannot be found at compile-time compilation will fail with 
 message **"E2002 SOME ASSEMBLY REQUIRED"**.
