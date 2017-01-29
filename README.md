@@ -89,37 +89,18 @@ it really integrate with other languages? Wasn’t there anything better to do?
 This project is officially "Simple Component Intercal for .NET" ("SICK.NET"). Inspired by,
 and building on Eric Raymond's work the compiler for this project is contained in *sick.exe*.
 
+# Project contents
+This project contains source code for two main binaries:
+* **sick.exe** - A conforming INTERCAL compiler for .NET
+* **intercal.runtime.dll** - A .NET assembly providing the standard system library and support code for the execution engine.
 # The SICK Compiler
 
-##
-This compiler is written in C# and targets **.NET 4.0**.  *sick.exe* is modeled equally after Eric Raymond's 
-classic *ick* and the C# *csc.exe* compilers.
+# Dependencies
+This compiler is written in C# and targets **.NET 4.0**.  **sick.exe** is modeled equally after Eric Raymond's 
+classic **ick** and the C# **csc** compilers.
  
-## Debugging
-*sick.exe* will add diagnostic Tracestatements to compiled executables if "/debug+" is specified on the command-line.
-These statements can be captured at runtime setting up a standard .NET config file for compiled binaries, e.g:
-```
-<?xml version="1.0"?>
-<configuration>
-  <system.diagnostics>
-    <trace autoflush="true" indentsize="4">
-      <listeners>
-   	<add name="textListener" 
-             type="System.Diagnostics.TextWriterTraceListener" 
-             initializeData="primes.log" />
-        <remove name="Default" />
-      </listeners>
-    </trace>
-  </system.diagnostics> 
-</configuration>
-
-```
-
-# Innovation
-This compiler follows C-INTERCAL in spirit but in keeping with the spirit of the INTERCAL community this 
-project introduces a few unique new capabilities.
-    
-## Component-Oriented Intercal
+   
+# Component-Oriented programming
 Almost all existing INTERCAL compilers are either interpreters or can only produce standalone
 executables.  SICK extends the INTERCAL execution model to include **components**.  Specifically:
   
@@ -129,7 +110,9 @@ executables.  SICK extends the INTERCAL execution model to include **components*
 * It is possible to author assemblies in other languages and consume them from INTERCAL.
 
 
-### Compiling libraries
+# Compiling code
+
+### Library assemblies
 Libraries are produced via the command-line switch "/t:library".  Any INTERCAL source file can be 
 compiled into a library.  By default all labels in the library are exposed public via DO_<label>
 entry stubs.
@@ -181,6 +164,7 @@ and the execute it:
 foo
 32767
 ```
+* *The sharp-eyed reader has probably noticed the "wimpmode" output -- see "Limitations" below 
 
 ### Cross-language Support
 Since SICK-compiled applivations are able to call compiled DLLs you can author extension DLLs in lesser
@@ -205,7 +189,28 @@ public class CSIntercalLib
 }
 ``` 
 
-### Component Restrictions
+## Debugging
+*sick.exe* will add diagnostic Tracestatements to compiled executables if "/debug+" is specified on the command-line.
+These statements can be captured at runtime setting up a standard .NET config file for compiled binaries, e.g:
+```
+<?xml version="1.0"?>
+<configuration>
+  <system.diagnostics>
+    <trace autoflush="true" indentsize="4">
+      <listeners>
+   	<add name="textListener" 
+             type="System.Diagnostics.TextWriterTraceListener" 
+             initializeData="primes.log" />
+        <remove name="Default" />
+      </listeners>
+    </trace>
+  </system.diagnostics> 
+</configuration>
+
+```
+
+
+### Programming Restrictions
 Some INTERCAL constructs are only mapped locally to their hosting component in order
  to preserve component boundaries. These include:
 
@@ -267,6 +272,9 @@ out variables then it can query .9999.
 
 ### Compiler and runtime Limitations
 * Only wimpmode numbering is currently supported
+
+
+
 
 #### Notes:
 * If no referenced assembly exposes the named endpoint compilation will fail with 
