@@ -103,64 +103,81 @@ classic **ick** and the C# **csc** compilers.
    
 # SICK user manual
 
-### Library assemblies
-Libraries are produced via the command-line switch "/t:library".  Any INTERCAL source file can be 
-compiled into a library.  By default all labels in the library are exposed public via DO_<label>
-entry stubs.
+### Compiling standalone applications
+Standalone .exe applications are produced via the command-line switch "/t:exe", *i.e.* given this code in **app.i**.
 
-As an example, consider the following brief bit of source code:	
+```
+DO .1 <- #32767
+PLEASE READ OUT .1
+DO GIVE UP
+```
+you could compile it using the following command line:
+
+```
+sick app.i
+```
+This will produce an executable (.exe).
+  
+
+### Compiling Libraries
+Larger programs can use library assemblies to control size and complexity of source files and 
+interop with other .NET languages. Libraries are produced via the command-line switch "/t:library".  
+Any INTERCAL source file can be compiled into an library - there is nothing in the language
+precluding it. By default all labels in the library are exposed publicly but this can be overridden.
+
+
+As an example, you could extract a library from app.i above into following brief bit of source code:	
 
 ```
 (100) DO .1 <- #32767
 PLEASE RESUME #1
 ```
-If you store this line of code into bar.i you can compile it into a Library Assembly via the following
+If you store this line of code into lib.i you can compile it into a Library Assembly via the following
 ```
-sick /t:library bar.i
+sick /t:library lib.i
 ```  
 
-This will produce a .NET Assembly bar.dll (as well as a file *~tmp.cs* which is left on the disk on purpose).
-This DLL will expose a public class with a public static method DO_100().
+This will produce a .NET Assembly lib.dll. This DLL will expose a public class with a 
+public static method DO_100().
  
-
-### Compiling standalone applications
-Standalone .exe applications are produced via the command-line switch "/t:exe". 
-```
-sick code.i
-```
-  
 ### Referencing Libraries
 Libraries are referenced via the "/r:*<library_name.dll>*" command-line parameter.
 
-```
-sick /r:mylib.dll drain.i
-```
-
-All labels exposed as public by mylib.dll are available via DO...NEXT.  So for example given (or sold) 
-a file foo.i with the following contents:  
+All labels exposed as public by mylib.dll are available via DO...NEXT.  So for example given the library
+lib.dll created above you could rewrite app.i as:  
 
 ```
 DO (100) NEXT
 PLEASE READ OUT .1
 DO GIVE UP
 ```
-
-you could compile it via the following
+This can them be compiled by referencing it via "/r" as shown below
 ```
-sick /r:bar.dll foo.i
+sick /r:bar.dll app.i
 ```
 
 and the execute it:
 ```
-foo
+app
 32767
 ```
 * *The sharp-eyed reader has probably noticed the "wimpmode" output -- see "Limitations" below 
 
+**NOTES**
+* Library developers must ensure that all publicly exposed code paths eventually terminate
+in a RESUME or GIVE UP.
+* Multiple libraries can be specified via a comma-delimeted list
+* If any referenced label cannot be found in the list of  referenced assembly compilation will fail with the message
+**"E129 PROGRAM HAS GOTTEN LOST ON THE WAY TO *(<label>)* **".
+
+* If any referenced assembly cannot be found at compile-time compilation will fail with 
+message **"E2002 SOME ASSEMBLY REQUIRED"**.
+
+
 ### Cross-language Support
 Since SICK-compiled applivations are able to call compiled DLLs you can author extension DLLs in lesser
 languages and invoke them via DO...NEXT.  The "csharplib" sample shows the way this is accomplished.  
-(See the sample for more info).
+(See the sample for more info).  The code snipped below gives a quick look at the idea:
 
 ```
 using System;
@@ -180,7 +197,7 @@ public class CSIntercalLib
 }
 ``` 
 
-## Debugging
+### Debugging Support
 *sick.exe* will add diagnostic Tracestatements to compiled executables if "/debug+" is specified on the command-line.
 These statements can be captured at runtime setting up a standard .NET config file for compiled binaries, e.g:
 ```
@@ -260,18 +277,8 @@ This allows the implementer of (3000) to decode both ;1 and ;2.  If (3000) wants
 out variables then it can query .9999.
 
 
-
 ### Compiler and runtime Limitations
-* Only wimpmode numbering is currently supported
-
-
-
-
-#### Notes:
-* If no referenced assembly exposes the named endpoint compilation will fail with 
-"E129 PROGRAM HAS GOTTEN LOST ON THE WAY TO *(<label>)*".
-
-* If any referenced assembly cannot be found at compile-time compilation will fail with message "E2002 SOME ASSEMBLY REQUIRED".
+* Only wimpmode numbering is currently supporte
 
 
 ### The standard library (syslib.i)
