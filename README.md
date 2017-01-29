@@ -10,17 +10,8 @@ fervently denies authorship and requests complete anonymity.
 Starting in the late 1990s Microsoft got bored with their
 existing programming infrastructure and decided to scrap it in favor of
 something slower.  Thus was born the effort to build a spiffy new programming
-platform known as the "Comically Limited Runtime ("CLR")".  This platform had the
-ludicrous ambition to provide services that would be consumable by a large
-range of languages, allowing components written in a variety of different source
-languages to coexist and interact. Designers of the platform got carried away
-and made grandiose claims like: 
-
-*The Common Type System (CTS) provides a rich type
-system that supports the types and operations found in many programming
-languages. The Common Type System is intended to support the complete
-implementation of a wide range of programming languages."*
-
+platform known as the "Comically Limited Runtime ("CLR")".  
+  
 Today, the .NET platform supports a range of languages from the 
 simple and easy (Figure 1) to the complex and difficult (Figure 2).
 
@@ -46,12 +37,8 @@ class Hello
 
 Despite the impressive range already demonstrated by the two
 languages above the question remained as to just how wide a range of languages
-this platform could actually support. To really test the range would require a
-really different language, one with as little in common as possible with the 
-languages already ported to the platform.
-
-A ready candidate was found in a language that dates all the
-way back to 1972: INTERCAL the Computer Language with No Pronounceable Acronyms
+this platform could actually support. A ready candidate can be found in a language
+that dates all the way back to 1972: INTERCAL the Computer Language with No Pronounceable Acronyms
 (not coincidentally the author dates back to 1972 as well). INTERCAL was defined
 by ambition completely antithetical to that of the CLR: *to have a nothing at
 all in common with any other major language.*
@@ -85,31 +72,35 @@ Now that the right language had been identified the burning
 questions needed to be answered: could INTERCAL be made to run on the CLR? Could
 it really integrate with other languages? Wasn’t there anything better to do?
 
+## Component-Oriented INTERCAL
+Almost all existing INTERCAL compilers are either interpreters or can only produce standalone
+executables. One of the major goals of this project was to make INTERCAL available in the world of 
+*components*.  Specifically:
+  
+* It is possible to compile standalone library and executable assemblies.  
+* INTERCAL libraries can be consumed from other INTERCAL programs and libraries.  
+* Variable-sharing and flow-control are supported between components with some minor restrictions.
+* It is possible to author assemblies in other languages and consume them from INTERCAL.
+* It is possible (but not really advisable) to consume INTERCAL libraries from other languages.
+
+
 ## Acronyms
-This project is officially "Simple Component Intercal for .NET" ("SICK.NET"). Inspired by,
-and building on Eric Raymond's work on **ick** the compiler for this project is 
+This project is officially Standard Component Intercal for .NET ("SICK.NET"). Inspired by,
+and building on Eric Raymond's work on **ick**, the compiler for this project is 
 known as **sick**.
 
 # Project contents
 This project contains a Visual Studio 2015 solution with two main project:
 * **sick.exe** - A conforming INTERCAL compiler for .NET 
 * **intercal.runtime.dll** - A .NET assembly providing the standard system library and support code for the execution engine.
+  
+You should be able to download the code, load it up and build with ordinary "Ctrl-Shift-B".  A selection of sample 
+INTERCAL programs is available in the "Samples" folder.
 
 # Dependencies
 This compiler is written in C# and targets **.NET 4.0**.  **sick.exe** is modeled equally after Eric Raymond's 
 classic **ick** and the C# **csc** compilers.
- 
    
-# Component-Oriented programming
-Almost all existing INTERCAL compilers are either interpreters or can only produce standalone
-executables.  SICK extends the INTERCAL execution model to include **components**.  Specifically:
-  
-* It is possible to compile standalone library and executable assemblies with **sick.exe**.  
-* INTERCAL libraries can be consumed from INTERCAL programs (or from other libraries) via the standard DO...NEXT construct
-* Variable-sharing and flow-control are supported between components with some minor restrictions.
-* It is possible to author assemblies in other languages and consume them from INTERCAL.
-
-
 # SICK user manual
 
 ### Library assemblies
