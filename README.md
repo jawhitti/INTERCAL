@@ -43,7 +43,7 @@ that dates all the way back to 1972: INTERCAL the Computer Language with No Pron
 by ambition completely antithetical to that of the CLR: *to have a nothing at
 all in common with any other major language.*
   
-"Hello, World" in INTERCAL bears nothing in common with either of the above languages, 
+"Hello, World" in INTERCAL indeed bears nothing in common with either of the above languages, 
 as can be seen in Figure 3:
 
  
@@ -67,10 +67,6 @@ PLEASE GIVE UP
 ```  
 **Figure 3**: Hello, World in INTERCAL 
 
-
-Now that the right language had been identified the burning
-questions needed to be answered: could INTERCAL be made to run on the CLR? Could
-it really integrate with other languages? Wasn’t there anything better to do?
 
 ## Component-Oriented INTERCAL
 Almost all existing INTERCAL compilers are either interpreters or can only produce standalone
