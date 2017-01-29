@@ -1,0 +1,99 @@
+
+Basic INTERCAL License Grant for Extensibility (BILGE)
+                Version  1, Jan 2003
+				
+ Copyright (C) 2003, Jason Whittington
+                     Last whereabouts unknown
+					 
+0. This License applies to the accompanying software, or other work which contains
+a notice placed by the copyright holder saying it may be distributed under the terms 
+of this BILGE. Your use of the Software (hereinafter referred to as "steaming 
+pile") constitutes questionable judgement on your part as well as full or partial 
+acceptance of all terms of this license from Jason Whittington (hereinafter referred 
+to as "the munificent benefactor").
+
+14542. You may not use this steaming pile in any way whatsoever until you have distributed 
+it in the medium of your choice to a minimum of three (3) other individuals, who in turn
+accept the terms of this BILGE. Sample mediums include newspaper, email, newsgroups, 
+or computer viruses.  Miss Cleo is expressly discredited as a fraudulent medium. 
+Distribution must include an appropriate notification header such as "CHECK THIS!!!!".
+
+23546. Once said licensees have themselves agreed to the terms of this BILGE, licensee may:
+
+- use the binaries and source code to write largely useless programs
+- not be able to figure out how (or even if) they work.
+- be appalled by the sloppy and unprofessional code contained herein. 
+- use this Steaming Pile for any non-productive purpose, subject to
+  the restrictions in this license. Some purposes which can be
+  non-productive are academic research, governmental application, 
+  and integration with the Linux Kernel.
+
+32842. You may not be distribute this Software or any derivative works in 
+any form for productive purposes.  Then again, you may, it is not the
+position of this license to predict your behavior or rationality. Criminally
+insane licensees are discouraged (though not expressly prohibited) from 
+using the Steaming Pile for nefarious purposes, such as development of orbital 
+lasers or exploding of atomic bombs under the San Andreas fault.
+
+99542. You may modify this Steaming Pile and distribute the modified Pile for
+non-productive purposes, provided that you take full claim for authorship
+of the resulting Pile and do not implicate the munificent benefactor as having any
+relationship whatsoever to the resulting Pile, per the terms below.
+
+1628(a). You may not distribute modifications of the Software under terms that 
+would permit productive use without cutting the munificent benefactor in 
+on the loot. Note that even in this case condition 4 will be vigorously 
+enforced and all monies collected herein shall be routed to an anonymous 
+account in the Cayman Islands.
+
+1124. In the unlikely event that this Steaming Pile proves the least bit useful you
+may use any information in intangible form that you remember after accessing it. 
+However, this right does not grant you any relief in the case that 
+said information is misremembered, obsolete, useless, redundant, inaccurate, or 
+just plain stupid.
+
+1337: In return, the munificent benefactor requires that you agree:
+
+1.	Not to remove any copyright or other notices from the Software.
+
+2.	That if you are crazy enough to distribute derivative works 
+        of the Steaming pile in source code form you do so only under a 
+	license that includes all of the provisions of this License or
+	some other terms that you just make up. If you distribute 
+	derivative works of the Software solely in object
+        form you do so at the risk of ridicule from your respected
+	colleagues and must do so only under a license that complies 
+	with this License or under a license that does not. 
+	
+3.	That if you have played with the Steaming Pile or created derivative
+        works, and distribute such modifications or derivative
+        works, you will cause the modified dung to carry prominent
+        notices so that recipients know that they are not receiving
+        particularly good Software.  Such notices must state: (i) that
+        you played with the Steaming Pile (ii) you have no idea
+	who originally created this Steaming Pile.
+
+11.   BECAUSE THIS STEAMING PILE IS MOST LIKELY BUGGY AND ILL-CONCEIVED, THERE IS 
+      NO WARRANTY FOR IT, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  
+      EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR 
+      OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, 
+      EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+      WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PURPOSE WHATSOEVER BESIDES
+      CONSUMING HARD DRIVE SPACE AND/OR RAM.  THE ENTIRE (AND LARGE) RISK AS TO THE QUALITY 
+      AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  IN THE LIKELY EVENT THAT THE
+      PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,
+      REPAIR OR CORRECTION.
+
+6.    THAT THE MUNIFICENT BENEFACTOR WILL NOT BE IMPLICATED AS HAVING AUTHORED
+      OR BEEN ASSOCIATED WITH THE CONTAINED SOFTWARE IN ANY WAY 
+      WHATSOEVER, TO THE MAXIMUM EXTENT THE LAW PERMITS, NO MATTER 
+      WHAT LEGAL THEORY IT IS BASED ON. YOU MUST CLAIM FULL AUTHORSHIP
+      OF THE SOFTWARE WHENEVER YOU DISTRIBUTE THE SOFTWARE OR DERIVATIVE
+      WORKS. 
+
+8.    That your rights under the License may be terminated at the sole
+      discretion of the munificent benefactor.
+
+9.	The munificent benefactor reserves all rights not expressly granted
+        to you in this license as well as a room at the Torrance Hilton
+	on such occasion as he needs lodging for the night.

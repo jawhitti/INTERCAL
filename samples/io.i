@@ -1,0 +1,5 @@
+    DO ,1 <- #100
+(1) PLEASE FORGET #1
+    DO WRITE IN ,1
+    DO READ OUT ,1
+    DO (1) NEXT
