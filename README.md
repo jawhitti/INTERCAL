@@ -1,6 +1,6 @@
 ﻿
-# INTERCAL
-Official home of Simple Component Intercal for .NET
+# SICK - Simple Component Intercal for .NET
+Official home of Simple Component Intercal for .NET (SICK)
 
 # Introduction
 The following was written by Jason Whittington, who
