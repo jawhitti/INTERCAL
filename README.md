@@ -87,13 +87,13 @@ it really integrate with other languages? Wasn’t there anything better to do?
 
 ## Acronyms
 This project is officially "Simple Component Intercal for .NET" ("SICK.NET"). Inspired by,
-and building on Eric Raymond's work the compiler for this project is contained in *sick.exe*.
+and building on Eric Raymond's work on **ick** the compiler for this project is 
+known as **sick**.
 
 # Project contents
-This project contains source code for two main binaries:
-* **sick.exe** - A conforming INTERCAL compiler for .NET
+This project contains a Visual Studio 2015 solution with two main project:
+* **sick.exe** - A conforming INTERCAL compiler for .NET 
 * **intercal.runtime.dll** - A .NET assembly providing the standard system library and support code for the execution engine.
-# The SICK Compiler
 
 # Dependencies
 This compiler is written in C# and targets **.NET 4.0**.  **sick.exe** is modeled equally after Eric Raymond's 
@@ -110,7 +110,7 @@ executables.  SICK extends the INTERCAL execution model to include **components*
 * It is possible to author assemblies in other languages and consume them from INTERCAL.
 
 
-# Compiling code
+# SICK user manual
 
 ### Library assemblies
 Libraries are produced via the command-line switch "/t:library".  Any INTERCAL source file can be 
