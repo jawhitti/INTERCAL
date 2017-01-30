@@ -141,9 +141,16 @@ namespace INTERCAL
 
         static void EmitBinary(CompilationContext c)
         {
-            StreamWriter writer = new StreamWriter("~tmp.cs");
-            writer.Write(c.ToString());
-            writer.Close();
+            try
+            {
+                StreamWriter writer = new StreamWriter("~tmp.cs");
+                writer.Write(c.ToString());
+                writer.Close();
+            }
+            catch (Exception e)
+            {
+                throw new CompilationException(Messages.E888, e);
+            }
 
             string compiler = "csc.exe";
             string userSpecifiedCompilerPath = ConfigurationManager.AppSettings["compilerPath"];

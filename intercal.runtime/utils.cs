@@ -1,11 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Linq;
-using System.Reflection;
-using System.Collections;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 using System.Runtime.Remoting.Messaging;
 using System.Collections.Generic;
 using System.Threading;
@@ -14,7 +10,6 @@ namespace INTERCAL
 {
     namespace Runtime
     {
-
         public class Messages
         {
             /*
@@ -95,7 +90,7 @@ namespace INTERCAL
             /* DONE No such source file. */
             public const string E777 = "E777 A SOURCE IS A SOURCE, OF COURSE, OF COURSE";
             /* Can't open C output file */
-            //public const string E888 = "E888 I HAVE NO FILE AND I MUST SCREAM";
+            public const string E888 = "E888 I HAVE NO FILE AND I MUST SCREAM";
             /* Can't open C skeleton file. */
             //public const string E999 = "E999 NO SKELETON IN MY CLOSET, WOE IS ME!";
             /* DONE Source file name with invalid extension (use .i or .[3-7]i). */
@@ -108,10 +103,10 @@ namespace INTERCAL
 
             /*DONE user specified /t: with something other than exe or library */
             public const string E2001 = "E2001 DON'T GET MUCH CALL FOR THOSE ROUND THESE PARTS";
-            /*DONE unable to open as assembly passed with /r */
+            /*DONE unable to open as assembly passed with /r (or unable to load assembly at run time) */
             public const string E2002 = "E2002 SOME ASSEMBLY REQUIRED";
             /*DONE Something went wrong when shelling out to csc (csc.exe probably not on PATH)*/
-            public const string E2003 = "E2003 I REFUSE TO WORK UNDER THESE CONDITIONS";
+            public const string E2003 = "E2003 C-SHARP OR B-FLAT";
             /*An extension function referenced with /r had the wrong prototype*/
             public const string E2004 = "E2004 SQUARE PEG, ROUND HOLE\nON THE WAY TO {0}.{1}";
 
@@ -192,36 +187,33 @@ namespace INTERCAL
         public class ExecutionContext : AsyncDispatcher,
             ILogicalThreadAffinative
         {
-            [ThreadStatic]
-            static ExecutionContext currentContext = new ExecutionContext();
-
-            public static ExecutionContext Current
-            {
-                get { return currentContext; }
-            }
             #region Fields and constuctors
 
             public static ExecutionContext CreateExecutionContext()
             {
                 return new ExecutionContext();
             }
+
+            public ExecutionContext()
+            {
+                Input = Console.OpenStandardInput();
+                Output = Console.OpenStandardOutput();
+ 
+                TextOut = new StreamWriter(this.Output);
+                BinaryOut = new BinaryReader(this.Input);
+                TextIn = new StreamReader(Input);
+            }
+
             //Text I/O is done in INTERCAL 
             //by attaching streams.  By default input and output come from 
             //the console but programs are free to change that if they wish.
-            Stream inputStream = Console.OpenStandardInput();
-            Stream outputStream = Console.OpenStandardOutput();
 
-            public Stream Input
-            {
-                get { return this.inputStream; }
-                set { this.inputStream = value; }
-            }
+            public Stream Input { get; set; }
+            public Stream Output { get; private set; }
 
-            public Stream Output
-            {
-                get { return this.outputStream; }
-                set { this.outputStream = value; }
-            }
+            public TextReader TextIn { get; private set; } 
+            public TextWriter TextOut { get; private set; }
+            public BinaryReader BinaryOut { get; private set; }
 
             //The Turing text model is not very
             //component friendly because whatever you write out is dependent on
@@ -229,7 +221,7 @@ namespace INTERCAL
             //strings (to do string manipulation) LastIn and LastOut MUST be stored
             //in the execution context.  Furthermore - there has to be some way
             //to query it.
- 
+
             public uint LastIn { get; private set; }
             public uint LastOut { get; private set; }
 
@@ -487,10 +479,10 @@ namespace INTERCAL
             {
                 var frame = new ExecutionFrame(this, proc, label);
 
-                    lock (SyncLock)
-                    {
-                        NextingStack.Push(frame);
-                    }
+                lock (SyncLock)
+                {
+                    NextingStack.Push(frame);
+                }
 
                 bool result = frame.Start();
                 return result;
@@ -522,7 +514,7 @@ namespace INTERCAL
                 }
                 else if (varname[0] == ',' || varname[0] == ';')
                 {
-                    
+
                     if (!Variables.TryGetValue(varname, out retval))
                     {
                         Variable v = new ArrayVariable(this, varname);
@@ -600,35 +592,33 @@ namespace INTERCAL
             //to modules written in INTERCAL.  
 
             //As of right now I haven't done anything yet to enable this.
-            public void ReadOut(string s)
+            public void ReadOut(string identifier)
             {
-                Trace.WriteLine(string.Format("Reading out {0} chars", s.Length));
+                Trace.WriteLine(string.Format("Reading out '{0}'", identifier.Length));
 
-                TextWriter tw = new StreamWriter(this.Output);
-                var next = Variables[s].ToString();
+                var next = Variables[identifier].ToString();
                 Trace.WriteLine(string.Format("Reading out {0}", next));
-                tw.Write(next); 
 
-                //for binary output write a newline.
-                if (!(Variables[s] is ArrayVariable))
-                    tw.Write("\n");
+                if (Variables[identifier] is ArrayVariable)
+                    TextOut.Write(next);
+                else
+                    TextOut.WriteLine(next);
 
-                tw.Flush();
+                TextOut.Flush();
             }
 
-            public void WriteIn(string s)
+            public void WriteIn(string identifier)
             {
-                Trace.WriteLine(string.Format("Writing into {0}", s));
+                Trace.WriteLine(string.Format("Writing into {0}", identifier));
                 //the intercal model is stream-based - calling WriteIn reads as
                 //many chars as there are in the array (or fewer if EOF is reached)
                 //Console.Write("{0}?>", s);
-                BinaryReader br = new BinaryReader(this.Input);
 
                 int[] idx = new int[1];
 
-                if ((s[0] == ',') || (s[0] == ';'))
+                if ((identifier[0] == ',') || (identifier[0] == ';'))
                 {
-                    ArrayVariable av = this.Variables[s] as ArrayVariable;
+                    ArrayVariable av = this.Variables[identifier] as ArrayVariable;
                     if (av.Rank != 1)
                         throw new IntercalException(Messages.E241);
 
@@ -636,33 +626,30 @@ namespace INTERCAL
                     {
                         idx[0] = i;
 
-                        uint c = (uint)br.ReadChar();
+                        uint c = (uint)BinaryOut.ReadChar();
 
                         uint v = (c - this.LastIn) % 256;
                         this.LastIn = c;
 
                         Trace.WriteLine(string.Format("Writing '{0}' into index {1}", (char)c, i));
-                        this[s, idx] = v;
+                        this[identifier, idx] = v;
                     }
                 }
                 else
                 {
-                    using (TextReader reader = new StreamReader(Input))
-                    {
-                        string input = reader.ReadLine();
+                        string input = TextIn.ReadLine();
                         try
                         {
                             //Note that this compiler today only works in wimpmode.  To do it
                             //right we will need to have satellite assemblies, one for each of
                             //many different languages.
-                            this[s] = UInt32.Parse(input);
+                            this[identifier] = UInt32.Parse(input);
                         }
                         catch
                         {
                             Lib.Fail(String.Format(Messages.E579, input));
                         }
-                    }
-                }
+                 }
             }
 
             #endregion

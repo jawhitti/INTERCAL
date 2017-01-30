@@ -219,30 +219,32 @@ Some INTERCAL constructs are only mapped locally to their hosting component in o
  to preserve component boundaries. These include:
 
 #### NEXT / RESUME / FORGET
-intercal.runtime.dll implements a thread-based NEXTing stack that allows full NEXT/RESUME/FORGET 
-support, even between components.  The comment in twisty.cs explains:
-```
-    //The code in this file implements a thread-based NEXTing stack. This is challenging
-    //because the sematics of FORGET mean that entries can be dropped from the call stack.
-    //In an ordinary program a DO NEXT would invoke a subroutine that would always return 
-    //control back to the parent.  FORGET allows the child to never return, so  DO NEXT / FORGET
-    //pairs can be used to move control around willy-nilly, (subject to the 80-item max 
-    //NEXTING depth).  When all code is in a single component a goto-based solution is adequate
-    //but linking multiple components together is a bigger challenge.
+**intercal.runtime.dll** implements a thread-based NEXTing stack that allows full NEXT/RESUME/FORGET 
+support, even between components. This was perhaps the biggest challenge to "componentizing"
+INTERCAL and the implementation deserves some description.
+  
+The NEXTING stack is challenging because the sematics of FORGET mean that entries can be dropped from the *middle* of the call stack. In an ordinary language a construct like DO NEXT would invoke a subroutine that would always return control back to the parent. INTERCAL is of course different. FORGET allows the child to never return, so  DO NEXT / FORGET pairs can be used to move control around willy-nilly, (subject to the 80-item max NEXTING depth, of course).  When all code is in a single component a goto-based solution is adequate but linking multiple components together is a bigger challenge. If an application .exe calls into a .dll and the function in the dll FORGETs we have a real problem.  There's no way to implement a program that doesn't have the thread unwind back to where it started.
+  
+The key is that if you invoke a new *thread* at every DO NEXT the problem can be solved reasonably elegantly. This is particularly appealing on the .NET framework because the thread pool, Monitors, and async delegates make it pretty straightforward to put together.
+  
+So here's how it works. When a DO NEXT is encountered the compiler generates a call to ExecutionContext.Evaluate, passing it a delegate referencing a function (typically "Eval())" as well as a label. This call blocks while Execution context asynchronously invokes the delegate and waits for it to complete.  The function must eventually either call back into the runtime via either the Resume() or Forget() functions.  If the top-level function calls Resume() it is popped and the waiting function is released.  In this case the function that called Resume() exits (and the threadpool thread is released).  If the topmost thread calls Forget() it continues running.  The other threads below it on the stack are
+signaled to terminate and they exit.  
 
-    //#I deals with this by using a thread-based nexting stack.  When a DO NEXT is encountered 
-    //the compiler generates a call to ExecutionContext.Evaluate, passing it a delegate referencing 
-    //a function (typically "Eval()" as well as a label parameter.  This call fires the delegate
-    //asynchronously on the .NET thread pool and waits for it to complete.  The fuction will 
-    //eventually either RESUME (returning false) or will FORGET and return true (GIVE UP is basically a fancy FORGET).  
-    //Either of these conditions will release the calling thread which will then continue (in the
-    //case of RESUME) or immediately exit (in the case of FORGET).  
-```
-Please do note that libraries must still ensure that every code path evenutally ends in a RESUME or GIVE UP.
+In this manner the NEXT semantics can be preserved across components. An application (.exe) can call DO NEXT into a Library (.dll). At this point there are two threads on the NEXT stack - the bottommost originating from Main() and the topmost originating from the invoked function in the DLL.  If the DLL calls FORGET #1 the bottom-most function will exit and the stack will contain only the currently executing thread.
+
+Please do note that libraries must still ensure that every code path evenutally ends in a RESUME or GIVE UP.  
+True to form executing a GIVE UP does indeed exit the entire program.
+
+##### External calls
+It's interesting to note that the only reason this chicanery is needed is to support FORGET. This means that 
+in the case of interop where an ordinary function call is being invoked the thread creation can be skipped in favor of a direct function call. 
+  
+##### Future research  
+If one could construct a flow-graph of an INTERCAL input program it may be possible to prove that certain sequences will never result in a FORGET. Such sequences could use direct function linkage and allow significant optimization as NEXT/RESUME is far more popular than NEXT/FORGET.   It may also be possible to detect the case where DO NEXT is followed immediately by "FORGET #1" in which case the code generator could emit an ordinary goto (at least for local calls).
+ 
 
 #### COME FROM
-It is only legal to COME FROM a label local to the current component. 
-It is not possible to COME FROM another component.
+It is only legal to COME FROM a label local to the current component.  It is not possible to COME FROM another component.
 
 #### ABSTAIN / REINSTATE
 ABSTAIN and REINSTATE calls only act on the local component (this includes gerunds)
@@ -251,34 +253,24 @@ ABSTAIN and REINSTATE calls only act on the local component (this includes gerun
 It is not legal to IGNORE or REMEMBER labels that exist outside of the calling component.
 
 #### READ OUT/WRITE IN
-sick bases its I/O on the "Turing Text Model" from c-intercal).  This presents difficulties for
-component based systems because the tape, because the tape is a *shared device*.  The original 
+The runtime bases its I/O on the ["Turing Text Model"](http://www.muppetlabs.com/~breadbox/intercal-man/s05.html) 
+first implemented in c-intecal.  This presents difficulties for
+component based systems because the tape is a *shared device*.  The original 
 Turing Text model would not work for component software, as it is impossible to decode a 
 string stored in an intercal array unless you know what position the tape head was at the 
-beginning (or end) of a READ OUT or WRITE IN operation.  At the moment this means 
-string data cannot be easily exchanged between components.
+beginning (or end) of a READ OUT or WRITE IN operation. 
 
-To make it possible to exchange string data the SICK compiler makes the “current” read and write 
-position available in variables .999 and .9999,  respectively. INTERCAL components that want to 
-pass string data out to the outside world should first copy the contents of these variables 
-into other variables so that client code can decode strings.  For example:
-```
-DO .1 <- .999
-DO WRITE IN ;1  //implicitly modifies .999 
-DO .2 <- .999
-DO WRITE IN ;2  //implicitly modifies .999 again
-DO (3000) NEXT //where 3000 is in another lib
-```
-This allows the implementer of (3000) to decode both ;1 and ;2.  If (3000) wants to write 
-out variables then it can query .9999.
+To make it possible to exchange string data the SICK runtime makes the “current” read and write 
+position available in properties LastIn and LastOut. These variables are not directly accessible
+from INTERCAL source code but they are publicly accessible. 
 
 
 ### Compiler and runtime Limitations
-* The parser is currently a really dodgy regex affair because in 2003 I couldn't make ANTLR work. 
-I now have an actual functioning INTERCAL recognizer using ANTLR but I haven't grafted it onto
-the code generator yet.
+* The front-end parser is currently a really dodgy regex affair because in 2003 I couldn't make 
+any parser-generators work in C#. As of late 2016 I was able to produce a functioning INTERCAL 
+recognizer using ANTLR but I haven't grafted it onto the code generator yet.
 
-* I am not entirely happy with the ExecutionContext set of classes. 
+* I am not entirely happy with the ExecutionContext set of classes. I want to refactor them to present a better set of services to client code.
   
 * I/O is still strictly ordinary.  To input the value 1023 type "1023".
 

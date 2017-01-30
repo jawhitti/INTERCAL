@@ -802,8 +802,6 @@ namespace INTERCAL
 					}
 				}
 			}
-
-
 		}
 
 		public class ReadOutStatement : Statement
