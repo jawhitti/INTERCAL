@@ -367,7 +367,6 @@ namespace INTERCAL
                 {
                     int[] lbounds = new int[subscripts.Length];
 
-                    //TODO: FIX THIS Arrays in INTERCAL are one-based
                     for (int i = 0; i < lbounds.Length; i++)
                     {
                         lbounds[i] = 1;
@@ -411,7 +410,14 @@ namespace INTERCAL
                 public int GetUpperBound(int dim) { return values.GetUpperBound(dim); }
                 public override void Stash()
                 {
-                    this.StashStack.Push(values.Clone() as Array);
+                    //what to do if a program stashes an unitialized array?  Donald Knuth's
+                    //tpk.i depends on this not crashing the runtime.  Knuth is more important
+                    //than you or I so this runtime bends to his wishes. This does mean that
+                    //it is possible to RETRIEVE a null array.
+                    if (values != null)
+                        StashStack.Push(values.Clone() as Array);
+                    else
+                        StashStack.Push(null);
                 }
 
                 public override void Retrieve()

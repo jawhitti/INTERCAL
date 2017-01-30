@@ -171,6 +171,128 @@ namespace INTERCAL
             get { return Statements[n]; }
         }
 
+
+        //TODO: This will need to deal with external calls. A "SafeRecursion"
+        //attribute or something would let the runtime query to see if calls out need
+        //to be done on a dedicated thread or if the call can be made directly.
+        bool IsSimpleFlow(int i, Stack<int> statementsExamined)
+        {
+            try
+            {
+                //if we find a cycle just bail out cause that's bad juju
+                if (statementsExamined.Contains(i))
+                {
+                    statementsExamined.ToList().ForEach(n => Console.WriteLine(n));
+                    Console.WriteLine("Cycle detected encountered at line {0}", Statements[i].LineNumber);
+
+                    return false;
+                }
+
+                statementsExamined.Push(i);
+
+                //If trapdoor is true then follow the COME FROM
+                //If the statement has a % modifier then we need 
+                //to ALSO ensure the successor is safe
+                if (Statements[i].Trapdoor > 0)
+                {
+                    var safeTarget = IsSimpleFlow(Statements[i].Trapdoor, statementsExamined);
+
+                    if(safeTarget && Statements[i].Percent == 100)
+                    {
+                        return true;
+                    }
+                    else if(safeTarget)
+                    {
+                        int successor = i + 1;
+                        return IsSimpleFlow(successor, statementsExamined);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                else if (Statements[i] is Statement.ResumeStatement)
+                {
+                    if (Statements[i].Percent < 100)
+                    {
+                        int successor = i + 1;
+                        return IsSimpleFlow(successor, statementsExamined);
+                    }
+                    else
+                    {
+                        statementsExamined.ToList().ForEach(n => Console.WriteLine(n));
+                        Console.WriteLine("RESUME encountered at line {0}", Statements[i].LineNumber);
+
+                        //OOPS.  This isn't actually enough.  We need to handle depth.  
+                        //And from what I've seen so far INTERCAL programs by and large
+                        //wind up not being safe, so this optimization is likely 
+                        //not as impactful as I thought. 
+                        return true;
+                    }
+                }
+                else if (Statements[i] is Statement.GiveUpStatement)
+                {
+                    if (Statements[i].Percent < 100)
+                    {
+                        int successor = i + 1;
+                        return IsSimpleFlow(successor, statementsExamined);
+                    }
+                    else
+                    {
+                        statementsExamined.ToList().ForEach(n => Console.WriteLine(n));
+                        Console.WriteLine("GIVE UP encountered at line {0}", Statements[i].LineNumber);
+                        return true;
+                    }
+                }
+
+                else if (Statements[i] is Statement.ForgetStatement)
+                {
+                    //FORGET is ALWAYS false. Even if it has a percentage
+                    //attached to it it still introduces the possibility of
+                    //a forget.
+                    statementsExamined.ToList().ForEach(n => Console.WriteLine(n));
+                    Console.WriteLine("FORGET encountered at line {0}", Statements[i].LineNumber);
+                    return false;
+                }
+                else if (Statements[i] is Statement.NextStatement)
+                {
+                    //A NEXT statement is safe if:
+                    // a) the flow beginning at the target is safe
+                    // b) the flow of the successor is safe.
+
+                    Statement.NextStatement ns = Statements[i] as Statement.NextStatement;
+                    var target = Statements.Where(s => s.Label == ns.Target).FirstOrDefault();
+                    if(target == null)
+                    {
+
+                        statementsExamined.ToList().ForEach(n => Console.WriteLine(n));
+                        Console.WriteLine("External call encountered at line {0}", Statements[i].LineNumber);
+                        return false;
+                    }
+
+                    var isTargetSafe =  IsSimpleFlow(target.StatementNumber, statementsExamined);
+
+                    if (!isTargetSafe)
+                        return false;
+                    else
+                    {
+                        int successor = i + 1;
+                        return IsSimpleFlow(successor, statementsExamined);
+                    }
+                }
+                else
+                {
+                    int successor = i + 1;
+                    return IsSimpleFlow(successor, statementsExamined);
+                }
+            }
+            finally
+            {
+                statementsExamined.Pop();
+            }
+        }
+
         Program(string input)
         {
             ParseStatements(input);
@@ -695,6 +817,20 @@ namespace INTERCAL
 
             foreach (Statement s in Statements)
             {
+                if(s is Statement.NextStatement)
+                {
+                    Stack<int> stack = new Stack<int>();
+
+                    //Console.Write("Examing ({0}) for simple flow...", (s as Statement.NextStatement).Target);
+                    //bool bSafe = IsSimpleFlow(s.StatementNumber,stack);
+                    //Console.WriteLine(bSafe);
+
+                    //If we determine that the flow is simple then we can
+                    //optimize away the async call on the NEXTING stack and 
+                    //replace it with an ordinary function call. Err...handling
+                    //RESUME n with n>1 might turn out to be painful (but doable). 
+                }
+
                 EmitStatementProlog(s, c);
                 if (s.Splatted)
                 {
