@@ -15,7 +15,7 @@ to as "the munificent benefactor").
 14542. You may not use this steaming pile in any way whatsoever until you have distributed 
 it in the medium of your choice to a minimum of three (3) other individuals, who in turn
 accept the terms of this BILGE. Sample mediums include newspaper, email, newsgroups, 
-or computer viruses.  Miss Cleo is expressly discredited as a fraudulent medium. 
+or computer viruses.  Miss Cleo is expressly discredited as an invalid medium. 
 Distribution must include an appropriate notification header such as "CHECK THIS!!!!".
 
 23546. Once said licensees have themselves agreed to the terms of this BILGE, licensee may:
@@ -28,7 +28,7 @@ Distribution must include an appropriate notification header such as "CHECK THIS
   non-productive are academic research, governmental application, 
   and integration with the Linux Kernel.
 
-32842. You may not be distribute this Software or any derivative works in 
+32842. You may not distribute this Software or any derivative works in 
 any form for productive purposes.  Then again, you may, it is not the
 position of this license to predict your behavior or rationality. Criminally
 insane licensees are discouraged (though not expressly prohibited) from 
