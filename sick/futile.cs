@@ -534,9 +534,9 @@ namespace INTERCAL
                 //Uncomment these three lines if you want the program to pause when it
                 //starts up.  This is useful if you want to attach a debugger before
                 //the program runs.
-                ctx.EmitRaw("      Console.WriteLine(\"press Enter to run:\");\r\n");
-                ctx.EmitRaw("      Console.ReadLine();\r\n");
-                ctx.EmitRaw("      while(Console.In.Peek() != -1) { Console.Read(); }\r\n\r\n");
+                //ctx.EmitRaw("      Console.WriteLine(\"press Enter to run:\");\r\n");
+                //ctx.EmitRaw("      Console.ReadLine();\r\n");
+                //ctx.EmitRaw("      while(Console.In.Peek() != -1) { Console.Read(); }\r\n\r\n");
 
                 ctx.EmitRaw("      //Speed up startup time by ensuring adequate thread availability\r\n");
                 ctx.EmitRaw("      System.Threading.ThreadPool.SetMinThreads(80, 4);\r\n\r\n");

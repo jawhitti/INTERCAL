@@ -865,8 +865,10 @@ namespace INTERCAL
 
 			public override void Emit(CompilationContext ctx)
 			{
-				ctx.EmitRaw("Lib.Fail(\""+ LineNumber.ToString() + " * " + this.StatementText);
-				//ctx.EmitRaw("Splatted statement encountered (source line " + this.LineNumber.ToString() + ")");
+                //That showoffy jerk Donald Knuth just *had* to put a quote in a 
+                //multiline comment so now I have to fix those up too.
+                var fixedUp = StatementText.Replace("\"", "\\\"").Replace("\r\n", "\" + \r\n\"");
+				ctx.EmitRaw("Lib.Fail(\""+ LineNumber.ToString() + " * " + fixedUp);
 				ctx.EmitRaw("\");\n");
 			}
 		}

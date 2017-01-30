@@ -190,7 +190,7 @@ namespace INTERCAL
             try
             {
                 //Uncomment this to display the command used to invoke the compiler
-                //Console.WriteLine("{0} {1}", compiler, compiler_args);
+                Console.WriteLine("{0} {1}", compiler, compiler_args);
 
                 ProcessStartInfo si = new ProcessStartInfo(compiler, compiler_args);
                 si.UseShellExecute = false;
@@ -290,7 +290,6 @@ namespace INTERCAL
                             //We put syslib in last. If other libs define labels that collide with
                             //syslibs then those will get precedence over the standard ones.
 
-                            //TODO: UNCOMMENT
                             c.references[refs.Length] = new ExportList("intercal.runtime.dll");
                         }
                         else if (arg.IndexOf("DEBUG+") > 0 || arg.IndexOf("debug+") > 0)

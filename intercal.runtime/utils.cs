@@ -647,18 +647,20 @@ namespace INTERCAL
                 }
                 else
                 {
-                    TextReader reader = new StreamReader(Input);
-                    string input = reader.ReadLine();
-                    try
+                    using (TextReader reader = new StreamReader(Input))
                     {
-                        //Note that this compiler today only works in wimpmode.  To do it
-                        //right we will need to have satellite assemblies, one for each of
-                        //many different languages.
-                        this[s] = UInt32.Parse(input);
-                    }
-                    catch
-                    {
-                        Lib.Fail(String.Format(Messages.E579, input));
+                        string input = reader.ReadLine();
+                        try
+                        {
+                            //Note that this compiler today only works in wimpmode.  To do it
+                            //right we will need to have satellite assemblies, one for each of
+                            //many different languages.
+                            this[s] = UInt32.Parse(input);
+                        }
+                        catch
+                        {
+                            Lib.Fail(String.Format(Messages.E579, input));
+                        }
                     }
                 }
             }
