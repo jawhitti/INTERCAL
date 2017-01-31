@@ -290,6 +290,9 @@ string will magically appear.
 The standard distribution holds a compiled version of **syslib.i** in *intercal.runtime.dll*. 
 This assembly is reference by default for all programs compiled with sick.exe.
 
+# OTher resources
+* The [C-INTERCAL Git Repe](https://github.com/calvinmetcalf/intercal) contains a wealth of code. The [pit](https://github.com/calvinmetcalf/intercal/tree/master/pit) is probably the most complete collection of intercal code and docs anywhere. The "libs" folder in particular holds floating point and other useful bits. 
+
 # Acknowledgements
 * This project drew inspiration primarily from Eric Raymond's [C-Intercal implementation (ick)](http://www.muppetlabs.com/~breadbox/intercal-man/s10.html).  
 * Development would not have been possible without the [MuppetLabs Intercal Pages](http://www.muppetlabs.com/~breadbox/intercal/)
