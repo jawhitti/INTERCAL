@@ -600,10 +600,10 @@ namespace INTERCAL
             //As of right now I haven't done anything yet to enable this.
             public void ReadOut(string identifier)
             {
-                Trace.WriteLine(string.Format("Reading out '{0}'", identifier.Length));
+                Trace.WriteLine(string.Format("Reading out variable '{0}'", identifier.Length));
 
                 var next = Variables[identifier].ToString();
-                Trace.WriteLine(string.Format("Reading out {0}", next));
+                Trace.WriteLine(string.Format("Reading out value '{0}'", next));
 
                 if (Variables[identifier] is ArrayVariable)
                     TextOut.Write(next);
@@ -612,6 +612,15 @@ namespace INTERCAL
 
                 TextOut.Flush();
             }
+
+            public void ReadOut(object expression)
+            {
+                Trace.WriteLine(string.Format("Reading out object '{0}'", expression));
+                TextOut.WriteLine(expression);
+                TextOut.Flush();
+            }
+
+
 
             public void WriteIn(string identifier)
             {

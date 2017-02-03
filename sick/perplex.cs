@@ -427,20 +427,19 @@ namespace INTERCAL
 
 					if(this.returnType == typeof(UInt16))
 						ctx.EmitRaw(sf + "(((ushort)frame.ExecutionContext[\"" + lval + "\"]))");
-						//return shortform((ushort)ctx[lval]);
 					else
 						ctx.EmitRaw(lf + "(((uint)frame.ExecutionContext[\"" + lval + "\"]))");
-					//return longform((uint)ctx[lval]);
 				}
 			}
 		}
 			
 
-		class ArrayExpression : Expression
+		public class ArrayExpression : Expression
 		{
-			string var;
+            //marked public to allow a fix for issue 002.  
+			public string Name { get; set; }
 			List<Expression> subscripts = new List<Expression>();
-			int[] indices = null;
+			public int[] Indices { get; private set; }
 
 			public ArrayExpression(Scanner s) : this(s, null)
 			{
@@ -454,7 +453,7 @@ namespace INTERCAL
 			public ArrayExpression(Scanner s, string delimeter) 
 			{
 				//Array expressions are VAR SUB <subscript>*
-				var = s.Current.Value + s.PeekNext.Value;
+				Name = s.Current.Value + s.PeekNext.Value;
 				s.MoveNext();
 				
 				if(s.PeekNext.Value == "SUB")
@@ -477,24 +476,24 @@ namespace INTERCAL
 
 			public override uint Evaluate(ExecutionContext ctx) 
 			{
-				string lval = var;
+				string lval = Name;
 
 				//minor optimization - we reuse the same array object
 				//every time instead of re-allocating it
-				if(indices == null)
-					indices = new int[subscripts.Count];
+				if(Indices == null)
+					Indices = new int[subscripts.Count];
 
 				for(int i=0; i< subscripts.Count; i++)
 				{
-					indices[i] = (int)(subscripts[i] as Expression).Evaluate(ctx);
+					Indices[i] = (int)(subscripts[i] as Expression).Evaluate(ctx);
 				}
 				
-				return ctx[lval, indices];
+				return ctx[lval, Indices];
 			}
 
 			public override void Emit(CompilationContext ctx)
 			{
-				ctx.EmitRaw("frame.ExecutionContext[\"" + this.var + "\", new int[]{");
+				ctx.EmitRaw("frame.ExecutionContext[\"" + this.Name + "\", new int[]{");
 
 				for(int i=0; i< subscripts.Count; i++)
 				{

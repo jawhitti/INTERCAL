@@ -670,11 +670,28 @@ namespace INTERCAL
                  "         var program = new {0}();\r\n", ctx.assemblyName));
                 ctx.EmitRaw(
                  "         program.Run();\r\n" +
-                 "      }\r\n" +
+                 "      }\r\n");
+
+                if (ctx.debugBuild)
+                {
+                    ctx.EmitRaw(
                  "      catch (Exception e)\r\n" +
                  "      {\r\n" +
                  "         Console.WriteLine(e);\r\n" +
-                 "      }\r\n");
+                 "      }\r\n"
+                    );
+                }
+                else
+                {
+                    ctx.EmitRaw(
+                  "      catch (Exception e)\r\n" +
+                  "      {\r\n" +
+                  "         Console.WriteLine(e.Message);\r\n" +
+                  "      }\r\n"
+                     );
+
+                }
+
 
                 ctx.EmitRaw("   }\r\n");
                 ctx.EmitRaw("}\r\n");

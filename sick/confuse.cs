@@ -806,32 +806,64 @@ namespace INTERCAL
 
 		public class ReadOutStatement : Statement
 		{
-			protected List<LValue> lvals = new List<LValue>();
+			List<Expression> lvals = new List<Expression>();
 
 			public ReadOutStatement(Scanner s)
 			{
 				s.MoveNext();
-				lvals.Add(new LValue(s));
+				lvals.Add(Expression.CreateExpression(s));
 				while(s.PeekNext.Value == "+")
 				{
 					s.MoveNext();
 					s.MoveNext();
-					lvals.Add(new LValue(s));
+					lvals.Add(Expression.CreateExpression(s));
 				}
 
 			}
 
 			public override void Emit(CompilationContext ctx)
 			{
-				foreach(LValue lval in lvals)
+				foreach(Expression lval in lvals)
 				{
-					ctx.Emit("frame.ExecutionContext.ReadOut(\"" + lval.Name + "\")");
+                    var ae = lval as Expression.ArrayExpression;
+
+                    bool shortCircuitArray = false;
+
+                    if (ae != null)
+                    {
+                        if (ae.Indices == null || ae.Indices.Length == 0)
+                            shortCircuitArray = true;
+                    }
+
+                    if(shortCircuitArray)
+                    {
+                        ctx.EmitRaw(
+                            string.Format("frame.ExecutionContext.ReadOut(\"{0}\");", ae.Name));
+                    }
+                    else
+                    {
+                        ctx.EmitRaw("frame.ExecutionContext.ReadOut(");
+                        lval.Emit(ctx);
+                        ctx.EmitRaw(");");
+                    }
 				}
 			}
 		}
-		public class WriteInStatement : ReadOutStatement
+		public class WriteInStatement : Statement
 		{
-			public WriteInStatement(Scanner s): base(s)	{}
+            protected List<LValue> lvals = new List<LValue>();
+
+            public WriteInStatement(Scanner s)
+            {
+                s.MoveNext();
+                lvals.Add(new LValue(s));
+                while (s.PeekNext.Value == "+")
+                {
+                    s.MoveNext();
+                    s.MoveNext();
+                    lvals.Add(new LValue(s));
+                }
+            }
 
 			public override void Emit(CompilationContext ctx)
 			{
