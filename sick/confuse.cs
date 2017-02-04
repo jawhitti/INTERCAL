@@ -28,9 +28,9 @@ namespace INTERCAL
 
 		public ExportList(string assemblyFile)
 		{
-			this.assemblyFile = assemblyFile;
 			try
 			{
+                this.assemblyFile = assemblyFile;
 				assembly = Assembly.LoadFrom(assemblyFile);
 
 				entryPoints = (EntryPointAttribute[])assembly.GetCustomAttributes(typeof(EntryPointAttribute), true);
@@ -250,7 +250,8 @@ namespace INTERCAL
 			}
 			catch(ParseException)
 			{
-				//Console.WriteLine(p.Message);
+				
+                //Console.WriteLine(p.Message);
 
 				if(retval != null) 
 					retval.Splatted = true;
@@ -520,10 +521,6 @@ namespace INTERCAL
                         ctx.Emit(string.Format("Trace.WriteLine(\"       Doing statement #{0} Next\");", target.StatementNumber));
 
                     }
-
-                    //ctx.Emit("nest = this.Eval(ref ctx," +  target.StatementNumber + ")");
-
-                    //Console.WriteLine("[{0}] (000) DO NEXT (100)", Thread.CurrentThread.ManagedThreadId);
 
                     ctx.EmitRaw("{\r\n");
                     ctx.EmitRaw("   bool shouldTerminate = frame.ExecutionContext.Evaluate(Eval," + target.Label.Substring(1, target.Label.Length -2) + ");\r\n");

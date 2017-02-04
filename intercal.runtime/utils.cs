@@ -435,7 +435,6 @@ namespace INTERCAL
                 {
                     StringBuilder sb = new StringBuilder();
 
-                    //Console.WriteLine("ArrayVariable {0} has {1} values", Name, values.Length);
                     int[] idx = new int[1];
 
                     foreach (uint v in values)
@@ -451,7 +450,6 @@ namespace INTERCAL
                         sb.Append((char)c);
                     }
 
-                    //Console.WriteLine("Array {0} ToString() ==> {1}", this.Name, sb.ToString());
                     return sb.ToString();
                 }
             }

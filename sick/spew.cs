@@ -5,6 +5,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Reflection;
 
 namespace INTERCAL
 {
@@ -30,6 +31,7 @@ namespace INTERCAL
         public string assemblyName;
         public AssemblyType assemblyType;
         public bool debugBuild = false;
+        public bool Verbose = false;
 
         //What will the base class be for the generated type?
         public string baseClass = "System.Object";
@@ -91,7 +93,7 @@ namespace INTERCAL
         {
             Console.WriteLine("Warning: " + s);
         }
-
+        
         public string GeneratePropertyName(string className)
         {
             string[] s = className.Split('.');
@@ -113,6 +115,7 @@ namespace INTERCAL
 
             foreach (string file in files)
             {
+                Trace.WriteLine(string.Format("Processing source file '{0}'", file));
                 int dot = file.IndexOf('.');
                 if (dot < 0)
                     throw new CompilationException(Messages.E998 + " (" + file + ")");
@@ -188,7 +191,7 @@ namespace INTERCAL
                     if (needsComma)
                         compiler_args += ",";
 
-                    compiler_args += c.references[i].assemblyFile;
+                    compiler_args += '"' + c.references[i].assemblyFile + '"';
                     needsComma = true;
                 }
             }
@@ -196,45 +199,73 @@ namespace INTERCAL
 
             try
             {
-                //Uncomment this to display the command used to invoke the compiler
-                Console.WriteLine("{0} {1}", compiler, compiler_args);
+                Trace.WriteLine(string.Format("{0} {1}", compiler, compiler_args));
 
                 ProcessStartInfo si = new ProcessStartInfo(compiler, compiler_args);
                 si.UseShellExecute = false;
                 si.CreateNoWindow = true;
                 Process p = Process.Start(si);
                 p.WaitForExit();
+
+                if(p.ExitCode == 0)
+                {
+                    CopyRequiredBinariesToOutputFolder(c);
+                }
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 Abort(Messages.E2003);
             }
 
             //File.Delete("~tmp.cs");
         }
 
+        private static void CopyRequiredBinariesToOutputFolder(CompilationContext c)
+        {
+            Trace.WriteLine("Copying binaries to output folder...");
+            foreach(var reference in c.references)
+            {
+                //note that we will skip files in the GAC
+               if(File.Exists(reference.assemblyFile))
+                {
+                    var sourceFileName = Path.GetFullPath(reference.assemblyFile);
+                    var destFileName = Path.Combine(Environment.CurrentDirectory, Path.GetFileName(sourceFileName));
+                    Trace.WriteLine(string.Format("Copying '{0}' to '{1}'", sourceFileName, destFileName));
+
+                    if(sourceFileName != destFileName)
+                        File.Copy(sourceFileName, destFileName, true);
+                }
+               else
+                {
+                    Trace.WriteLine(string.Format("Not copying '{0}' (File is in the GAC?)", reference.assemblyFile));
+                }
+            }
+        }
+
         const string Banner =
-            "Simple INTERCAL Compiler version {0}\n" +
-            "for Microsoft (R) .NET Framework version {1}\n" +
-            "Authorship disclaimed by Jason Whittington 2003. All rights reserved.\n\n";
+            "Simple INTERCAL Compiler version {0}\r\n" +
+            "for Microsoft (R) .NET Framework version {1}\r\n" +
+            "Authorship disclaimed by Jason Whittington 2017. All rights reserved.\r\n\r\n";
         const string Usage =
         #region usage
-            "                        SICK Compiler Options\n" +
+            "                        SICK Compiler Options\r\n" +
 
-            "                        - OUTPUT FILES -\n" +
-            "/t:exe                  Build a console executable (default)\n" +
-            "/t:library              Build a library \n" +
+            "                        - OUTPUT FILES -\r\n" +
+            "/t:exe                  Build a console executable (default)\r\n" +
+            "/t:library              Build a library \r\n" +
 
-            "\n                      - INPUT FILES -\n" +
-            "/r:<file list>          Reference metadata from the specified assembly files\n" +
+            "\r\n                      - INPUT FILES -\r\n" +
+            "/r:<file list>          Reference metadata from the specified assembly files\r\n" +
 
-            "\n                      - CODE GENERATION -\n" +
-            "/debug+                 Emit debugging information\n" +
-            "/base:<class_name>      Use specified class as base class (e.g. MarshalByRefObject)\n" +
-            "/public:<label_list>    Only emit stubs for the specified labels (ignored for .exe builds)\n" +
+            "\r\n                      - CODE GENERATION -\r\n" +
+            "/debug+                 Emit debugging information\r\n" +
+            "/base:<class_name>      Use specified class as base class (e.g. MarshalByRefObject)\r\n" +
+            "/public:<label_list>    Only emit stubs for the specified labels (ignored for .exe builds)\r\n" +
 
-            "\n                      - ERRORS AND WARNINGS -\n" +
-            "/b                      Reduce probably of E774 to zero.\n";
+            "\r\n                      - ERRORS AND WARNINGS -\r\n" +
+            "/b                      Reduce probably of E774 to zero.\r\n" +
+            "/v or /verbose          Verbose compiler output\r\n";
         #endregion
 
         const int MinimumPoliteness = 20;
@@ -244,8 +275,11 @@ namespace INTERCAL
         {
 
             Console.WriteLine(Banner,
-                System.Reflection.Assembly.GetExecutingAssembly().GetName().Version,
-                System.Environment.Version);
+                Assembly.GetExecutingAssembly().GetName().Version,
+                Environment.Version);
+
+            Trace.Listeners.Clear();
+
             try
             {
 
@@ -269,7 +303,11 @@ namespace INTERCAL
                 {
                     if ((arg[0] == '-') || (arg[0] == '/'))
                     {
-                        if (arg.IndexOf("t:") == 1)
+                        if (arg.Substring(1).ToLower() == "v" ||
+                            arg.Substring(1).ToLower() == "verbose")
+                            Trace.Listeners.Add(new ConsoleTraceListener());
+
+                        else if (arg.IndexOf("t:") == 1)
                             switch (arg.Substring(3))
                             {
                                 case "library": c.assemblyType = CompilationContext.AssemblyType.library; break;
@@ -291,16 +329,17 @@ namespace INTERCAL
                             //will be the one used.
                             for (int i = 0; i < refs.Length; i++)
                             {
+                                Trace.WriteLine(string.Format("Referencing '{0}'", refs[i]));
                                 c.references[i] = new ExportList(refs[i]);
                             }
 
                             //We put syslib in last. If other libs define labels that collide with
                             //syslibs then those will get precedence over the standard ones.
-
-                            c.references[refs.Length] = new ExportList("intercal.runtime.dll");
+                            c.references[refs.Length] = new ExportList(FindFile("intercal.runtime.dll"));
                         }
                         else if (arg.IndexOf("DEBUG+") > 0 || arg.IndexOf("debug+") > 0)
                         {
+                            Trace.WriteLine("Emitting a Debug build");
                             c.debugBuild = true;
                         }
 
@@ -321,11 +360,13 @@ namespace INTERCAL
                         else if (arg.IndexOf("base:") == 1)
                         {
                             c.baseClass = arg.Substring(6);
+                            Trace.WriteLine(string.Format("Setting base type to {0}", c.baseClass));
                         }
 
                         // /b reduces the probability of E774 to zero.
                         else if (arg.IndexOf("b") == 1)
                         {
+                            Trace.WriteLine("(Intentional) Bugs disabled");
                             c.Buggy = false;
                         }
                     }
@@ -336,11 +377,12 @@ namespace INTERCAL
                     }
                 }
 
-                //Auto-include standard lib
+                //Auto-include standard lib if it hasn't been referenced already
                 if (c.references == null)
                 {
                     c.references = new ExportList[1];
-                    c.references[0] = new ExportList("intercal.runtime.dll");
+                    var file = FindFile("intercal.runtime.dll");
+                    c.references[0] = new ExportList(file);
                 }
 
 
@@ -353,10 +395,12 @@ namespace INTERCAL
                 //Creating a program object parses it - any compile time errors will 
                 //show up as an exception here. If we do get an exception we purposely
                 //leave ~tmp.i sitting on the hard drive for the programer to inspect
+                Trace.WriteLine("Parsing...");
                 Program p = Program.CreateFromFile("~tmp.i");
 
                 //Now do politeness checking.  No point until we have 
                 //at least three statements in the program.
+                Trace.WriteLine("Analyzing Politeness...");
                 if (p.StatementCount > 3)
                 {
                     //less than 1/5 politeness level is not polite enough
@@ -373,11 +417,14 @@ namespace INTERCAL
 
 
                 c.program = p;
-                c.assemblyName = ((string)sources[0]).Substring(0, ((string)sources[0]).IndexOf('.'));
+                c.assemblyName = Path.GetFileNameWithoutExtension(sources[0]);
+
+                Trace.WriteLine("Emitting C#...");
                 p.EmitCSharp(c);
 
                 File.Delete("~tmp.i");
 
+                Trace.WriteLine("Emitting Binaries...");
                 EmitBinary(c);
             }
 
@@ -387,6 +434,26 @@ namespace INTERCAL
             }
 
         }
+
+        private static string FindFile(string path)
+        {
+            if (File.Exists(path))
+            {
+                return path;
+            }
+            else
+            {
+                var baseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var srcPath = Path.Combine(baseDir, path);
+                if (File.Exists(srcPath))
+                {
+                    return  srcPath;
+                }
+            }
+
+            throw new IntercalException(Messages.E2002);
+        }
+
         static void Abort(string error)
         {
             Console.WriteLine(error);
