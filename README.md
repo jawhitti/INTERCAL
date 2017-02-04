@@ -1,6 +1,6 @@
 ﻿
-# SICK - Simple Component Intercal for .NET
-Official home of Simple Component Intercal for .NET (SICK)
+# CRINGE  (Common Runtime Intercal: Next-Generation Engine)
+Formerly Simple Component Intercal for .NET (SICK).  Name changed to avoid name collision with existing SICK compiler
 
 # Introduction
 The following was written by Jason Whittington, who
