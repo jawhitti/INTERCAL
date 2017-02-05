@@ -1,7 +1,4 @@
-﻿
-# CRINGE  (Common Runtime Intercal: Next-Generation Engine)
-
-# Introduction
+﻿# Introduction
 The following was written by Jason Whittington, who
 fervently denies authorship and requests complete anonymity.
 
