@@ -1,6 +1,5 @@
 ﻿
 # CRINGE  (Common Runtime Intercal: Next-Generation Engine)
-(*Formerly known as "Simple Component Intercal for .NET (SICK).  Name changed to avoid name collision with existing SICK compiler*).
 
 # Introduction
 The following was written by Jason Whittington, who
@@ -82,7 +81,9 @@ executables. One of the major goals of this project was to make INTERCAL availab
 
 ## Acronyms
 This project is officially Common Runtime Intercal: Next Generation Engine, or "cringe". Inspired by,
-and building on Eric Raymond's work on **ick**, the compiler for this project is **cringe.exe*
+and building on Eric Raymond's work on **ick**, the compiler for this project is **cringe.exe* 
+  
+(This project was originally known as "SICK" but it has been renamed to avoid name-collision with the [CLC sick compiler](http://manpages.ubuntu.com/manpages/xenial/man1/sick.1p.html).
 
 # Project contents
 This project contains a Visual Studio 2015 solution with two main project:
