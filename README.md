@@ -81,23 +81,22 @@ executables. One of the major goals of this project was to make INTERCAL availab
 
 
 ## Acronyms
-This project is officially Standard Component Intercal for .NET ("SICK.NET"). Inspired by,
-and building on Eric Raymond's work on **ick**, the compiler for this project is 
-known as **sick**.
+This project is officially Common Runtime Intercal: Next Generation Engine, or "cringe". Inspired by,
+and building on Eric Raymond's work on **ick**, the compiler for this project is **cringe.exe*
 
 # Project contents
 This project contains a Visual Studio 2015 solution with two main project:
-* **sick.exe** - A conforming INTERCAL compiler for .NET 
+* **cringe.exe** - A conforming INTERCAL compiler for .NET 
 * **intercal.runtime.dll** - A .NET assembly providing the standard system library and support code for the execution engine.
   
 You should be able to download the code, load it up and build with ordinary "Ctrl-Shift-B".  A selection of sample 
 INTERCAL programs is available in the "Samples" folder.
 
 # Dependencies
-This compiler is written in C# and targets **.NET 4.0**.  **sick.exe** is modeled equally after Eric Raymond's 
-classic **ick** and the C# **csc** compilers.
+This compiler is written in C# and targets **.NET 4.0**.  **cringe.exe** draws influence from both Eric Raymond's 
+classic **ick** and Microsoft's C# compiler **csc.exe**. 
    
-# SICK user manual
+# CRINGE user manual
 
 ### Compiling standalone applications
 Standalone .exe applications are produced via the command-line switch "/t:exe", *i.e.* given this code in **app.i**.
@@ -110,12 +109,16 @@ DO GIVE UP
 you could compile it using the following command line:
 
 ```
-sick app.i
+cringe app.i
 ```
-This will produce an executable (.exe).
+This will produce an executable (.exe).  Source code may also be spread across multiple files, so 
+```
+cringe app.i lib.i
+```
+would also be accepted. Source files are consumed in the order in which they are listed and compiled into a single executable.
   
 
-### Compiling Libraries
+### Binary Libraries
 Larger programs can use library assemblies to control size and complexity of source files and 
 interop with other .NET languages. Libraries are produced via the command-line switch "/t:library".  
 Any INTERCAL source file can be compiled into an library - there is nothing in the language
@@ -130,7 +133,7 @@ PLEASE RESUME #1
 ```
 If you store this line of code into lib.i you can compile it into a Library Assembly via the following
 ```
-sick /t:library lib.i
+cringe /t:library lib.i
 ```  
 
 This will produce a .NET Assembly lib.dll. This DLL will expose a public class with a 
@@ -149,7 +152,7 @@ DO GIVE UP
 ```
 This can them be compiled by referencing it via "/r" as shown below
 ```
-sick /r:bar.dll app.i
+cringe /r:bar.dll app.i
 ```
 
 and the execute it:
@@ -194,7 +197,7 @@ public class CSIntercalLib
 ``` 
 
 ### Debugging Support
-*sick.exe* will add diagnostic Tracestatements to compiled executables if "/debug+" is specified on the command-line.
+*cringe.exe* will add diagnostic Trace statements to compiled executables if "/debug+" is specified on the command-line.
 These statements can be captured at runtime setting up a standard .NET config file for compiled binaries, e.g:
 ```
 <?xml version="1.0"?>
