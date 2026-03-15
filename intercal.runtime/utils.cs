@@ -479,7 +479,10 @@ namespace INTERCAL
                         c = (c & 0x33) << 2 | (c & 0xcc) >> 2;
                         c = (c & 0x55) << 1 | (c & 0xaa) >> 1;
 
-                        sb.Append((char)c);
+                        // Skip null bytes — they are used to reset LastOut state
+                        // without producing visible output
+                        if (c != 0)
+                            sb.Append((char)c);
                     }
 
                     return sb.ToString();
