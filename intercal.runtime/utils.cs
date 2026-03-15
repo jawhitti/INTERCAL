@@ -159,6 +159,10 @@ namespace INTERCAL
             public IntercalException(string message, Exception inner) : base(message, inner) { }
         }
 
+        // Thrown by GiveUp to halt the current execution thread.
+        // Not an error — just a clean program exit.
+        public class GiveUpException : Exception { }
+
         ////IExecutionContext holds shared variables used to call across components.
         ////INTERCAL uses an interface so that other languages can define their own
         ////implementation of this interface and pass it in to the DO functions.  This
@@ -600,6 +604,10 @@ namespace INTERCAL
                 }
 
                 bool result = frame.Start();
+
+                if (Done)
+                    throw new GiveUpException();
+
                 return result;
             }
 
