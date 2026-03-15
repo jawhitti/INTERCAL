@@ -1086,6 +1086,8 @@ namespace INTERCAL
                 else
                     return Mirror64(val);
             }
+            // Mirror = reverse bit positions AND invert (rotation around vertical axis)
+            // Pure reversal is |- or -| (mirror then invert, or vice versa)
             public static ushort Mirror16(ushort val)
             {
                 ushort result = 0;
@@ -1094,7 +1096,7 @@ namespace INTERCAL
                     if ((val & (1 << i)) != 0)
                         result |= (ushort)(1 << (15 - i));
                 }
-                return result;
+                return (ushort)~result;
             }
             public static uint Mirror32(uint val)
             {
@@ -1104,7 +1106,7 @@ namespace INTERCAL
                     if ((val & (1U << i)) != 0)
                         result |= 1U << (31 - i);
                 }
-                return result;
+                return ~result;
             }
             public static ulong Mirror64(ulong val)
             {
@@ -1114,7 +1116,7 @@ namespace INTERCAL
                     if ((val & (1UL << i)) != 0)
                         result |= 1UL << (63 - i);
                 }
-                return result;
+                return ~result;
             }
 
             public static ulong Invert(ulong val)

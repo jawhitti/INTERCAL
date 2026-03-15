@@ -299,43 +299,48 @@ namespace intercal.tests
             Assert.Contains("E999", ex.Message);
         }
 
-        // Mirror (horizontal mirror / staple) tests
+        // Mirror (| = rotation around vertical axis: reverse + invert)
         [Fact]
-        public void Mirror16_One_ReturnsHighBit()
+        public void Mirror16_One_ReturnsInvertedHighBit()
         {
-            Assert.Equal((ushort)0x8000, Lib.Mirror16(1));
+            // reverse(1) = 0x8000, invert = 0x7FFF
+            Assert.Equal((ushort)0x7FFF, Lib.Mirror16(1));
         }
 
         [Fact]
-        public void Mirror16_HighBit_ReturnsOne()
+        public void Mirror16_HighBit_ReturnsInvertedOne()
         {
-            Assert.Equal((ushort)1, Lib.Mirror16(0x8000));
+            // reverse(0x8000) = 1, invert = 0xFFFE
+            Assert.Equal((ushort)0xFFFE, Lib.Mirror16(0x8000));
         }
 
         [Fact]
-        public void Mirror16_Zero_ReturnsZero()
+        public void Mirror16_Zero_ReturnsAllOnes()
         {
-            Assert.Equal((ushort)0, Lib.Mirror16(0));
+            // reverse(0) = 0, invert = 0xFFFF
+            Assert.Equal((ushort)0xFFFF, Lib.Mirror16(0));
         }
 
         [Fact]
-        public void Mirror16_AllOnes_ReturnsAllOnes()
+        public void Mirror16_AllOnes_ReturnsZero()
         {
-            Assert.Equal((ushort)0xFFFF, Lib.Mirror16(0xFFFF));
+            // reverse(0xFFFF) = 0xFFFF, invert = 0
+            Assert.Equal((ushort)0, Lib.Mirror16(0xFFFF));
         }
 
         [Fact]
         public void Mirror16_IsOwnInverse()
         {
-            // ||x == x for all values
+            // ||x == x for all values (reverse+invert twice = identity)
             ushort val = 0x1234;
             Assert.Equal(val, Lib.Mirror16(Lib.Mirror16(val)));
         }
 
         [Fact]
-        public void Mirror32_One_ReturnsHighBit()
+        public void Mirror32_One_ReturnsInvertedHighBit()
         {
-            Assert.Equal(0x80000000u, Lib.Mirror32(1));
+            // reverse(1) = 0x80000000, invert = 0x7FFFFFFF
+            Assert.Equal(0x7FFFFFFFu, Lib.Mirror32(1));
         }
 
         [Fact]
@@ -346,9 +351,10 @@ namespace intercal.tests
         }
 
         [Fact]
-        public void Mirror64_One_ReturnsHighBit()
+        public void Mirror64_One_ReturnsInvertedHighBit()
         {
-            Assert.Equal(0x8000000000000000UL, Lib.Mirror64(1));
+            // reverse(1) = 0x8000..., invert = 0x7FFF...
+            Assert.Equal(0x7FFFFFFFFFFFFFFFUL, Lib.Mirror64(1));
         }
 
         [Fact]
@@ -361,18 +367,34 @@ namespace intercal.tests
         [Fact]
         public void Mirror_Dispatcher_16bit()
         {
-            // Values <= 16-bit use Mirror16
-            Assert.Equal((ulong)0x8000, Lib.Mirror(1));
+            Assert.Equal((ulong)0x7FFF, Lib.Mirror(1));
         }
 
         [Fact]
         public void Mirror_Dispatcher_32bit()
         {
-            // Values > 16-bit use Mirror32. Bit 16 reversed in 32 bits → bit 15
-            Assert.Equal((ulong)0x8000, Lib.Mirror(0x10000));
+            // 0x10000 reversed in 32 bits = 0x00008000, inverted = 0xFFFF7FFF
+            Assert.Equal((ulong)0xFFFF7FFFu, Lib.Mirror(0x10000));
         }
 
-        // Invert (vertical mirror / worm) tests
+        // Pure reversal is now |- or -| (mirror then invert, or vice versa)
+        [Fact]
+        public void MirrorInvert_GivesPureReversal()
+        {
+            // |- reverses without inverting
+            ushort val = 1;
+            Assert.Equal((ushort)0x8000, Lib.Invert16(Lib.Mirror16(val)));
+        }
+
+        [Fact]
+        public void InvertMirror_AlsoGivesPureReversal()
+        {
+            // -| also reverses without inverting (they commute)
+            ushort val = 1;
+            Assert.Equal((ushort)0x8000, Lib.Mirror16(Lib.Invert16(val)));
+        }
+
+        // Invert (- = rotation around horizontal axis: 0↔1)
         [Fact]
         public void Invert16_Zero_ReturnsAllOnes()
         {
