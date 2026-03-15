@@ -113,8 +113,8 @@ namespace INTERCAL
 		class QuotedExpression : Expression
 		{
 			string delimeter; //either ' or "
-			string unary_op = null;
-			
+			List<string> unary_ops = new List<string>();
+
 			Expression child;
 
 			public QuotedExpression(Scanner s)
@@ -122,11 +122,12 @@ namespace INTERCAL
 				delimeter = s.Current.Value;
 
 				s.MoveNext();
-				if(s.Current.Type == TokenType.UnaryOp)
+				//3.4.3 A unary operator is applied to a sparked or rabbit-eared
+				//expression by inserting the operator immediately following the opening spark or ears
+				// Multiple unary operators can be stacked (e.g., '&-|?.1')
+				while(s.Current.Type == TokenType.UnaryOp)
 				{
-					//3.4.3 A unary operator is applied to a sparked or rabbit-eared 
-					//expression by inserting the operator immediately following the opening spark or ears
-					unary_op = s.Current.Value;
+					unary_ops.Add(s.Current.Value);
 					s.MoveNext();
 				}
 
@@ -145,6 +146,19 @@ namespace INTERCAL
 				this.returnType = child.ReturnType;
 			}
 
+			public static ulong ApplyUnaryOp(string op, ulong val)
+			{
+				switch(op)
+				{
+					case "v": case "V": return Lib.Or(val);
+					case "&": return Lib.And(val);
+					case "?": return Lib.Xor(val);
+					case "|": return Lib.Mirror(val);
+					case "-": return Lib.Invert(val);
+					default: throw new CompilationException("Bad unary operator");
+				}
+			}
+
 			public override Expression Optimize()
 			{
 				//first we optimize the child.
@@ -156,138 +170,58 @@ namespace INTERCAL
 				//a constant expression.
 				if(c!= null)
 				{
-					if(unary_op == null)
+					if(unary_ops.Count == 0)
 						return child;
-					else
-					{
-						if(c.Value <= UInt16.MaxValue)
-						{
-							ushort tmp = (ushort)c.Value;
-							switch(unary_op)
-							{
-								case "v": case "V":
-									return new ConstantExpression((ulong)Lib.UnaryOr16(tmp));
-								case "&":
-									return new ConstantExpression((ulong)Lib.UnaryAnd16(tmp));
-								case "?":
-									return new ConstantExpression((ulong)Lib.UnaryXor16(tmp));
-							}
-						}
-						else if(c.Value <= UInt32.MaxValue)
-						{
-							switch(unary_op)
-							{
-								case "v": case "V":
-									return new ConstantExpression((ulong)Lib.UnaryOr32((uint)c.Value));
-								case "&":
-									return new ConstantExpression((ulong)Lib.UnaryAnd32((uint)c.Value));
-								case "?":
-									return new ConstantExpression((ulong)Lib.UnaryXor32((uint)c.Value));
-							}
-						}
-						else
-						{
-							switch(unary_op)
-							{
-								case "v": case "V":
-									return new ConstantExpression(Lib.UnaryOr64(c.Value));
-								case "&":
-									return new ConstantExpression(Lib.UnaryAnd64(c.Value));
-								case "?":
-									return new ConstantExpression(Lib.UnaryXor64(c.Value));
-							}
-						}
 
+					// Apply operators right-to-left
+					ulong val = c.Value;
+					for(int i = unary_ops.Count - 1; i >= 0; i--)
+					{
+						val = ApplyUnaryOp(unary_ops[i], val);
 					}
+					return new ConstantExpression(val);
 				}
 
 				//if the child expression was not constant then we can't optimize.
 				return this;
 			}
 
+			private static string EmitNameForOp(string op)
+			{
+				switch(op)
+				{
+					case "v": case "V": return "Lib.Or";
+					case "&": return "Lib.And";
+					case "?": return "Lib.Xor";
+					case "|": return "Lib.Mirror";
+					case "-": return "Lib.Invert";
+					default: throw new CompilationException("Bad unary operator");
+				}
+			}
+
 			public override void Emit(CompilationContext ctx)
 			{
 				ctx.EmitRaw("(");
-				if(this.unary_op == null)
+				// Emit nested calls left-to-right: &-|x becomes Lib.And(Lib.Invert(Lib.Mirror(x)))
+				foreach(string op in unary_ops)
 				{
-					child.Emit(ctx);
+					ctx.EmitRaw(EmitNameForOp(op) + "(");
 				}
-				else
+				child.Emit(ctx);
+				for(int i = 0; i < unary_ops.Count; i++)
 				{
-					switch(unary_op)
-					{
-						case "v": case "V":
-							ctx.EmitRaw("Lib.Or(");
-							child.Emit(ctx);
-							ctx.EmitRaw(")");
-							break;
-						case "&":
-							ctx.EmitRaw("Lib.And(");
-							child.Emit(ctx);
-							ctx.EmitRaw(")");
-							break;
-						case "?":
-							ctx.EmitRaw("Lib.Xor(");
-							child.Emit(ctx);
-							ctx.EmitRaw(")");
-							break;
-					}
+					ctx.EmitRaw(")");
 				}
-
 				ctx.EmitRaw(")");
 			}
 
 			public override ulong Evaluate(ExecutionContext ctx)
 			{
 				ulong result = child.Evaluate(ctx);
-				if(unary_op != null)
+				// Apply operators right-to-left (innermost first)
+				for(int i = unary_ops.Count - 1; i >= 0; i--)
 				{
-					if(result <= UInt16.MaxValue)
-					{
-						ushort tmp = (ushort)result;
-						switch(unary_op)
-						{
-							case "v": case "V":
-								result = (ulong)Lib.UnaryOr16(tmp);
-								break;
-							case "&":
-								result = (ulong)Lib.UnaryAnd16(tmp);
-								break;
-							case "?":
-								result = (ulong)Lib.UnaryXor16(tmp);
-								break;
-						}
-					}
-					else if(result <= UInt32.MaxValue)
-					{
-						switch(unary_op)
-						{
-							case "v": case "V":
-								result = (ulong)Lib.UnaryOr32((uint)result);
-								break;
-							case "&":
-								result = (ulong)Lib.UnaryAnd32((uint)result);
-								break;
-							case "?":
-								result = (ulong)Lib.UnaryXor32((uint)result);
-								break;
-						}
-					}
-					else
-					{
-						switch(unary_op)
-						{
-							case "v": case "V":
-								result = Lib.UnaryOr64(result);
-								break;
-							case "&":
-								result = Lib.UnaryAnd64(result);
-								break;
-							case "?":
-								result = Lib.UnaryXor64(result);
-								break;
-						}
-					}
+					result = ApplyUnaryOp(unary_ops[i], result);
 				}
 				return result;
 			}
@@ -306,6 +240,8 @@ namespace INTERCAL
 				eval_table["V"] = new eval_delegate(Lib.UnaryOr16);
 				eval_table["v"] = new eval_delegate(Lib.UnaryOr16);
 				eval_table["?"] = new eval_delegate(Lib.UnaryXor16);
+				eval_table["|"] = new eval_delegate(Lib.Mirror16);
+				eval_table["-"] = new eval_delegate(Lib.Invert16);
 			}
 
 			//This constructor is used during optimization
@@ -327,17 +263,18 @@ namespace INTERCAL
 				string prefix = s.Current.Value;
 
 				s.MoveNext();
-				if(s.Current.Type == TokenType.UnaryOp)
+				// Collect any stacked unary operators (e.g., #-|5)
+				List<string> ops = new List<string>();
+				while(s.Current.Type == TokenType.UnaryOp)
 				{
-					//For some reason there's an unary operator in front of
-					//the digits.  We just do the conversion here...
-					string op = s.Current.Value;
+					ops.Add(s.Current.Value);
 					s.MoveNext();
-					Value = ((eval_delegate)eval_table[op])((ushort)UInt64.Parse(Statement.ReadGroupValue(s, "digits")));
 				}
-				else
+				Value = UInt64.Parse(Statement.ReadGroupValue(s, "digits"));
+				// Apply operators right-to-left
+				for(int i = ops.Count - 1; i >= 0; i--)
 				{
-					Value = UInt64.Parse(Statement.ReadGroupValue(s, "digits"));
+					Value = ((eval_delegate)eval_table[ops[i]])((ushort)Value);
 				}
 
 				// Validate range based on constant prefix
@@ -376,16 +313,8 @@ namespace INTERCAL
 		//unary operation on the front.
 		class NumericExpression : Expression
 		{
-			delegate uint long_op(uint arg);
-			delegate ushort short_op(ushort arg);
-			delegate ulong vlong_op(ulong arg);
-
-			string unary_op = null;
+			List<string> unary_ops = new List<string>();
 			string lval;
-
-			long_op longform;
-			short_op shortform;
-			vlong_op vlongform;
 
 			public NumericExpression(Scanner s)
 			{
@@ -399,87 +328,68 @@ namespace INTERCAL
 				else
 					Debug.Assert(false);
 
-				if(s.PeekNext.Type == TokenType.UnaryOp)
+				// Collect any stacked unary operators (e.g., .-|1)
+				while(s.PeekNext.Type == TokenType.UnaryOp)
 				{
-					//Theres an unary operator
 					s.MoveNext();
-					unary_op = s.Current.Value;
-					switch(unary_op)
-					{
-						case "v":
-						case "V":
-							this.shortform = new short_op(Lib.UnaryOr16);
-							this.longform =  new long_op(Lib.UnaryOr32);
-							this.vlongform = new vlong_op(Lib.UnaryOr64);
-							break;
-						case "?":
-							this.shortform = new short_op(Lib.UnaryXor16);
-							this.longform =  new long_op(Lib.UnaryXor32);
-							this.vlongform = new vlong_op(Lib.UnaryXor64);
-							break;
-						case "&":
-							this.shortform = new short_op(Lib.UnaryAnd16);
-							this.longform =  new long_op(Lib.UnaryAnd32);
-							this.vlongform = new vlong_op(Lib.UnaryAnd64);
-							break;
-					}
+					unary_ops.Add(s.Current.Value);
 				}
 
 				s.MoveNext();
 				this.lval = typeid + Statement.ReadGroupValue(s, "digits");
 			}
 
+			private static string EmitNameForOp(string op, Type width)
+			{
+				bool is16 = width == typeof(UInt16);
+				bool is64 = width == typeof(UInt64);
+				switch(op)
+				{
+					case "v": case "V": return is16 ? "Lib.UnaryOr16" : is64 ? "Lib.UnaryOr64" : "Lib.UnaryOr32";
+					case "&": return is16 ? "Lib.UnaryAnd16" : is64 ? "Lib.UnaryAnd64" : "Lib.UnaryAnd32";
+					case "?": return is16 ? "Lib.UnaryXor16" : is64 ? "Lib.UnaryXor64" : "Lib.UnaryXor32";
+					case "|": return is16 ? "Lib.Mirror16" : is64 ? "Lib.Mirror64" : "Lib.Mirror32";
+					case "-": return is16 ? "Lib.Invert16" : is64 ? "Lib.Invert64" : "Lib.Invert32";
+					default: throw new CompilationException("Bad unary operator");
+				}
+			}
+
 			public override ulong Evaluate(ExecutionContext ctx)
 			{
-				if(this.longform == null)
-					return ctx[lval];
-
-				if(this.returnType == typeof(UInt16))
-					return shortform((ushort)ctx[lval]);
-				else if(this.returnType == typeof(UInt64))
-					return vlongform(ctx[lval]);
-				else
-					return longform((uint)ctx[lval]);
+				ulong result = ctx[lval];
+				// Apply operators right-to-left
+				for(int i = unary_ops.Count - 1; i >= 0; i--)
+				{
+					result = QuotedExpression.ApplyUnaryOp(unary_ops[i], result);
+				}
+				return result;
 			}
 
 			public override void Emit(CompilationContext ctx)
 			{
-				if(this.longform == null)
+				if(unary_ops.Count == 0)
+				{
 					ctx.EmitRaw("frame.ExecutionContext[\"" + lval + "\"]");
+				}
 				else
 				{
-					string sf = null;
-					string lf = null;
-					string vlf = null;
-					switch(unary_op)
+					// Emit nested calls: outermost op first
+					foreach(string op in unary_ops)
 					{
-						case "v":
-						case "V":
-							sf = "Lib.UnaryOr16";
-							lf =  "Lib.UnaryOr32";
-							vlf = "Lib.UnaryOr64";
-							break;
-						case "?":
-							sf = "Lib.UnaryXor16";
-							lf =  "Lib.UnaryXor32";
-							vlf = "Lib.UnaryXor64";
-							break;
-						case "&":
-							sf = "Lib.UnaryAnd16";
-							lf =  "Lib.UnaryAnd32";
-							vlf = "Lib.UnaryAnd64";
-							break;
-						default:
-							throw new CompilationException("Bad unary operator");
-
+						ctx.EmitRaw(EmitNameForOp(op, this.returnType) + "(");
 					}
 
 					if(this.returnType == typeof(UInt16))
-						ctx.EmitRaw(sf + "(((ushort)frame.ExecutionContext[\"" + lval + "\"]))");
+						ctx.EmitRaw("((ushort)frame.ExecutionContext[\"" + lval + "\"])");
 					else if(this.returnType == typeof(UInt64))
-						ctx.EmitRaw(vlf + "(frame.ExecutionContext[\"" + lval + "\"])");
+						ctx.EmitRaw("frame.ExecutionContext[\"" + lval + "\"]");
 					else
-						ctx.EmitRaw(lf + "(((uint)frame.ExecutionContext[\"" + lval + "\"]))");
+						ctx.EmitRaw("((uint)frame.ExecutionContext[\"" + lval + "\"])");
+
+					for(int i = 0; i < unary_ops.Count; i++)
+					{
+						ctx.EmitRaw(")");
+					}
 				}
 			}
 		}

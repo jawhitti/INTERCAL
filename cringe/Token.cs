@@ -9,7 +9,7 @@ namespace INTERCAL
         Statement,  // READ OUT, WRITE IN, COME FROM, ABSTAIN FROM, GIVE UP, NEXT, <-, etc.
         Separator,  // " ' + BY
         Var,        // . , ; : #
-        UnaryOp,    // & v V ?
+        UnaryOp,    // & v V ? | -
         BinaryOp,   // $ ~
         Sub,        // SUB
         Word,       // any other [a-zA-Z]+ sequence

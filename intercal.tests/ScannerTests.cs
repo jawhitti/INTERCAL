@@ -352,5 +352,37 @@ namespace intercal.tests
             Assert.Equal(TokenType.Digits, scanner.Current.Type);
             Assert.Equal("42", scanner.Current.Value);
         }
+
+        // Mirror (|) and Invert (-) tokenization
+        [Fact]
+        public void Tokenizer_PipeIsUnaryOp()
+        {
+            var scanner = Scanner.CreateScanner("|");
+            Assert.Equal(TokenType.UnaryOp, scanner.Current.Type);
+            Assert.Equal("|", scanner.Current.Value);
+        }
+
+        [Fact]
+        public void Tokenizer_DashIsUnaryOp()
+        {
+            var scanner = Scanner.CreateScanner("-");
+            Assert.Equal(TokenType.UnaryOp, scanner.Current.Type);
+            Assert.Equal("-", scanner.Current.Value);
+        }
+
+        [Fact]
+        public void Tokenizer_StackedUnaryOps()
+        {
+            // -|? should tokenize as three consecutive UnaryOp tokens
+            var scanner = Scanner.CreateScanner("-|?");
+            Assert.Equal(TokenType.UnaryOp, scanner.Current.Type);
+            Assert.Equal("-", scanner.Current.Value);
+            scanner.MoveNext();
+            Assert.Equal(TokenType.UnaryOp, scanner.Current.Type);
+            Assert.Equal("|", scanner.Current.Value);
+            scanner.MoveNext();
+            Assert.Equal(TokenType.UnaryOp, scanner.Current.Type);
+            Assert.Equal("?", scanner.Current.Value);
+        }
     }
 }

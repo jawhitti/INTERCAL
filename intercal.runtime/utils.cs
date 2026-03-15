@@ -1066,6 +1066,59 @@ namespace INTERCAL
             public static ushort UnaryXor16(ushort val) { return (ushort)(val ^ Rotate(val)); }
             public static ulong UnaryXor64(ulong val) { return val ^ Rotate(val); }
 
+            public static ulong Mirror(ulong val)
+            {
+                if (val <= UInt16.MaxValue)
+                    return (ulong)Mirror16((ushort)val);
+                else if (val <= UInt32.MaxValue)
+                    return (ulong)Mirror32((uint)val);
+                else
+                    return Mirror64(val);
+            }
+            public static ushort Mirror16(ushort val)
+            {
+                ushort result = 0;
+                for (int i = 0; i < 16; i++)
+                {
+                    if ((val & (1 << i)) != 0)
+                        result |= (ushort)(1 << (15 - i));
+                }
+                return result;
+            }
+            public static uint Mirror32(uint val)
+            {
+                uint result = 0;
+                for (int i = 0; i < 32; i++)
+                {
+                    if ((val & (1U << i)) != 0)
+                        result |= 1U << (31 - i);
+                }
+                return result;
+            }
+            public static ulong Mirror64(ulong val)
+            {
+                ulong result = 0;
+                for (int i = 0; i < 64; i++)
+                {
+                    if ((val & (1UL << i)) != 0)
+                        result |= 1UL << (63 - i);
+                }
+                return result;
+            }
+
+            public static ulong Invert(ulong val)
+            {
+                if (val <= UInt16.MaxValue)
+                    return (ulong)Invert16((ushort)val);
+                else if (val <= UInt32.MaxValue)
+                    return (ulong)Invert32((uint)val);
+                else
+                    return Invert64(val);
+            }
+            public static ushort Invert16(ushort val) { return (ushort)~val; }
+            public static uint Invert32(uint val) { return ~val; }
+            public static ulong Invert64(ulong val) { return ~val; }
+
 
             public static int Rand(int n)
             {
