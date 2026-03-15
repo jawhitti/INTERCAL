@@ -580,5 +580,93 @@ namespace intercal.tests
             // And verify it's not the same as input (rotation changed it)
             Assert.NotEqual(input, rotated);
         }
+
+        // ================================================================
+        // Array invert (monkey bar) tests
+        // Flipping over the monkey bars inverts each element in place
+        // without changing element order.
+        // ================================================================
+
+        private static ushort[] InvertArray16(ushort[] elements)
+        {
+            ushort[] result = new ushort[elements.Length];
+            for (int i = 0; i < elements.Length; i++)
+            {
+                result[i] = (ushort)~elements[i];
+            }
+            return result;
+        }
+
+        [Fact]
+        public void InvertArray16_BasicCase()
+        {
+            // { 0100, 0001 } = { 4, 1 } → { 1011, 1110 } = { 0xFFFB, 0xFFFE }
+            var result = InvertArray16(new ushort[] { 4, 1 });
+            Assert.Equal(new ushort[] { 0xFFFB, 0xFFFE }, result);
+        }
+
+        [Fact]
+        public void InvertArray16_AllZeros()
+        {
+            var result = InvertArray16(new ushort[] { 0, 0 });
+            Assert.Equal(new ushort[] { 0xFFFF, 0xFFFF }, result);
+        }
+
+        [Fact]
+        public void InvertArray16_AllOnes()
+        {
+            var result = InvertArray16(new ushort[] { 0xFFFF, 0xFFFF });
+            Assert.Equal(new ushort[] { 0, 0 }, result);
+        }
+
+        [Fact]
+        public void InvertArray16_IsOwnInverse()
+        {
+            ushort[] input = { 0x1234, 0x5678, 0x9ABC };
+            var inverted = InvertArray16(input);
+            var back = InvertArray16(inverted);
+            Assert.Equal(input, back);
+        }
+
+        [Fact]
+        public void InvertArray16_PreservesOrder()
+        {
+            // Invert doesn't reorder — first element stays first
+            ushort[] input = { 1, 2, 3 };
+            var result = InvertArray16(input);
+            Assert.Equal(Lib.Invert16(1), result[0]);
+            Assert.Equal(Lib.Invert16(2), result[1]);
+            Assert.Equal(Lib.Invert16(3), result[2]);
+        }
+
+        [Fact]
+        public void InvertArray16_SingleElement_MatchesScalarInvert()
+        {
+            ushort val = 0x1234;
+            var result = InvertArray16(new ushort[] { val });
+            Assert.Equal(Lib.Invert16(val), result[0]);
+        }
+
+        // ================================================================
+        // Rotation and invert on arrays commute
+        // ================================================================
+
+        [Fact]
+        public void ArrayRotateThenInvert_EqualsInvertThenRotate()
+        {
+            ushort[] input = { 0x00FF, 0xFF00, 0x0F0F };
+            var rotateThenInvert = InvertArray16(RotateArray16(input));
+            var invertThenRotate = RotateArray16(InvertArray16(input));
+            Assert.Equal(rotateThenInvert, invertThenRotate);
+        }
+
+        [Fact]
+        public void ArrayRotateInvertRotateInvert_IsIdentity()
+        {
+            // |-|- on arrays is still identity
+            ushort[] input = { 0xDEAD, 0xBEEF, 0xCAFE };
+            var result = RotateArray16(InvertArray16(RotateArray16(InvertArray16(input))));
+            Assert.Equal(input, result);
+        }
     }
 }
