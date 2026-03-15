@@ -1086,8 +1086,8 @@ namespace INTERCAL
                 else
                     return Mirror64(val);
             }
-            // Mirror = reverse bit positions AND invert (rotation around vertical axis)
-            // Pure reversal is |- or -| (mirror then invert, or vice versa)
+            // Rotate (| = stripper pole): reverse bit positions AND invert
+            // Pure reversal is |- or -| (rotate then flip, or vice versa)
             public static ushort Mirror16(ushort val)
             {
                 ushort result = 0;

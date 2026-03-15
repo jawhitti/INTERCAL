@@ -299,7 +299,7 @@ namespace intercal.tests
             Assert.Contains("E999", ex.Message);
         }
 
-        // Mirror (| = rotation around vertical axis: reverse + invert)
+        // Rotate (| = stripper pole: reverse + invert)
         [Fact]
         public void Mirror16_One_ReturnsInvertedHighBit()
         {
@@ -377,11 +377,11 @@ namespace intercal.tests
             Assert.Equal((ulong)0xFFFF7FFFu, Lib.Mirror(0x10000));
         }
 
-        // Pure reversal is now |- or -| (mirror then invert, or vice versa)
+        // Pure reversal is now |- or -| (rotate then flip, or vice versa)
         [Fact]
         public void MirrorInvert_GivesPureReversal()
         {
-            // |- reverses without inverting
+            // |- (rotate then flip) reverses without inverting
             ushort val = 1;
             Assert.Equal((ushort)0x8000, Lib.Invert16(Lib.Mirror16(val)));
         }
@@ -389,12 +389,12 @@ namespace intercal.tests
         [Fact]
         public void InvertMirror_AlsoGivesPureReversal()
         {
-            // -| also reverses without inverting (they commute)
+            // -| (flip then rotate) also reverses without inverting (they commute)
             ushort val = 1;
             Assert.Equal((ushort)0x8000, Lib.Mirror16(Lib.Invert16(val)));
         }
 
-        // Invert (- = rotation around horizontal axis: 0↔1)
+        // Flip (- = monkey bar: 0↔1)
         [Fact]
         public void Invert16_Zero_ReturnsAllOnes()
         {
@@ -434,7 +434,7 @@ namespace intercal.tests
             Assert.Equal(val, Lib.Invert64(Lib.Invert64(val)));
         }
 
-        // Mirror and Invert commute
+        // Rotate and Flip commute
         [Fact]
         public void MirrorInvert_Commute_16bit()
         {
@@ -444,7 +444,7 @@ namespace intercal.tests
                 Lib.Invert16(Lib.Mirror16(val)));
         }
 
-        // |-|- is identity (the # revelation)
+        // |-|- is identity (the # revelation: rotate-flip-rotate-flip)
         [Fact]
         public void MirrorInvertMirrorInvert_IsIdentity()
         {
@@ -454,7 +454,7 @@ namespace intercal.tests
         }
 
         // ================================================================
-        // Array rotation tests
+        // Array rotate (stripper pole) tests
         // Rotating an array treats it as one concatenated bit string,
         // reverses all bit positions, and inverts all bits.
         // This is equivalent to: reverse element order, rotate each element.
@@ -557,7 +557,7 @@ namespace intercal.tests
             ushort[] input = { 0x00FF, 0xFF00, 0x0F0F };
             var concatenated = RotateArray16(input);
 
-            // Alternative: reverse order then Mirror each
+            // Alternative: reverse order then Rotate each
             ushort[] alternative = new ushort[input.Length];
             for (int i = 0; i < input.Length; i++)
             {
@@ -582,8 +582,8 @@ namespace intercal.tests
         }
 
         // ================================================================
-        // Array invert (monkey bar) tests
-        // Flipping over the monkey bars inverts each element in place
+        // Array flip (monkey bar) tests
+        // Flipping over the monkey bar inverts each element in place
         // without changing element order.
         // ================================================================
 
@@ -648,7 +648,7 @@ namespace intercal.tests
         }
 
         // ================================================================
-        // Rotation and invert on arrays commute
+        // Rotate and flip on arrays commute
         // ================================================================
 
         [Fact]
