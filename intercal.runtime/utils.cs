@@ -4,6 +4,7 @@ using System.Text;
 using System.Diagnostics;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -163,34 +164,39 @@ namespace INTERCAL
         // Not an error — just a clean program exit.
         public class GiveUpException : Exception { }
 
-        // Debug helper — dynamically exposes all INTERCAL variables
-        // for the VS Code debugger's Locals/Watch panel.
-        [System.Diagnostics.DebuggerDisplay("INTERCAL Variables ({Count} vars)")]
+        // A single INTERCAL variable for debugger display
+        [System.Diagnostics.DebuggerDisplay("{Value}", Name = "{Name}")]
+        public class DebugVar
+        {
+            [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+            public readonly string Name;
+            public readonly ulong Value;
+            public DebugVar(string name, ulong value) { Name = name; Value = value; }
+        }
+
+        // Debug helper — snapshots all INTERCAL variables when constructed.
+        [System.Diagnostics.DebuggerDisplay("{summary}")]
         public class DebugVars
         {
-            private ExecutionContext ctx;
-            public DebugVars(ExecutionContext ctx) { this.ctx = ctx; }
+            [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.RootHidden)]
+            public readonly DebugVar[] vars;
 
-            public int Count => ctx.VariableNames.Count;
+            [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+            private readonly string summary;
 
-            // Dynamic property: index by INTERCAL name e.g. _vars[".1"]
-            public ulong this[string name]
+            public DebugVars(ExecutionContext ctx)
             {
-                get { try { return ctx[name]; } catch { return 0; } }
-            }
-
-            // For the debugger Locals panel — shows all variables as a dictionary
-            public Dictionary<string, ulong> All
-            {
-                get
+                var result = new List<DebugVar>();
+                foreach (var name in ctx.VariableNames)
                 {
-                    var result = new Dictionary<string, ulong>();
-                    foreach (var name in ctx.VariableNames)
-                    {
-                        try { result[name] = ctx[name]; } catch { }
-                    }
-                    return result;
+                    var val = ctx.GetVarValue(name);
+                    if (val.HasValue)
+                        result.Add(new DebugVar(name, val.Value));
                 }
+                result.Sort((a, b) => string.Compare(a.Name, b.Name));
+                vars = result.ToArray();
+                summary = vars.Length == 0 ? "(no variables)" :
+                    string.Join(", ", vars.Select(v => v.Name + "=" + v.Value));
             }
         }
 
@@ -226,6 +232,7 @@ namespace INTERCAL
         //}
 
         [Serializable]
+        [System.Diagnostics.DebuggerNonUserCode]
         public class ExecutionContext : AsyncDispatcher
         {
             #region Fields and constuctors
@@ -605,8 +612,15 @@ namespace INTERCAL
             //stored here.  Entries in arrays are stored in the Arrays hash table below.
             Dictionary<string, Variable> Variables = new Dictionary<string, Variable>();
 
-            // Expose variable names for the debugger
+            // Expose variable names and access for the debugger
             public ICollection<string> VariableNames => Variables.Keys;
+            // Get a variable's value without auto-creating it (for debugger use)
+            public ulong? GetVarValue(string name)
+            {
+                if (Variables.ContainsKey(name) && Variables[name] is IntVariable iv)
+                    return iv.Value;
+                return null;
+            }
 
             #endregion
 
@@ -927,6 +941,7 @@ namespace INTERCAL
 
         //This class provides basic bit-mangling functionality, e.g.
         //uint u = Bits.Mingle(0, 65535);
+        [System.Diagnostics.DebuggerNonUserCode]
         public class Lib
         {
             static Random random = new Random();

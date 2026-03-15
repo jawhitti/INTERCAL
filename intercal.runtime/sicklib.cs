@@ -71,6 +71,7 @@ using System.Diagnostics;
 
 
 [Serializable]
+[System.Diagnostics.DebuggerNonUserCode]
 public class syslib : System.Object
 {
     public void Run()

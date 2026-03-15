@@ -620,7 +620,7 @@ namespace INTERCAL
             this.EmitDispatchMap(ctx);
 
             // Emit debug variable helper for VS Code debugger
-            ctx.EmitRaw("   var _vars = new INTERCAL.Runtime.DebugVars(frame.ExecutionContext);\r\n");
+            ctx.EmitRaw("   INTERCAL.Runtime.DebugVars _vars = new INTERCAL.Runtime.DebugVars(frame.ExecutionContext);\r\n");
 
         }
 
@@ -725,12 +725,16 @@ namespace INTERCAL
             c.EmitRaw("#line hidden\r\n");
 
             if (s.Label != null)
+            {
                 c.EmitRaw("\r\nlabel_" + s.Label.Substring(1, s.Label.Length - 2) + ": \r\n");
+                c.EmitRaw("_vars = new INTERCAL.Runtime.DebugVars(frame.ExecutionContext);\r\n");
+            }
 
             //We need to emit labels for COME FROM so the trapdoor has something to point to.
             else if (s as Statement.ComeFromStatement != null)
             {
                 c.EmitRaw("\r\nline_" + s.StatementNumber.ToString() + ":\r\n");
+                c.EmitRaw("_vars = new INTERCAL.Runtime.DebugVars(frame.ExecutionContext);\r\n");
             }
             //Uncomment these lines to emit labels for every single statement.  This
             //is not currently necessary..
@@ -764,19 +768,24 @@ namespace INTERCAL
                 c.EmitRaw(string.Format("Trace.WriteLine(\"[{0:0000}] {1}\");\n", s.StatementNumber, s.GetType().Name));
             }
 
-            // Emit #line directive for source-level debugging — placed after all
-            // boilerplate so the debugger steps directly to the INTERCAL statement
+            // Emit #line directive with a no-op for the debugger to stop on,
+            // then hide the actual C# implementation. This ensures the debugger
+            // stops once on each INTERCAL line even when the underlying C# calls
+            // are marked [DebuggerNonUserCode].
             if (c.sourceFile != null && s.LineNumber >= 0)
             {
-                c.EmitRaw("#line " + (s.LineNumber + 1) + " \"" + c.sourceFile.Replace("\\", "\\\\") + "\"\r\n");
+                c.EmitRaw("#line " + s.LineNumber + " \"" + c.sourceFile.Replace("\\", "\\\\") + "\"\r\n");
+                c.EmitRaw("System.GC.KeepAlive(_vars);\r\n");
+                c.EmitRaw("#line hidden\r\n");
             }
 
         }
 
         public void EmitStatementEpilog(Statement s, CompilationContext c)
         {
-            // Hide epilog boilerplate from the debugger
-            c.EmitRaw("\r\n#line hidden\r\n");
+            // Snapshot variables AFTER statement executes, then hide epilog boilerplate
+            c.EmitRaw("\r\n_vars = new INTERCAL.Runtime.DebugVars(frame.ExecutionContext);\r\n");
+            c.EmitRaw("#line hidden\r\n");
 
             //COME FROM statements don't include an abstain guard around
             //the COME FROM itself.  Any checks for abstaining or % prefixes

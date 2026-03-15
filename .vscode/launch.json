@@ -9,9 +9,10 @@
             "args": [],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
-            "justMyCode": true,
-            "requireExactSource": false,
-            "preLaunchTask": "compile-intercal"
+            "justMyCode": "false",
+            "requireExactSource": "false",
+            "preLaunchTask": "compile-intercal",
+            "suppressJITOptimizations": true
         }
     ]
 }

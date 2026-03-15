@@ -29,6 +29,7 @@ namespace INTERCAL.Runtime
     //80 threads can be made available quickly.
 
     public delegate void IntercalThreadProc(ExecutionFrame context);
+    [System.Diagnostics.DebuggerNonUserCode]
     public class ExecutionFrame
     {
         public object SyncLock = new object();
@@ -102,6 +103,7 @@ namespace INTERCAL.Runtime
         }
     }
 
+    [System.Diagnostics.DebuggerNonUserCode]
     public class AsyncDispatcher
     {
         protected bool Done = false;

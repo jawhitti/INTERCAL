@@ -38,6 +38,7 @@ using INTERCAL.Runtime;
 [assembly: EntryPoint("(5927104639891486260)", "syslib64", "DO_RANDOM64")]
 
 [Serializable]
+[System.Diagnostics.DebuggerNonUserCode]
 public class syslib64 : System.Object
 {
     private static Random random = new Random();

@@ -583,9 +583,9 @@ namespace INTERCAL
 				{
 					Statement target = ctx.program[this.Target].First() as Statement;
 
-                    // Emit a no-op on the source line so the debugger stops here once,
-                    // then hide the NEXT boilerplate
-                    ctx.EmitRaw(";\r\n#line hidden\r\n");
+                    // Hide the NEXT boilerplate — step-into across threads isn't
+                    // possible with the current Task.Run threading model.
+                    ctx.EmitRaw("#line hidden\r\n");
 
                     if (!string.IsNullOrEmpty(target.Label))
                     {
