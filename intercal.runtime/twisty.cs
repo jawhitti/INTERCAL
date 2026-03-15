@@ -183,8 +183,7 @@ namespace INTERCAL.Runtime
                 Monitor.Pulse(SyncLock);
             }
 
-            Console.Out.Flush();
-            Environment.Exit(0);
+            throw new GiveUpException();
         }
 
         [Conditional("DEBUG")]

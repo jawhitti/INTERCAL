@@ -27,8 +27,9 @@ namespace INTERCAL
         //What program are we compiling?
         public Program program;
 
-        //What is the build target? 
+        //What is the build target?
         public string assemblyName;
+        public string sourceFile;
         public AssemblyType assemblyType;
         public bool debugBuild = false;
         public bool Verbose = false;
@@ -176,10 +177,12 @@ namespace INTERCAL
             csproj.AppendLine("    <TargetFramework>net9.0</TargetFramework>");
             csproj.AppendLine("    <AssemblyName>" + c.assemblyName + "</AssemblyName>");
             csproj.AppendLine("    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>");
+            // Always emit debug symbols for source-level debugging
+            csproj.AppendLine("    <DebugType>portable</DebugType>");
+            csproj.AppendLine("    <DebugSymbols>true</DebugSymbols>");
             if (c.debugBuild)
             {
                 csproj.AppendLine("    <DefineConstants>TRACE</DefineConstants>");
-                csproj.AppendLine("    <DebugType>full</DebugType>");
             }
             csproj.AppendLine("  </PropertyGroup>");
             csproj.AppendLine("  <ItemGroup>");
@@ -444,6 +447,7 @@ namespace INTERCAL
 
                 c.program = p;
                 c.assemblyName = Path.GetFileNameWithoutExtension(sources[0]);
+                c.sourceFile = Path.GetFullPath(sources[0]);
 
                 Trace.WriteLine("Emitting C#...");
                 p.EmitCSharp(c);

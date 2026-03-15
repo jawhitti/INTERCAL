@@ -619,6 +619,9 @@ namespace INTERCAL
 
             this.EmitDispatchMap(ctx);
 
+            // Emit debug variable helper for VS Code debugger
+            ctx.EmitRaw("   var _vars = new INTERCAL.Runtime.DebugVars(frame.ExecutionContext);\r\n");
+
         }
 
         public void EmitProgramEpilog(CompilationContext ctx)
@@ -716,8 +719,10 @@ namespace INTERCAL
             //will 
             c.EmitRaw("\r\n/* ");
             c.EmitRaw(s.StatementText);
-
             c.EmitRaw("*/\r\n");
+
+            // Emit #line hidden for label/boilerplate, then #line N for the statement
+            c.EmitRaw("#line hidden\r\n");
 
             if (s.Label != null)
                 c.EmitRaw("\r\nlabel_" + s.Label.Substring(1, s.Label.Length - 2) + ": \r\n");
@@ -759,11 +764,21 @@ namespace INTERCAL
                 c.EmitRaw(string.Format("Trace.WriteLine(\"[{0:0000}] {1}\");\n", s.StatementNumber, s.GetType().Name));
             }
 
+            // Emit #line directive for source-level debugging — placed after all
+            // boilerplate so the debugger steps directly to the INTERCAL statement
+            if (c.sourceFile != null && s.LineNumber >= 0)
+            {
+                c.EmitRaw("#line " + (s.LineNumber + 1) + " \"" + c.sourceFile.Replace("\\", "\\\\") + "\"\r\n");
+            }
+
         }
 
         public void EmitStatementEpilog(Statement s, CompilationContext c)
         {
-            //COME FROM statements don't include an abstain guard around 
+            // Hide epilog boilerplate from the debugger
+            c.EmitRaw("\r\n#line hidden\r\n");
+
+            //COME FROM statements don't include an abstain guard around
             //the COME FROM itself.  Any checks for abstaining or % prefixes
             //happen as part of processing the trap door below.
             if (s as Statement.ComeFromStatement == null)

@@ -583,6 +583,10 @@ namespace INTERCAL
 				{
 					Statement target = ctx.program[this.Target].First() as Statement;
 
+                    // Emit a no-op on the source line so the debugger stops here once,
+                    // then hide the NEXT boilerplate
+                    ctx.EmitRaw(";\r\n#line hidden\r\n");
+
                     if (!string.IsNullOrEmpty(target.Label))
                     {
                         ctx.Emit(string.Format("Trace.WriteLine(\"       Doing {0} Next\");", target.Label));
@@ -671,6 +675,8 @@ namespace INTERCAL
 
 			public override void Emit(CompilationContext ctx)
 			{
+                // Stop on the source line, then hide the boilerplate
+                ctx.EmitRaw(";\r\n#line hidden\r\n");
                 //RESUME 0 needs to be treated as a no-op.
                 ctx.EmitRaw("   {\r\n");
                 ctx.EmitRaw("      uint depth = (uint)(");

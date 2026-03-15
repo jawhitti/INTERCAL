@@ -163,6 +163,40 @@ namespace INTERCAL
         // Not an error — just a clean program exit.
         public class GiveUpException : Exception { }
 
+        // Debug helper — exposes INTERCAL variables as named properties
+        // for the VS Code debugger's Locals/Watch panel.
+        [System.Diagnostics.DebuggerDisplay("INTERCAL Variables")]
+        public class DebugVars
+        {
+            private ExecutionContext ctx;
+            public DebugVars(ExecutionContext ctx) { this.ctx = ctx; }
+
+            private ulong Safe(string name)
+            {
+                try { return ctx[name]; } catch { return 0; }
+            }
+
+            // Spot (16-bit)
+            public ulong dot1 => Safe(".1");
+            public ulong dot2 => Safe(".2");
+            public ulong dot3 => Safe(".3");
+            public ulong dot4 => Safe(".4");
+            public ulong dot5 => Safe(".5");
+            public ulong dot6 => Safe(".6");
+
+            // Two-spot (32-bit)
+            public ulong colon1 => Safe(":1");
+            public ulong colon2 => Safe(":2");
+            public ulong colon3 => Safe(":3");
+            public ulong colon4 => Safe(":4");
+
+            // Four-spot (64-bit)
+            public ulong dcolon1 => Safe("::1");
+            public ulong dcolon2 => Safe("::2");
+            public ulong dcolon3 => Safe("::3");
+            public ulong dcolon4 => Safe("::4");
+        }
+
         ////IExecutionContext holds shared variables used to call across components.
         ////INTERCAL uses an interface so that other languages can define their own
         ////implementation of this interface and pass it in to the DO functions.  This

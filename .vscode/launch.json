@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug INTERCAL Program",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/Debug/net9.0/${fileBasenameNoExtension}.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "requireExactSource": false,
+            "preLaunchTask": "compile-intercal"
+        }
+    ]
+}

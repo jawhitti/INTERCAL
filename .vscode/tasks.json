@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "compile-intercal",
+            "type": "shell",
+            "command": "dotnet run --project cringe -- -b ${file} ; if ($LASTEXITCODE -eq 0) { dotnet build ~tmp.csproj }",
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared"
+            }
+        }
+    ]
+}
