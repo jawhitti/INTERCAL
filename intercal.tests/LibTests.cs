@@ -298,5 +298,137 @@ namespace intercal.tests
             var ex = Assert.Throws<IntercalException>(() => Lib.Fail("E999"));
             Assert.Contains("E999", ex.Message);
         }
+
+        // Mirror (horizontal mirror / staple) tests
+        [Fact]
+        public void Mirror16_One_ReturnsHighBit()
+        {
+            Assert.Equal((ushort)0x8000, Lib.Mirror16(1));
+        }
+
+        [Fact]
+        public void Mirror16_HighBit_ReturnsOne()
+        {
+            Assert.Equal((ushort)1, Lib.Mirror16(0x8000));
+        }
+
+        [Fact]
+        public void Mirror16_Zero_ReturnsZero()
+        {
+            Assert.Equal((ushort)0, Lib.Mirror16(0));
+        }
+
+        [Fact]
+        public void Mirror16_AllOnes_ReturnsAllOnes()
+        {
+            Assert.Equal((ushort)0xFFFF, Lib.Mirror16(0xFFFF));
+        }
+
+        [Fact]
+        public void Mirror16_IsOwnInverse()
+        {
+            // ||x == x for all values
+            ushort val = 0x1234;
+            Assert.Equal(val, Lib.Mirror16(Lib.Mirror16(val)));
+        }
+
+        [Fact]
+        public void Mirror32_One_ReturnsHighBit()
+        {
+            Assert.Equal(0x80000000u, Lib.Mirror32(1));
+        }
+
+        [Fact]
+        public void Mirror32_IsOwnInverse()
+        {
+            uint val = 0xDEADBEEF;
+            Assert.Equal(val, Lib.Mirror32(Lib.Mirror32(val)));
+        }
+
+        [Fact]
+        public void Mirror64_One_ReturnsHighBit()
+        {
+            Assert.Equal(0x8000000000000000UL, Lib.Mirror64(1));
+        }
+
+        [Fact]
+        public void Mirror64_IsOwnInverse()
+        {
+            ulong val = 0xCAFEBABEDEADBEEFUL;
+            Assert.Equal(val, Lib.Mirror64(Lib.Mirror64(val)));
+        }
+
+        [Fact]
+        public void Mirror_Dispatcher_16bit()
+        {
+            // Values <= 16-bit use Mirror16
+            Assert.Equal((ulong)0x8000, Lib.Mirror(1));
+        }
+
+        [Fact]
+        public void Mirror_Dispatcher_32bit()
+        {
+            // Values > 16-bit use Mirror32. Bit 16 reversed in 32 bits → bit 15
+            Assert.Equal((ulong)0x8000, Lib.Mirror(0x10000));
+        }
+
+        // Invert (vertical mirror / worm) tests
+        [Fact]
+        public void Invert16_Zero_ReturnsAllOnes()
+        {
+            Assert.Equal((ushort)0xFFFF, Lib.Invert16(0));
+        }
+
+        [Fact]
+        public void Invert16_AllOnes_ReturnsZero()
+        {
+            Assert.Equal((ushort)0, Lib.Invert16(0xFFFF));
+        }
+
+        [Fact]
+        public void Invert16_One_ReturnsComplement()
+        {
+            Assert.Equal((ushort)0xFFFE, Lib.Invert16(1));
+        }
+
+        [Fact]
+        public void Invert16_IsOwnInverse()
+        {
+            ushort val = 0x1234;
+            Assert.Equal(val, Lib.Invert16(Lib.Invert16(val)));
+        }
+
+        [Fact]
+        public void Invert32_IsOwnInverse()
+        {
+            uint val = 0xDEADBEEF;
+            Assert.Equal(val, Lib.Invert32(Lib.Invert32(val)));
+        }
+
+        [Fact]
+        public void Invert64_IsOwnInverse()
+        {
+            ulong val = 0xCAFEBABEDEADBEEFUL;
+            Assert.Equal(val, Lib.Invert64(Lib.Invert64(val)));
+        }
+
+        // Mirror and Invert commute
+        [Fact]
+        public void MirrorInvert_Commute_16bit()
+        {
+            ushort val = 0x1234;
+            Assert.Equal(
+                Lib.Mirror16(Lib.Invert16(val)),
+                Lib.Invert16(Lib.Mirror16(val)));
+        }
+
+        // |-|- is identity (the # revelation)
+        [Fact]
+        public void MirrorInvertMirrorInvert_IsIdentity()
+        {
+            ushort val = 0xABCD;
+            ushort result = Lib.Mirror16(Lib.Invert16(Lib.Mirror16(Lib.Invert16(val))));
+            Assert.Equal(val, result);
+        }
     }
 }

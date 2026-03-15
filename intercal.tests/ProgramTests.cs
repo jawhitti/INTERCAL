@@ -242,5 +242,87 @@ namespace intercal.tests
                 "DO GIVE UP\n");
             Assert.Equal(3, p.StatementCount);
         }
+
+        // Mirror operator (|) — horizontal mirror / staple
+        [Fact]
+        public void Parse_MirrorConstant()
+        {
+            var p = ParseSource(
+                "DO .1 <- #|1\n" +
+                "DO GIVE UP\n");
+            Assert.Equal(2, p.StatementCount);
+        }
+
+        [Fact]
+        public void Parse_MirrorVariable()
+        {
+            var p = ParseSource(
+                "DO .1 <- #5\n" +
+                "DO .2 <- .|1\n" +
+                "DO GIVE UP\n");
+            Assert.Equal(3, p.StatementCount);
+        }
+
+        [Fact]
+        public void Parse_MirrorQuotedExpression()
+        {
+            var p = ParseSource(
+                "DO .1 <- #5\n" +
+                "DO .2 <- '|.1'\n" +
+                "DO GIVE UP\n");
+            Assert.Equal(3, p.StatementCount);
+        }
+
+        // Invert operator (-) — vertical mirror / worm
+        [Fact]
+        public void Parse_InvertConstant()
+        {
+            var p = ParseSource(
+                "DO .1 <- #-1\n" +
+                "DO GIVE UP\n");
+            Assert.Equal(2, p.StatementCount);
+        }
+
+        [Fact]
+        public void Parse_InvertVariable()
+        {
+            var p = ParseSource(
+                "DO .1 <- #5\n" +
+                "DO .2 <- .-1\n" +
+                "DO GIVE UP\n");
+            Assert.Equal(3, p.StatementCount);
+        }
+
+        // Stacked unary operators
+        [Fact]
+        public void Parse_StackedMirrorInvert_Constant()
+        {
+            // #-|5 means: mirror 5, then invert
+            var p = ParseSource(
+                "DO .1 <- #-|5\n" +
+                "DO GIVE UP\n");
+            Assert.Equal(2, p.StatementCount);
+        }
+
+        [Fact]
+        public void Parse_StackedMirrorInvert_QuotedExpression()
+        {
+            // '-|.1' means: mirror .1, then invert
+            var p = ParseSource(
+                "DO .1 <- #5\n" +
+                "DO .2 <- '-|.1'\n" +
+                "DO GIVE UP\n");
+            Assert.Equal(3, p.StatementCount);
+        }
+
+        [Fact]
+        public void Parse_IdentityStack_MirrorInvertMirrorInvert()
+        {
+            // |-|- is identity (the # revelation)
+            var p = ParseSource(
+                "DO .1 <- #|-|-5\n" +
+                "DO GIVE UP\n");
+            Assert.Equal(2, p.StatementCount);
+        }
     }
 }
