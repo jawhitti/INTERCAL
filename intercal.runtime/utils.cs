@@ -41,7 +41,7 @@ namespace INTERCAL
             /* DONE A line label has been multiply defined. */
             public const string E182 = "E182 YOU MUST LIKE THIS LABEL A LOT!";
             /* DONE An invalid line label has been encountered. */
-            public const string E197 = "E197 SO!  65535 LABELS AREN'T ENOUGH FOR YOU?";
+            public const string E197 = "E197 SO!  9223372036854775807 LABELS AREN'T ENOUGH FOR YOU?";
             /* An expression involves an unidentified variable. */
             public const string E200 = "E200 NOTHING VENTURED, NOTHING GAINED";
             /* An attempt has been made to give an array a dimension of zero. */
@@ -587,7 +587,7 @@ namespace INTERCAL
                     throw CurrentException;
                 }
             }
-            public bool Evaluate(IntercalThreadProc proc, int label)
+            public bool Evaluate(IntercalThreadProc proc, long label)
             {
                 var frame = new ExecutionFrame(this, proc, label);
 

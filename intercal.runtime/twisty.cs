@@ -42,9 +42,9 @@ namespace INTERCAL.Runtime
         //now true means "terminate" ("you've been forgotten") and 
         //false means "continue" ("you've been resumed");
         public bool Result;
-        public int Label;
+        public long Label;
 
-        public ExecutionFrame(ExecutionContext context, IntercalThreadProc proc, int label)
+        public ExecutionFrame(ExecutionContext context, IntercalThreadProc proc, long label)
         {
             ExecutionContext = context;
             Proc = proc;
@@ -105,7 +105,7 @@ namespace INTERCAL.Runtime
         protected Exception CurrentException { get; set; }
         protected Stack<ExecutionFrame> NextingStack = new Stack<ExecutionFrame>();
 
-        protected delegate bool StartProc(IntercalThreadProc proc, int label);
+        protected delegate bool StartProc(IntercalThreadProc proc, long label);
         public void Resume(uint depth)
         {
             //depth must be zero.  We depend on the compiler to ensure that 

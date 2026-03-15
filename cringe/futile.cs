@@ -402,12 +402,6 @@ namespace INTERCAL
 
                 if (s.Label != null)
                 {
-                    uint lblVal = UInt32.Parse(s.Label.Substring(1, s.Label.Length - 2));
-                    if (lblVal > UInt16.MaxValue)
-                    {
-                        throw new CompilationException(Messages.E197 + " " + s.Label);
-                    }
-
                     //Check for duplicate label
                     if (this[s.Label].Count() > 1)
                         throw new CompilationException(Messages.E182 + " " + s.Label);
@@ -485,7 +479,7 @@ namespace INTERCAL
 
 
                     ctx.EmitRaw("public bool DO_" + s.Label.Substring(1, s.Label.Length - 2) + "(ExecutionContext context)\r\n{\r\n");
-                    ctx.EmitRaw("   return context.Evaluate(Eval," + s.Label + ");\r\n");
+                    ctx.EmitRaw("   return context.Evaluate(Eval," + s.Label.Substring(1, s.Label.Length - 2) + "L);\r\n");
                     ctx.EmitRaw("}\r\n\r\n");
                 }
             }
@@ -508,10 +502,10 @@ namespace INTERCAL
                             continue;
                         }
 
-                        uint labelValue = uint.Parse(s.Label.Substring(1, s.Label.Length - 2));
+                        long labelValue = long.Parse(s.Label.Substring(1, s.Label.Length - 2));
 
                         ctx.EmitRaw("         case \"" + s.Label + "\": ");
-                        ctx.EmitRaw("context.Evaluate(Eval," + labelValue + ");  ");
+                        ctx.EmitRaw("context.Evaluate(Eval," + labelValue + "L);  ");
                         ctx.EmitRaw("break;\r\n");
                     }
 
@@ -583,8 +577,8 @@ namespace INTERCAL
                 {
                     if (s.Label != null)
                     {
-                        int labelNum = int.Parse(s.Label.Substring(1, s.Label.Length - 2));
-                        ctx.EmitRaw("      case " + labelNum + ": ");
+                        long labelNum = long.Parse(s.Label.Substring(1, s.Label.Length - 2));
+                        ctx.EmitRaw("      case " + labelNum + "L: ");
                         ctx.EmitRaw("goto label_" + labelNum + ";\r\n");
                     }
                 }

@@ -57,11 +57,12 @@ namespace INTERCAL
 		//then it contains the index of the destination COME FROM.
 		public int Trapdoor = -1;
 
-		//A statement may begin with a logical line label enclosed in wax-wane pairs (()). 
-		//A statement may not have more than one label, although it is possible to omit the label 
-		//entirely. A line label is any integer from 1 to 65535, which must be unique within each
-		//program. The user is cautioned, however, that many line labels between 1000 and 
-		//1999 are used in the INTERCAL System Library functions. 
+		//A statement may begin with a logical line label enclosed in wax-wane pairs (()).
+		//A statement may not have more than one label, although it is possible to omit the label
+		//entirely. A line label is any 64-bit integer, which must be unique within each
+		//program. The user is cautioned, however, that many line labels between 1000 and
+		//1999 are used in the INTERCAL System Library functions. The i# syslib uses
+		//labels encoded as ASCII strings (e.g., "ADD16" = 0x4144443136000000).
 		public string  Label = null;
 		
 		//Unrecognizable statements, as noted in section 9, are flagged with a splat (*)
@@ -593,7 +594,7 @@ namespace INTERCAL
                     }
 
                     ctx.EmitRaw("{\r\n");
-                    ctx.EmitRaw("   bool shouldTerminate = frame.ExecutionContext.Evaluate(Eval," + target.Label.Substring(1, target.Label.Length -2) + ");\r\n");
+                    ctx.EmitRaw("   bool shouldTerminate = frame.ExecutionContext.Evaluate(Eval," + target.Label.Substring(1, target.Label.Length -2) + "L);\r\n");
                     ctx.EmitRaw("   if (shouldTerminate)\r\n");
                     ctx.EmitRaw("   {\r\n");
                     ctx.EmitRaw("       goto exit;\r\n");
