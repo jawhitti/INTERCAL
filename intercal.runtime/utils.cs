@@ -163,38 +163,35 @@ namespace INTERCAL
         // Not an error — just a clean program exit.
         public class GiveUpException : Exception { }
 
-        // Debug helper — exposes INTERCAL variables as named properties
+        // Debug helper — dynamically exposes all INTERCAL variables
         // for the VS Code debugger's Locals/Watch panel.
-        [System.Diagnostics.DebuggerDisplay("INTERCAL Variables")]
+        [System.Diagnostics.DebuggerDisplay("INTERCAL Variables ({Count} vars)")]
         public class DebugVars
         {
             private ExecutionContext ctx;
             public DebugVars(ExecutionContext ctx) { this.ctx = ctx; }
 
-            private ulong Safe(string name)
+            public int Count => ctx.VariableNames.Count;
+
+            // Dynamic property: index by INTERCAL name e.g. _vars[".1"]
+            public ulong this[string name]
             {
-                try { return ctx[name]; } catch { return 0; }
+                get { try { return ctx[name]; } catch { return 0; } }
             }
 
-            // Spot (16-bit)
-            public ulong dot1 => Safe(".1");
-            public ulong dot2 => Safe(".2");
-            public ulong dot3 => Safe(".3");
-            public ulong dot4 => Safe(".4");
-            public ulong dot5 => Safe(".5");
-            public ulong dot6 => Safe(".6");
-
-            // Two-spot (32-bit)
-            public ulong colon1 => Safe(":1");
-            public ulong colon2 => Safe(":2");
-            public ulong colon3 => Safe(":3");
-            public ulong colon4 => Safe(":4");
-
-            // Four-spot (64-bit)
-            public ulong dcolon1 => Safe("::1");
-            public ulong dcolon2 => Safe("::2");
-            public ulong dcolon3 => Safe("::3");
-            public ulong dcolon4 => Safe("::4");
+            // For the debugger Locals panel — shows all variables as a dictionary
+            public Dictionary<string, ulong> All
+            {
+                get
+                {
+                    var result = new Dictionary<string, ulong>();
+                    foreach (var name in ctx.VariableNames)
+                    {
+                        try { result[name] = ctx[name]; } catch { }
+                    }
+                    return result;
+                }
+            }
         }
 
         ////IExecutionContext holds shared variables used to call across components.
@@ -607,6 +604,9 @@ namespace INTERCAL
             //This dictionary maps simple identifiers to their values.  All non-array values are
             //stored here.  Entries in arrays are stored in the Arrays hash table below.
             Dictionary<string, Variable> Variables = new Dictionary<string, Variable>();
+
+            // Expose variable names for the debugger
+            public ICollection<string> VariableNames => Variables.Keys;
 
             #endregion
 
