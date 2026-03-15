@@ -1,0 +1,136 @@
+{
+  "scopeName": "source.intercal",
+  "name": "INTERCAL",
+  "patterns": [
+    { "include": "#splatted-statement" },
+    { "include": "#labels" },
+    { "include": "#prefixes" },
+    { "include": "#two-word-statements" },
+    { "include": "#single-statements" },
+    { "include": "#two-word-gerunds" },
+    { "include": "#single-gerunds" },
+    { "include": "#assignment" },
+    { "include": "#quantum-operator" },
+    { "include": "#binary-operators" },
+    { "include": "#unary-operators" },
+    { "include": "#box-variables" },
+    { "include": "#four-spot-variables" },
+    { "include": "#two-spot-variables" },
+    { "include": "#spot-variables" },
+    { "include": "#double-hybrid-arrays" },
+    { "include": "#hybrid-arrays" },
+    { "include": "#tail-arrays" },
+    { "include": "#quad-hash-constants" },
+    { "include": "#double-hash-constants" },
+    { "include": "#hash-constants" },
+    { "include": "#digits" },
+    { "include": "#sparks-and-ears" },
+    { "include": "#sub-keyword" },
+    { "include": "#by-keyword" }
+  ],
+  "repository": {
+    "splatted-statement": {
+      "match": "^\\s*\\*.*$",
+      "name": "invalid.illegal.splatted.intercal"
+    },
+    "labels": {
+      "match": "\\(\\d+\\)",
+      "name": "entity.name.tag.label.intercal"
+    },
+    "prefixes": {
+      "match": "\\b(PLEASE|DO|NOT|N'T)\\b",
+      "name": "keyword.control.prefix.intercal"
+    },
+    "two-word-statements": {
+      "match": "\\b(GIVE\\s+UP|READ\\s+OUT|WRITE\\s+IN|COME\\s+FROM|ABSTAIN\\s+FROM)\\b",
+      "name": "keyword.control.statement.intercal"
+    },
+    "single-statements": {
+      "match": "\\b(REINSTATE|NEXT|STASH|RESUME|FORGET|IGNORE|REMEMBER|RETRIEVE|FEED|PET)\\b",
+      "name": "keyword.control.statement.intercal"
+    },
+    "two-word-gerunds": {
+      "match": "\\b(READING\\s+OUT|WRITING\\s+IN|COMING\\s+FROM)\\b",
+      "name": "support.type.gerund.intercal"
+    },
+    "single-gerunds": {
+      "match": "\\b(ABSTAINING|REINSTATING|NEXTING|STASHING|RESUMING|FORGETTING|IGNORING|REMEMBERING|RETRIEVING|CALCULATING|BOXING|FEEDING|PETTING)\\b",
+      "name": "support.type.gerund.intercal"
+    },
+    "assignment": {
+      "match": "<-",
+      "name": "keyword.operator.assignment.intercal"
+    },
+    "quantum-operator": {
+      "match": "=",
+      "name": "keyword.operator.quantum.double-worm.intercal"
+    },
+    "binary-operators": {
+      "match": "[$~]",
+      "name": "keyword.operator.binary.intercal"
+    },
+    "unary-operators": {
+      "match": "[&?]|\\bV\\b|\\bv\\b",
+      "name": "keyword.operator.unary.intercal"
+    },
+    "box-variables": {
+      "match": "\\[\\](\\d+)",
+      "captures": {
+        "0": { "name": "variable.other.box.intercal" }
+      },
+      "name": "variable.other.box.intercal"
+    },
+    "four-spot-variables": {
+      "match": "::(\\d+)",
+      "name": "variable.other.four-spot.intercal"
+    },
+    "two-spot-variables": {
+      "match": "(?<!:):(\\d+)",
+      "name": "variable.other.two-spot.intercal"
+    },
+    "spot-variables": {
+      "match": "\\.(\\d+)",
+      "name": "variable.other.spot.intercal"
+    },
+    "double-hybrid-arrays": {
+      "match": ";;(\\d+)",
+      "name": "variable.other.double-hybrid.intercal"
+    },
+    "hybrid-arrays": {
+      "match": "(?<!;);(\\d+)",
+      "name": "variable.other.hybrid.intercal"
+    },
+    "tail-arrays": {
+      "match": ",(\\d+)",
+      "name": "variable.other.tail.intercal"
+    },
+    "quad-hash-constants": {
+      "match": "####(\\d+)",
+      "name": "constant.numeric.quad-mesh.intercal"
+    },
+    "double-hash-constants": {
+      "match": "(?<!#)##(?!#)(\\d+)",
+      "name": "constant.numeric.double-mesh.intercal"
+    },
+    "hash-constants": {
+      "match": "(?<!#)#(?!#)(\\d+)",
+      "name": "constant.numeric.mesh.intercal"
+    },
+    "digits": {
+      "match": "\\b\\d+\\b",
+      "name": "constant.numeric.intercal"
+    },
+    "sparks-and-ears": {
+      "match": "['\"]",
+      "name": "punctuation.definition.spark-ears.intercal"
+    },
+    "sub-keyword": {
+      "match": "\\bSUB\\b",
+      "name": "keyword.other.sub.intercal"
+    },
+    "by-keyword": {
+      "match": "\\bBY\\b",
+      "name": "keyword.other.by.intercal"
+    }
+  }
+}

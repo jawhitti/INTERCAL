@@ -44,6 +44,6 @@ For reference, the official INTERCAL character naming conventions used in this e
 | `)` | wane |
 | `-` | worm |
 | `<-` | angle-worm |
-| `[` | correct horse battery staple |
-| `]` | incorrect horse battery staple |
+| `[` | staple |
+| `]` | reverse staple |
 | `[]` | cat box |

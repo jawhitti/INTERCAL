@@ -1,0 +1,35 @@
+{
+  "name": "intercal",
+  "displayName": "INTERCAL",
+  "description": "Syntax highlighting for INTERCAL, the Computer Language with No Pronounceable Acronym. Includes quantum cat box support.",
+  "version": "0.1.0",
+  "publisher": "jawhitti",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "intercal",
+        "aliases": [
+          "INTERCAL",
+          "intercal"
+        ],
+        "extensions": [
+          ".i"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "intercal",
+        "scopeName": "source.intercal",
+        "path": "./syntaxes/intercal.tmLanguage.json"
+      }
+    ]
+  }
+}
