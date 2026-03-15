@@ -452,5 +452,133 @@ namespace intercal.tests
             ushort result = Lib.Mirror16(Lib.Invert16(Lib.Mirror16(Lib.Invert16(val))));
             Assert.Equal(val, result);
         }
+
+        // ================================================================
+        // Array rotation tests
+        // Rotating an array treats it as one concatenated bit string,
+        // reverses all bit positions, and inverts all bits.
+        // This is equivalent to: reverse element order, rotate each element.
+        //
+        // Helper: simulates array rotation by concatenating 16-bit values
+        // into a wider value, applying rotation, and splitting back.
+        // ================================================================
+
+        private static ushort[] RotateArray16(ushort[] elements)
+        {
+            int n = elements.Length;
+            // Concatenate: first element = high bits
+            // For 2 elements: combined = (e[0] << 16) | e[1] as a 32-bit value
+            // For N elements: use a byte array and manual bit ops
+            int totalBits = n * 16;
+
+            // Build a big-endian bit array
+            bool[] bits = new bool[totalBits];
+            for (int e = 0; e < n; e++)
+            {
+                for (int b = 0; b < 16; b++)
+                {
+                    bits[e * 16 + (15 - b)] = (elements[e] & (1 << b)) != 0;
+                }
+            }
+
+            // Reverse all bit positions AND invert (rotation)
+            bool[] rotated = new bool[totalBits];
+            for (int i = 0; i < totalBits; i++)
+            {
+                rotated[i] = !bits[totalBits - 1 - i];
+            }
+
+            // Split back into 16-bit elements
+            ushort[] result = new ushort[n];
+            for (int e = 0; e < n; e++)
+            {
+                ushort val = 0;
+                for (int b = 0; b < 16; b++)
+                {
+                    if (rotated[e * 16 + (15 - b)])
+                        val |= (ushort)(1 << b);
+                }
+                result[e] = val;
+            }
+            return result;
+        }
+
+        [Fact]
+        public void RotateArray16_TwoElements_BasicCase()
+        {
+            // { 0x0004, 0x0001 } as concatenated 32-bit: 0x00040001
+            // Reverse 32 bits: 0x80002000
+            // Invert: 0x7FFFDFFF
+            // Split: { 0x7FFF, 0xDFFF }
+            var result = RotateArray16(new ushort[] { 0x0004, 0x0001 });
+            Assert.Equal(new ushort[] { 0x7FFF, 0xDFFF }, result);
+        }
+
+        [Fact]
+        public void RotateArray16_TwoElements_AllZeros()
+        {
+            // { 0, 0 } → reverse = { 0, 0 } → invert = { 0xFFFF, 0xFFFF }
+            var result = RotateArray16(new ushort[] { 0, 0 });
+            Assert.Equal(new ushort[] { 0xFFFF, 0xFFFF }, result);
+        }
+
+        [Fact]
+        public void RotateArray16_TwoElements_AllOnes()
+        {
+            // { 0xFFFF, 0xFFFF } → reverse = same → invert = { 0, 0 }
+            var result = RotateArray16(new ushort[] { 0xFFFF, 0xFFFF });
+            Assert.Equal(new ushort[] { 0, 0 }, result);
+        }
+
+        [Fact]
+        public void RotateArray16_IsOwnInverse()
+        {
+            // Rotating twice = identity
+            ushort[] original = { 0x1234, 0x5678, 0x9ABC };
+            var rotated = RotateArray16(original);
+            var back = RotateArray16(rotated);
+            Assert.Equal(original, back);
+        }
+
+        [Fact]
+        public void RotateArray16_SingleElement_MatchesScalarMirror()
+        {
+            // A one-element array rotation should equal scalar Mirror16
+            ushort val = 0x1234;
+            var result = RotateArray16(new ushort[] { val });
+            Assert.Equal(Lib.Mirror16(val), result[0]);
+        }
+
+        [Fact]
+        public void RotateArray16_EqualsReverseOrderThenRotateEach()
+        {
+            // Rotating a concatenated bit string is equivalent to:
+            // reverse element order, then rotate (|) each element
+            ushort[] input = { 0x00FF, 0xFF00, 0x0F0F };
+            var concatenated = RotateArray16(input);
+
+            // Alternative: reverse order then Mirror each
+            ushort[] alternative = new ushort[input.Length];
+            for (int i = 0; i < input.Length; i++)
+            {
+                alternative[i] = Lib.Mirror16(input[input.Length - 1 - i]);
+            }
+
+            Assert.Equal(alternative, concatenated);
+        }
+
+        [Fact]
+        public void RotateArray16_ThreeElements()
+        {
+            // { 1, 0, 0 }: bit 0 of element 0, all others zero
+            // Concatenated 48 bits, reversed, inverted
+            // Verify via round-trip: rotate twice = identity
+            ushort[] input = { 1, 0, 0 };
+            var rotated = RotateArray16(input);
+            var back = RotateArray16(rotated);
+            Assert.Equal(input, back);
+            // And verify it's not the same as input (rotation changed it)
+            Assert.NotEqual(input, rotated);
+        }
     }
 }
