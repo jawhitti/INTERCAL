@@ -308,6 +308,7 @@ namespace INTERCAL
 			public override void Emit(CompilationContext ctx)
 			{
 				string lval = destination.Name;
+				ctx.DebugVariables.Add(lval);
 
 				// Quantum box assignment: DO []1 <- expr1 = expr2
 				if(destination.IsBox)

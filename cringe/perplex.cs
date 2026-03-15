@@ -367,6 +367,7 @@ namespace INTERCAL
 
 			public override void Emit(CompilationContext ctx)
 			{
+				ctx.DebugVariables.Add(lval);
 				if(unary_ops.Count == 0)
 				{
 					ctx.EmitRaw("frame.ExecutionContext[\"" + lval + "\"]");

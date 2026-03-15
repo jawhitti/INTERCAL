@@ -57,6 +57,9 @@ namespace INTERCAL
         //then used to generate the private properties.
         public List<string> ExternalReferences = new List<string>();
 
+        // Tracks all INTERCAL variable names seen during compilation for debug locals
+        public HashSet<string> DebugVariables = new HashSet<string>();
+
         static CompilationContext()
         {
             AbstainMap["NEXTING"] = typeof(Statement.NextStatement);
@@ -81,6 +84,11 @@ namespace INTERCAL
         }
 
         public override string ToString() { return source.ToString(); }
+
+        public void ReplaceMarker(string marker, string replacement)
+        {
+            source.Replace(marker, replacement);
+        }
 
         public void Emit(string s)
         {

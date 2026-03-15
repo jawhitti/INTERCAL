@@ -619,8 +619,8 @@ namespace INTERCAL
 
             this.EmitDispatchMap(ctx);
 
-            // Emit debug variable helper for VS Code debugger
-            ctx.EmitRaw("   INTERCAL.Runtime.DebugVars _vars = new INTERCAL.Runtime.DebugVars(frame.ExecutionContext);\r\n");
+            // Placeholder for debug locals — replaced after all statements are emitted
+            ctx.EmitRaw("/*DEBUG_LOCALS_PLACEHOLDER*/\r\n");
 
         }
 
@@ -727,14 +727,12 @@ namespace INTERCAL
             if (s.Label != null)
             {
                 c.EmitRaw("\r\nlabel_" + s.Label.Substring(1, s.Label.Length - 2) + ": \r\n");
-                c.EmitRaw("_vars = new INTERCAL.Runtime.DebugVars(frame.ExecutionContext);\r\n");
             }
 
             //We need to emit labels for COME FROM so the trapdoor has something to point to.
             else if (s as Statement.ComeFromStatement != null)
             {
                 c.EmitRaw("\r\nline_" + s.StatementNumber.ToString() + ":\r\n");
-                c.EmitRaw("_vars = new INTERCAL.Runtime.DebugVars(frame.ExecutionContext);\r\n");
             }
             //Uncomment these lines to emit labels for every single statement.  This
             //is not currently necessary..
@@ -775,7 +773,7 @@ namespace INTERCAL
             if (c.sourceFile != null && s.LineNumber >= 0)
             {
                 c.EmitRaw("#line " + s.LineNumber + " \"" + c.sourceFile.Replace("\\", "\\\\") + "\"\r\n");
-                c.EmitRaw("System.GC.KeepAlive(_vars);\r\n");
+                c.EmitRaw("System.GC.KeepAlive(frame);\r\n");
                 c.EmitRaw("#line hidden\r\n");
             }
 
@@ -783,8 +781,8 @@ namespace INTERCAL
 
         public void EmitStatementEpilog(Statement s, CompilationContext c)
         {
-            // Snapshot variables AFTER statement executes, then hide epilog boilerplate
-            c.EmitRaw("\r\n_vars = new INTERCAL.Runtime.DebugVars(frame.ExecutionContext);\r\n");
+            // Placeholder for debug local updates — replaced after all statements emitted
+            c.EmitRaw("\r\n/*DEBUG_UPDATE_PLACEHOLDER*/\r\n");
             c.EmitRaw("#line hidden\r\n");
 
             //COME FROM statements don't include an abstain guard around
@@ -872,7 +870,44 @@ namespace INTERCAL
                 EmitStatementEpilog(s, c);
             }
 
+            // Replace debug locals placeholder with actual declarations
+            EmitDebugLocals(c);
+
             EmitProgramEpilog(c);
+        }
+
+        private static string DebugLocalName(string intercalName)
+        {
+            // .1 → dot_1, :1 → colon_1, ::1 → dcolon_1
+            // ,1 → tail_1, ;1 → hybrid_1, ;;1 → dhybrid_1
+            if (intercalName.StartsWith("::")) return "dcolon_" + intercalName.Substring(2);
+            if (intercalName.StartsWith(";;")) return "dhybrid_" + intercalName.Substring(2);
+            if (intercalName.StartsWith(":")) return "colon_" + intercalName.Substring(1);
+            if (intercalName.StartsWith(";")) return "hybrid_" + intercalName.Substring(1);
+            if (intercalName.StartsWith(".")) return "dot_" + intercalName.Substring(1);
+            if (intercalName.StartsWith(",")) return "tail_" + intercalName.Substring(1);
+            return "_" + intercalName;
+        }
+
+        private void EmitDebugLocals(CompilationContext c)
+        {
+            var sortedVars = c.DebugVariables.Where(v => v[0] == '.' || v[0] == ':').OrderBy(v => v).ToList();
+
+            // Emit declarations
+            var decls = new StringBuilder();
+            foreach (var v in sortedVars)
+            {
+                decls.AppendLine("   ulong " + DebugLocalName(v) + " = 0;");
+            }
+            c.ReplaceMarker("/*DEBUG_LOCALS_PLACEHOLDER*/", decls.ToString());
+
+            // Emit updates (same for every statement)
+            var updates = new StringBuilder();
+            foreach (var v in sortedVars)
+            {
+                updates.AppendLine(DebugLocalName(v) + " = frame.ExecutionContext.GetVarValue(\"" + v + "\") ?? 0;");
+            }
+            c.ReplaceMarker("/*DEBUG_UPDATE_PLACEHOLDER*/", updates.ToString());
         }
 
         #endregion
