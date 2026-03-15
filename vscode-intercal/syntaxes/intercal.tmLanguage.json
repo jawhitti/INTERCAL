@@ -70,7 +70,7 @@
       "name": "keyword.operator.binary.intercal"
     },
     "unary-operators": {
-      "match": "[&?]|\\bV\\b|\\bv\\b",
+      "match": "[&?|\\-]|\\bV\\b|\\bv\\b",
       "name": "keyword.operator.unary.intercal"
     },
     "box-variables": {
