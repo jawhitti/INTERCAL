@@ -806,11 +806,10 @@ namespace INTERCAL
                     c.EmitRaw("}\r\n");
                 }
 
-                //Close off the abstain block — when abstained, skip past the epilog
-                //to prevent fall-through to the next label in the goto model
+                //Close off the abstain block
                 if (s.AbstainSlot >= 0)
                 {
-                    c.EmitRaw("} else { goto _abstain_skip_" + s.StatementNumber + "; }\n\n");
+                    c.EmitRaw("}\n\n");
                 }
             }
 
@@ -855,14 +854,13 @@ namespace INTERCAL
                     c.EmitRaw("    goto line_" + target.StatementNumber.ToString() + ";\n");
             }
 
-            // Emit abstain skip label at the very end of the epilog
-            // When an abstained statement is entered via NEXT (goto), we need to
-            // return to the caller by popping and dispatching the return label.
+            // When a statement is abstained, skip everything until the next
+            // labeled statement to prevent fall-through in the goto model.
+            // The else branch of the abstain guard jumps to the next label.
+            // (The skip label is placed at the start of the next labeled statement's prolog)
             if (s.AbstainSlot >= 0 && s as Statement.ComeFromStatement == null)
             {
-                c.EmitRaw("_abstain_skip_" + s.StatementNumber + ":\n");
-                c.EmitRaw("if(_nextStack.Count > 0) { int _r = _nextStack.Pop();");
-                c.EmitRaw(" if (_r > 0) { switch(_r) { /*RESUME_DISPATCH_PLACEHOLDER*/ } } goto exit; }\n");
+                c.EmitRaw("_abstain_skip_" + s.StatementNumber + ": ;\n");
             }
 
         }
