@@ -400,7 +400,7 @@ namespace INTERCAL
                     }
                     catch
                     {
-                        Lib.Fail(Messages.E436);
+                        Lib.Fail(Messages.E436 + " (" + Name + ")");
                     }
                 }
                 public override string ToString()
