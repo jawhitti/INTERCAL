@@ -985,7 +985,7 @@ namespace INTERCAL
 			{
                 //That showoffy jerk Donald Knuth just *had* to put a quote in a 
                 //multiline comment so now I have to fix those up too.
-                var fixedUp = StatementText.Replace("\"", "\\\"").Replace("\r\n", "\" + \r\n\"");
+                var fixedUp = StatementText.Replace("\"", "\\\"").Replace("\r\n", " ").Replace("\n", " ");
 				ctx.EmitRaw("Lib.Fail(\""+ LineNumber.ToString() + " * " + fixedUp);
 				ctx.EmitRaw("\");\n");
 			}

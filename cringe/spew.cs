@@ -143,7 +143,31 @@ namespace INTERCAL
                 try
                 {
                     StreamReader r = new StreamReader(file);
-                    src += r.ReadToEnd();
+                    // Join continuation lines: if a line starts with whitespace
+                    // followed by non-keyword content, it's a continuation of the
+                    // previous line (standard INTERCAL allows multi-line statements)
+                    string raw = r.ReadToEnd();
+                    string[] lines = raw.Split('\n');
+                    var joined = new System.Text.StringBuilder();
+                    for (int li = 0; li < lines.Length; li++)
+                    {
+                        string line = lines[li].TrimEnd('\r');
+                        if (li > 0 && line.Length > 0 && (line[0] == ' ' || line[0] == '\t'))
+                        {
+                            // Check if this is a continuation (doesn't start a new statement)
+                            string trimmed = line.TrimStart();
+                            if (trimmed.Length > 0 && trimmed[0] != '(' &&
+                                !trimmed.StartsWith("DO") && !trimmed.StartsWith("PLEASE"))
+                            {
+                                // Continuation line — append without newline
+                                Console.Error.WriteLine("JOINING: " + trimmed);
+                                joined.Append(" " + trimmed);
+                                continue;
+                            }
+                        }
+                        joined.Append(line + "\n");
+                    }
+                    src += joined.ToString();
                     r.Close();
                 }
 
