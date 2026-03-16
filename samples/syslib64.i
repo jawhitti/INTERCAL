@@ -488,65 +488,46 @@
 	DO RETRIEVE ::1 + ::2 + :1 + :2
 	PLEASE RESUME #1
 
-(4920558940556964150)	DO STASH .1 + .2 + .5 + .6
-	DO .1 <- .-|1
+	PLEASE NOTE lib2.i 16-bit division by Louis Howell
+	PLEASE NOTE .1 / .2 -> .3 quotient, .4 remainder
+(2030)	DO STASH .1 + .5
 	DO .3 <- #0
-	DO .4 <- #0
-	DO .6 <- #16
-	DO STASH .1
-	DO .1 <- .-2
-	DO .2 <- .1
-	DO .1 <- #1
-	DO (1000) NEXT
+	DO .5 <- '?"!2~.2'~#1"$#1'~#3
+	PLEASE DO (2031) NEXT
+	DO .4 <- #1
+	PLEASE DO (2033) NEXT
+(2033)	DO FORGET #1
+	DO .5 <- '?".2~#32768"$#2'~#3
+	DO (2032) NEXT
+	DO .2 <- '.2$#0'~'#32767$#1'
+	PLEASE DO .4 <- '.4$#0'~'#32767$#1'
+	DO (2033) NEXT
+(2032)	DO (1001) NEXT
+(2036)	PLEASE FORGET #1
+	DO .5 <- '?.1$.2'~'#0$#65535'
+	DO .5 <- '?"'&"'.2~.5'~'"?'?.5~.5'$#32768"~"#0$#65535"'"$
+	         ".5~.5"'~#1"$#2'~#3
+	DO (2034) NEXT
 	DO .5 <- .3
-	DO RETRIEVE .1
-	DO (4920558940556964151) NEXT
-
-(4920558940556964151)	DO FORGET #1
-	DO .2 <- .1 ~ #1
-	DO .1 <- .1 ~ #65534
-	DO .4 <- '.4$#0'~'#32767$#1'
-	DO STASH .1
-	DO .1 <- .4
-	DO (1000) NEXT
-	DO .4 <- .3
-	DO RETRIEVE .1
-	DO STASH .1 + .2 + :1 + :2
-	DO :1 <- .4
-	DO :2 <- .5
-	DO (1500) NEXT
-	DO .6 <- :3 ~ #65535
-	DO .2 <- :3 ~ '#65280$#65280'
-	DO .2 <- "?'.2~.2'$#1"~#3
-	DO RETRIEVE .1 + .2 + :1 + :2
-	DO (4920558940556964153) NEXT
-	DO .3 <- '.3$#0'~'#32767$#1'
-	DO (4920558940556964154) NEXT
-
-(4920558940556964153)	DO RESUME .2
-
-	DO .4 <- .6
-	DO .3 <- '.3$#0'~'#32767$#1'
-	DO STASH .1
-	DO .1 <- .3
-	DO .2 <- #1
-	DO (1000) NEXT
-	DO RETRIEVE .1
-
-(4920558940556964154)	DO FORGET #1
-	DO STASH .1 + .2
-	DO .1 <- .6
-	DO .2 <- #1
-	DO (5569068542595249664) NEXT
-	DO .6 <- .3
-	DO RETRIEVE .1 + .2
-	DO .2 <- "?'.6~.6'$#1"~#3
-	DO (4920558940556964155) NEXT
-	DO (4920558940556964151) NEXT
-
-(4920558940556964155)	DO (1001) NEXT
-	DO RETRIEVE .1 + .2 + .5 + .6
+	DO (1010) NEXT
+	PLEASE DO .1 <- .3
+	DO .3 <- 'V.4$.5'~'#0$#65535'
+	DO (2035) NEXT
+(2034)	PLEASE DO (1001) NEXT
+(2035)	DO FORGET #1
+	DO .5 <- "?'.4~#1'$#2"~#3
+	DO (2031) NEXT
+	DO .2 <- .2~#65534
+	DO .4 <- .4~#65534
+	PLEASE DO (2036) NEXT
+(2031)	DO (1001) NEXT
+	PLEASE DO .4 <- .1
+	DO RETRIEVE .1 + .5
 	PLEASE RESUME #2
+
+	PLEASE NOTE DIVIDE16: wrapper around lib2.i (2030)
+(4920558940556964150)	DO (2030) NEXT
+	PLEASE RESUME #1
 
 (4920558940556964658)	DO STASH :1 + :2 + :5 + .1 + .2 + .5 + .6
 	DO .1 <- :1 ~ #65535
