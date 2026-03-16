@@ -91,6 +91,8 @@ namespace INTERCAL.Runtime
             try
             {
                 Proc(this);
+                // Eval returned normally (goto exit) — signal completion
+                if (!Complete) Finish(false);
             }
             catch (Exception e)
             {

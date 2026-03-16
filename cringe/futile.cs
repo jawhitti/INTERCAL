@@ -561,7 +561,8 @@ namespace INTERCAL
             }
 
             // NEXT stack for goto-based state machine (field, not local, to survive gotos)
-            ctx.EmitRaw("   System.Collections.Generic.Stack<int> _nextStack = new System.Collections.Generic.Stack<int>();\r\n\r\n");
+            ctx.EmitRaw("   System.Collections.Generic.Stack<int> _nextStack = new System.Collections.Generic.Stack<int>();\r\n");
+            ctx.EmitRaw("   int _forgetAdj = 0;\r\n\r\n");
         }
 
         public void EmitDispatchMap(CompilationContext ctx)
