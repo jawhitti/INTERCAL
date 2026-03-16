@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug INTERCAL Program",
+            "name": "Debug INTERCAL (rebuild)",
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Debug/net9.0/${fileBasenameNoExtension}.dll",
@@ -12,6 +12,18 @@
             "justMyCode": "false",
             "requireExactSource": "false",
             "preLaunchTask": "compile-intercal",
+            "suppressJITOptimizations": true
+        },
+        {
+            "name": "Debug INTERCAL (prebuilt)",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/Debug/net9.0/${fileBasenameNoExtension}.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
             "suppressJITOptimizations": true
         }
     ]

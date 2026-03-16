@@ -479,7 +479,9 @@ namespace INTERCAL
 
 
                     ctx.EmitRaw("public bool DO_" + s.Label.Substring(1, s.Label.Length - 2) + "(ExecutionContext context)\r\n{\r\n");
-                    ctx.EmitRaw("   return context.Evaluate(Eval," + s.Label.Substring(1, s.Label.Length - 2) + "L);\r\n");
+                    ctx.EmitRaw("   var frame = new ExecutionFrame(context, Eval, " + s.Label.Substring(1, s.Label.Length - 2) + "L);\r\n");
+                    ctx.EmitRaw("   Eval(frame);\r\n");
+                    ctx.EmitRaw("   return context.Done;\r\n");
                     ctx.EmitRaw("}\r\n\r\n");
                 }
             }
@@ -778,8 +780,6 @@ namespace INTERCAL
             if (c.sourceFile != null && s.LineNumber >= 0)
             {
                 c.EmitRaw("#line " + s.LineNumber + " \"" + c.sourceFile.Replace("\\", "\\\\") + "\"\r\n");
-                c.EmitRaw("System.GC.KeepAlive(frame);\r\n");
-                c.EmitRaw("#line hidden\r\n");
             }
 
         }
@@ -909,8 +909,9 @@ namespace INTERCAL
             }
             c.ReplaceMarker("/*DEBUG_LOCALS_PLACEHOLDER*/", decls.ToString());
 
-            // Emit updates (same for every statement)
+            // Emit updates (same for every statement, hidden from debugger)
             var updates = new StringBuilder();
+            updates.AppendLine("#line hidden");
             foreach (var v in sortedVars)
             {
                 updates.AppendLine(DebugLocalName(v) + " = frame.ExecutionContext.GetVarValue(\"" + v + "\") ?? 0;");

@@ -4,7 +4,7 @@
         {
             "label": "compile-intercal",
             "type": "shell",
-            "command": "dotnet run --project cringe -- -b ${file} ; if ($LASTEXITCODE -eq 0) { dotnet build ~tmp.csproj }",
+            "command": "dotnet run --project cringe -- -b -r:testlib.dll ${file} ; if ($LASTEXITCODE -eq 0) { dotnet build ~tmp.csproj }",
             "group": "build",
             "problemMatcher": [],
             "presentation": {

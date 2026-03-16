@@ -660,11 +660,14 @@ namespace INTERCAL
                 ctx.EmitRaw("      uint depth = (uint)(");
                 Depth.Emit(ctx);
                 ctx.EmitRaw(");\r\n");
-                // Pop depth entries from the local NEXT stack, goto the last one popped
-                ctx.EmitRaw("      int _retLabel = 0;\r\n");
-                ctx.EmitRaw("      for (uint _i = 0; _i < depth && _nextStack.Count > 0; _i++)\r\n");
-                ctx.EmitRaw("         _retLabel = _nextStack.Pop();\r\n");
-                ctx.EmitRaw("      if (_retLabel > 0) { switch(_retLabel) { /*RESUME_DISPATCH_PLACEHOLDER*/ } }\r\n");
+                ctx.EmitRaw("      if (depth > 0) {\r\n");
+                ctx.EmitRaw("         int _retLabel = 0;\r\n");
+                ctx.EmitRaw("         for (uint _i = 0; _i < depth && _nextStack.Count > 0; _i++)\r\n");
+                ctx.EmitRaw("            _retLabel = _nextStack.Pop();\r\n");
+                ctx.EmitRaw("         if (_retLabel > 0) { switch(_retLabel) { /*RESUME_DISPATCH_PLACEHOLDER*/ } }\r\n");
+                // Stack was empty or ran out — we're returning from an external entry point
+                ctx.EmitRaw("         goto exit;\r\n");
+                ctx.EmitRaw("      }\r\n");
                 ctx.EmitRaw("   }\r\n");
             }
         }

@@ -627,20 +627,8 @@ namespace INTERCAL
             #region control flow
             public void Run(IntercalThreadProc proc)
             {
-                Task.Run(() => Evaluate(proc, 0));
-
-                lock (SyncLock)
-                {
-                    while (!Done)
-                    {
-                        Monitor.Wait(SyncLock);
-                    }
-                }
-
-                if (CurrentException != null)
-                {
-                    throw CurrentException;
-                }
+                var frame = new ExecutionFrame(this, proc, 0);
+                proc(frame);
             }
             public bool Evaluate(IntercalThreadProc proc, long label)
             {

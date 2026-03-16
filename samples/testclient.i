@@ -1,0 +1,4 @@
+	DO .1 <- #1
+	PLEASE DO (3000) NEXT
+	DO READ OUT .3
+	DO GIVE UP
