@@ -842,6 +842,13 @@ namespace INTERCAL
                 else
                     c.EmitRaw("    goto line_" + target.StatementNumber.ToString() + ";\n");
             }
+
+            // Emit return label for NEXT statements at top scope (outside abstain blocks)
+            if (s is Statement.NextStatement ns && ns.ReturnLabelId >= 0)
+            {
+                c.EmitRaw("_ret_" + ns.ReturnLabelId + ": ;\r\n");
+                c.EmitRaw("if (frame.ExecutionContext.Done) goto exit;\r\n");
+            }
         }
 
         //This is the master routine for taking a program and emitting it as 

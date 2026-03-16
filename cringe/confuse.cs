@@ -423,8 +423,9 @@ namespace INTERCAL
 		public class NextStatement : Statement
 		{
 			public string Target;
+			public int ReturnLabelId = -1;
 
-			public NextStatement(Scanner s) 
+			public NextStatement(Scanner s)
 			{
 				this.Target = ReadGroupValue(s, "label");
 				s.MoveNext();
@@ -585,14 +586,14 @@ namespace INTERCAL
 					Statement target = ctx.program[this.Target].First() as Statement;
 
                     // Goto-based NEXT: push return label, jump to target
+                    // The _ret_N label is emitted in EmitStatementEpilog (outside abstain scope)
                     int retId = ++ctx.NextReturnLabelCounter;
                     ctx.NextReturnLabels.Add(retId);
+                    this.ReturnLabelId = retId;
 
                     ctx.EmitRaw("#line hidden\r\n");
                     ctx.EmitRaw("_nextStack.Push(" + retId + ");\r\n");
                     ctx.EmitRaw("goto label_" + target.Label.Substring(1, target.Label.Length - 2) + ";\r\n");
-                    ctx.EmitRaw("_ret_" + retId + ": ;\r\n");
-                    ctx.EmitRaw("if (frame.ExecutionContext.Done) goto exit;\r\n");
 
                 }
             }
