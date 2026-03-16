@@ -6,6 +6,7 @@ namespace INTERCAL
     {
         private readonly string input;
         private int pos;
+        private Token pending = null;
 
         // Two-word gerunds: first word -> second word
         static readonly Dictionary<string, string> TwoWordGerunds = new Dictionary<string, string>
@@ -56,6 +57,13 @@ namespace INTERCAL
 
         public Token NextToken()
         {
+            if (pending != null)
+            {
+                var t = pending;
+                pending = null;
+                return t;
+            }
+
             // Skip whitespace (but not newlines)
             while (pos < input.Length && (input[pos] == ' ' || input[pos] == '\t' || input[pos] == '\r'))
                 pos++;
@@ -169,11 +177,9 @@ namespace INTERCAL
                     return new Token(TokenType.Separator, c.ToString(), startPos);
 
                 case '!':
-                    // In classic INTERCAL, ! can mean spark (') or spot (.)
-                    // If followed by a digit, it's spot (variable). Otherwise spark.
+                    // ! is shorthand for '. (spark + spot)
                     pos++;
-                    if (pos < input.Length && char.IsDigit(input[pos]))
-                        return new Token(TokenType.Var, ".", startPos);
+                    pending = new Token(TokenType.Var, ".", startPos);
                     return new Token(TokenType.Separator, "'", startPos);
 
                 case '%':
