@@ -105,6 +105,7 @@ namespace INTERCAL.Runtime
     public class AsyncDispatcher
     {
         public bool Done = false;
+        public int ResumeDepth = 0;  // remaining RESUME depth after cross-component return
         protected object SyncLock = new object();
         protected Exception CurrentException { get; set; }
         protected Stack<ExecutionFrame> NextingStack = new Stack<ExecutionFrame>();
