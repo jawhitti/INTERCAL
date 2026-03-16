@@ -584,6 +584,8 @@ namespace INTERCAL
                     {
                         long labelNum = long.Parse(s.Label.Substring(1, s.Label.Length - 2));
                         ctx.EmitRaw("      case " + labelNum + "L: ");
+                        // Push sentinel so RESUME can pop the "caller" level
+                        ctx.EmitRaw("_nextStack.Push(0); ");
                         ctx.EmitRaw("goto label_" + labelNum + ";\r\n");
                     }
                 }
@@ -929,6 +931,8 @@ namespace INTERCAL
         private void EmitResumeDispatch(CompilationContext c)
         {
             var sb = new StringBuilder();
+            // Sentinel 0 = return from external entry (goto exit)
+            sb.Append("case 0: goto exit; ");
             foreach (int id in c.NextReturnLabels)
             {
                 sb.Append("case " + id + ": goto _ret_" + id + "; ");
