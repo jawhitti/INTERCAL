@@ -995,8 +995,8 @@ namespace INTERCAL
 
 			public override void Emit(CompilationContext ctx)
 			{
-                //-1 means "unconditional return"
-                ctx.Emit("           frame.ExecutionContext.GiveUp();\r\n");
+                ctx.EmitRaw("           frame.ExecutionContext.GiveUp();\r\n");
+                ctx.EmitRaw("           goto exit;\r\n");
 			}
 		}
 

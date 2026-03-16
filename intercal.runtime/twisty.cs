@@ -92,10 +92,6 @@ namespace INTERCAL.Runtime
             {
                 Proc(this);
             }
-            catch (GiveUpException)
-            {
-                // Clean program exit — not an error
-            }
             catch (Exception e)
             {
                 ExecutionContext.OnUnhandledException(e);
@@ -185,7 +181,6 @@ namespace INTERCAL.Runtime
                 Monitor.Pulse(SyncLock);
             }
 
-            throw new GiveUpException();
         }
 
         [Conditional("DEBUG")]

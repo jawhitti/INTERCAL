@@ -654,7 +654,7 @@ namespace INTERCAL
                 bool result = frame.Start();
 
                 if (Done)
-                    throw new GiveUpException();
+                    return true;
 
                 return result;
             }
