@@ -584,36 +584,15 @@ namespace INTERCAL
 				{
 					Statement target = ctx.program[this.Target].First() as Statement;
 
-                    // Hide the NEXT boilerplate — step-into across threads isn't
-                    // possible with the current Task.Run threading model.
+                    // Goto-based NEXT: push return label, jump to target
+                    int retId = ++ctx.NextReturnLabelCounter;
+                    ctx.NextReturnLabels.Add(retId);
+
                     ctx.EmitRaw("#line hidden\r\n");
-
-                    if (!string.IsNullOrEmpty(target.Label))
-                    {
-                        ctx.Emit(string.Format("Trace.WriteLine(\"       Doing {0} Next\");", target.Label));
-                    }
-                    else
-                    {
-                        ctx.Emit(string.Format("Trace.WriteLine(\"       Doing statement #{0} Next\");", target.StatementNumber));
-
-                    }
-
-                    ctx.EmitRaw("{\r\n");
-                    ctx.EmitRaw("   bool shouldTerminate = frame.ExecutionContext.Evaluate(Eval," + target.Label.Substring(1, target.Label.Length -2) + "L);\r\n");
-                    ctx.EmitRaw("   if (shouldTerminate)\r\n");
-                    ctx.EmitRaw("   {\r\n");
-                    ctx.EmitRaw("       goto exit;\r\n");
-                    ctx.EmitRaw("   }\r\n");
-
-                    if (ctx.debugBuild)
-                    {
-                        ctx.EmitRaw("   else\r\n");
-                        ctx.EmitRaw("   {\r\n");
-                        ctx.EmitRaw(string.Format("      Trace.WriteLine(\"Resuming execution at {0}\");", StatementNumber));
-                        ctx.EmitRaw("   }\r\n");
-                    }
-
-                    ctx.EmitRaw("}\r\n");
+                    ctx.EmitRaw("_nextStack.Push(" + retId + ");\r\n");
+                    ctx.EmitRaw("goto label_" + target.Label.Substring(1, target.Label.Length - 2) + ";\r\n");
+                    ctx.EmitRaw("_ret_" + retId + ": ;\r\n");
+                    ctx.EmitRaw("if (frame.ExecutionContext.Done) goto exit;\r\n");
 
                 }
             }
@@ -655,9 +634,9 @@ namespace INTERCAL
                     ctx.EmitRaw("\");\r\n");
                 }
 
-                ctx.EmitRaw("frame.ExecutionContext.Forget((int)(");
+                ctx.EmitRaw("{ int _n = (int)(");
                 this.exp.Emit(ctx);
-                ctx.EmitRaw("));\r\n");
+                ctx.EmitRaw("); for (int _i = 0; _i < _n && _nextStack.Count > 0; _i++) _nextStack.Pop(); }\r\n");
 			}
 		}
 		
@@ -676,27 +655,16 @@ namespace INTERCAL
 
 			public override void Emit(CompilationContext ctx)
 			{
-                // Stop on the source line, then hide the boilerplate
                 ctx.EmitRaw(";\r\n#line hidden\r\n");
-                //RESUME 0 needs to be treated as a no-op.
                 ctx.EmitRaw("   {\r\n");
                 ctx.EmitRaw("      uint depth = (uint)(");
                 Depth.Emit(ctx);
                 ctx.EmitRaw(");\r\n");
-
-                if (ctx.debugBuild)
-                {
-                    ctx.Emit("      Trace.WriteLine(string.Format(\"      Resuming {0}\", depth));");
-                }
-
-
-                ctx.EmitRaw("      if(depth > 0)\r\n");
-                ctx.EmitRaw("      {\r\n");
-
-
-                ctx.EmitRaw("         frame.ExecutionContext.Resume(depth);\r\n");
-                ctx.EmitRaw("         goto exit;\r\n");
-                ctx.EmitRaw("      }\r\n");
+                // Pop depth entries from the local NEXT stack, goto the last one popped
+                ctx.EmitRaw("      int _retLabel = 0;\r\n");
+                ctx.EmitRaw("      for (uint _i = 0; _i < depth && _nextStack.Count > 0; _i++)\r\n");
+                ctx.EmitRaw("         _retLabel = _nextStack.Pop();\r\n");
+                ctx.EmitRaw("      if (_retLabel > 0) { switch(_retLabel) { /*RESUME_DISPATCH_PLACEHOLDER*/ } }\r\n");
                 ctx.EmitRaw("   }\r\n");
             }
         }

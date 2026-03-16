@@ -557,6 +557,9 @@ namespace INTERCAL
 
                 ctx.EmitRaw("};\n\n");
             }
+
+            // NEXT stack for goto-based state machine (field, not local, to survive gotos)
+            ctx.EmitRaw("   System.Collections.Generic.Stack<int> _nextStack = new System.Collections.Generic.Stack<int>();\r\n\r\n");
         }
 
         public void EmitDispatchMap(CompilationContext ctx)
@@ -618,6 +621,8 @@ namespace INTERCAL
                         "   {\r\n");
 
             this.EmitDispatchMap(ctx);
+
+            // _nextStack is a field on the class, declared in EmitAbstainMap
 
             // Placeholder for debug locals — replaced after all statements are emitted
             ctx.EmitRaw("/*DEBUG_LOCALS_PLACEHOLDER*/\r\n");
@@ -873,6 +878,9 @@ namespace INTERCAL
             // Replace debug locals placeholder with actual declarations
             EmitDebugLocals(c);
 
+            // Replace RESUME dispatch placeholder with goto switch
+            EmitResumeDispatch(c);
+
             EmitProgramEpilog(c);
         }
 
@@ -908,6 +916,16 @@ namespace INTERCAL
                 updates.AppendLine(DebugLocalName(v) + " = frame.ExecutionContext.GetVarValue(\"" + v + "\") ?? 0;");
             }
             c.ReplaceMarker("/*DEBUG_UPDATE_PLACEHOLDER*/", updates.ToString());
+        }
+
+        private void EmitResumeDispatch(CompilationContext c)
+        {
+            var sb = new StringBuilder();
+            foreach (int id in c.NextReturnLabels)
+            {
+                sb.Append("case " + id + ": goto _ret_" + id + "; ");
+            }
+            c.ReplaceMarker("/*RESUME_DISPATCH_PLACEHOLDER*/", sb.ToString());
         }
 
         #endregion

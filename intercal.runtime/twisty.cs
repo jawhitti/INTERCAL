@@ -102,7 +102,7 @@ namespace INTERCAL.Runtime
     [System.Diagnostics.DebuggerNonUserCode]
     public class AsyncDispatcher
     {
-        protected bool Done = false;
+        public bool Done = false;
         protected object SyncLock = new object();
         protected Exception CurrentException { get; set; }
         protected Stack<ExecutionFrame> NextingStack = new Stack<ExecutionFrame>();

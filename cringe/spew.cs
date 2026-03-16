@@ -60,6 +60,10 @@ namespace INTERCAL
         // Tracks all INTERCAL variable names seen during compilation for debug locals
         public HashSet<string> DebugVariables = new HashSet<string>();
 
+        // Tracks return labels for the goto-based NEXT state machine
+        public int NextReturnLabelCounter = 0;
+        public List<int> NextReturnLabels = new List<int>();
+
         static CompilationContext()
         {
             AbstainMap["NEXTING"] = typeof(Statement.NextStatement);
