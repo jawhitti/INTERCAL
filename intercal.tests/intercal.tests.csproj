@@ -24,6 +24,9 @@
   <ItemGroup>
     <ProjectReference Include="..\intercal.runtime\intercal.runtime.csproj" />
     <ProjectReference Include="..\cringe\cringe.csproj" />
+    <Reference Include="isyslib">
+      <HintPath>isyslib.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
