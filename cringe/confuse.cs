@@ -666,10 +666,9 @@ namespace INTERCAL
                 ctx.EmitRaw("         int _popped = 0;\r\n");
                 ctx.EmitRaw("         while (_popped < depth && _nextStack.Count > 0) { _retLabel = _nextStack.Pop(); _popped++; }\r\n");
                 ctx.EmitRaw("         int _remaining = depth - _popped;\r\n");
-                ctx.EmitRaw("         if (_retLabel > 0 && _remaining == 0) { switch(_retLabel) { /*RESUME_DISPATCH_PLACEHOLDER*/ } }\r\n");
-                // Sentinel hit or stack exhausted — store remaining depth for caller
-                ctx.EmitRaw("         frame.ExecutionContext.ResumeDepth = _remaining;\r\n");
-                ctx.EmitRaw("         goto exit;\r\n");
+                ctx.EmitRaw("         if (_retLabel == 0) { frame.ExecutionContext.ResumeDepth = _remaining; goto exit; }\r\n");
+                ctx.EmitRaw("         if (_retLabel > 0) { switch(_retLabel) { /*RESUME_DISPATCH_PLACEHOLDER*/ } }\r\n");
+
                 ctx.EmitRaw("      }\r\n");
                 ctx.EmitRaw("   }\r\n");
             }

@@ -813,7 +813,15 @@ namespace INTERCAL
                 }
             }
 
-            //Now we handle COME FROM.  Note that even if the statement has 
+            // Emit return label for NEXT statements BEFORE the COME FROM trapdoor
+            // so that returning from a NEXT hits the trapdoor on the way through
+            if (s is Statement.NextStatement ns2 && ns2.ReturnLabelId >= 0)
+            {
+                c.EmitRaw("_ret_" + ns2.ReturnLabelId + ": ;\r\n");
+                c.EmitRaw("if (frame.ExecutionContext.Done) goto exit;\r\n");
+            }
+
+            //Now we handle COME FROM.  Note that even if the statement has
             //been ABSTAINED we still might fall through the trapdoor.  We have to
             //do this even for COME FROM statements in case someone is sick
             //enough to do this:
@@ -846,12 +854,6 @@ namespace INTERCAL
                     c.EmitRaw("    goto line_" + target.StatementNumber.ToString() + ";\n");
             }
 
-            // Emit return label for NEXT statements at top scope (outside abstain blocks)
-            if (s is Statement.NextStatement ns && ns.ReturnLabelId >= 0)
-            {
-                c.EmitRaw("_ret_" + ns.ReturnLabelId + ": ;\r\n");
-                c.EmitRaw("if (frame.ExecutionContext.Done) goto exit;\r\n");
-            }
         }
 
         //This is the master routine for taking a program and emitting it as 
