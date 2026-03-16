@@ -164,10 +164,17 @@ namespace INTERCAL
                     pos++;
                     return new Token(TokenType.BinaryOp, c.ToString(), startPos);
 
-                case '"': case '\'': case '!': case '+':
+                case '"': case '\'': case '+':
                     pos++;
-                    // ! is an alternate spark (') in classic INTERCAL
-                    return new Token(TokenType.Separator, c == '!' ? "'" : c.ToString(), startPos);
+                    return new Token(TokenType.Separator, c.ToString(), startPos);
+
+                case '!':
+                    // In classic INTERCAL, ! can mean spark (') or spot (.)
+                    // If followed by a digit, it's spot (variable). Otherwise spark.
+                    pos++;
+                    if (pos < input.Length && char.IsDigit(input[pos]))
+                        return new Token(TokenType.Var, ".", startPos);
+                    return new Token(TokenType.Separator, "'", startPos);
 
                 case '%':
                     pos++;
