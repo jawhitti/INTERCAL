@@ -521,7 +521,7 @@ namespace INTERCAL
         {
             int abstains = OccurencesOf(typeof(Statement.AbstainStatement)).Count();
 
-            abstains += Statements.Where(s => !s.bEnabled).Count();
+            abstains += Statements.Where(s => !s.bEnabled || s.Splatted).Count();
 
             if (abstains > 0)
             {
@@ -538,7 +538,9 @@ namespace INTERCAL
                     Statement s = (Statement)Statements[i];
 
                     //Does this statement need an abstain guard?
-                    if ((!s.bEnabled) ||
+                    //In the goto model, splatted statements also get guards (starting
+                    //disabled) to prevent fall-through from abstained predecessors.
+                    if ((!s.bEnabled) || s.Splatted ||
                         (this.AbstainedGerunds.ContainsKey(s.GetType())) ||
                         (s.Label != null && this.AbstainedLabels.ContainsKey(s.Label)))
                     {
@@ -551,7 +553,7 @@ namespace INTERCAL
                             bfirst = false;
                         }
 
-                        ctx.EmitRaw(s.bEnabled ? "true" : "false");
+                        ctx.EmitRaw((s.bEnabled && !s.Splatted) ? "true" : "false");
                         ((Statement)Statements[i]).AbstainSlot = slot;
                         slot++;
                     }
