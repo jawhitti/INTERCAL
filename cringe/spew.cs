@@ -421,9 +421,16 @@ namespace INTERCAL
                 //Auto-include standard lib if it hasn't been referenced already
                 if (c.references == null)
                 {
-                    c.references = new ExportList[1];
-                    var file = FindFile("intercal.runtime.dll");
-                    c.references[0] = new ExportList(file);
+                    var refs = new List<ExportList>();
+                    var syslibPath = TryFindFile("isyslib.dll");
+                    // Don't self-reference when compiling the syslib itself
+                    if (syslibPath != null && Path.GetFileNameWithoutExtension(sources[0]) != "isyslib")
+                    {
+                        Trace.WriteLine("Auto-referencing isyslib.dll");
+                        refs.Add(new ExportList(syslibPath));
+                    }
+                    refs.Add(new ExportList(FindFile("intercal.runtime.dll")));
+                    c.references = refs.ToArray();
                 }
 
 
@@ -475,6 +482,15 @@ namespace INTERCAL
                 Abort(e.Message);
             }
 
+        }
+
+        private static string TryFindFile(string path)
+        {
+            if (File.Exists(path)) return path;
+            var baseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var srcPath = Path.Combine(baseDir, path);
+            if (File.Exists(srcPath)) return srcPath;
+            return null;
         }
 
         private static string FindFile(string path)

@@ -763,7 +763,7 @@ namespace INTERCAL
             if ((s.Percent > 0) && (s.Percent < 100))
             {
                 c.EmitRaw("if(Lib.Rand(100)  < " + s.Percent.ToString() + ")\n{\n");
-                c.EmitRaw(string.Format("    Trace.WriteLine(\"[{0:0000}] Rolled the dice and lost.\");", s.StatementNumber));
+                c.EmitRaw(string.Format("    Trace.WriteLine(\"[{0:0000}] Rolled the dice and lost.\");\r\n", s.StatementNumber));
             }
 
             if (c.debugBuild)
@@ -800,7 +800,7 @@ namespace INTERCAL
                     c.EmitRaw("}\n\n");
                     c.EmitRaw("else {");
                     c.EmitRaw(string.Format("    Trace.WriteLine(\"[{0:0000}] Rolled the dice and lost.\");", s.StatementNumber));
-                    c.EmitRaw("}");
+                    c.EmitRaw("}\r\n");
                 }
 
                 //Close off the abstain block
