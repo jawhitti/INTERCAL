@@ -32,6 +32,7 @@ namespace INTERCAL
         public string sourceFile;
         public AssemblyType assemblyType;
         public bool debugBuild = false;
+        public bool skipPoliteness = false;
         public bool Verbose = false;
 
         //What will the base class be for the generated type?
@@ -330,7 +331,8 @@ namespace INTERCAL
 
             "\r\n                      - ERRORS AND WARNINGS -\r\n" +
             "/b                      Reduce probably of E774 to zero.\r\n" +
-            "/v or /verbose          Verbose compiler output\r\n";
+            "/v or /verbose          Verbose compiler output\r\n" +
+            "/noplease              Skip politeness checking\r\n";
         #endregion
 
         const int MinimumPoliteness = 20;
@@ -434,6 +436,12 @@ namespace INTERCAL
                             Trace.WriteLine("(Intentional) Bugs disabled");
                             c.Buggy = false;
                         }
+
+                        else if (arg.Substring(1).ToLower() == "noplease")
+                        {
+                            Trace.WriteLine("Politeness checking disabled");
+                            c.skipPoliteness = true;
+                        }
                     }
 
                     else
@@ -470,10 +478,14 @@ namespace INTERCAL
                 Trace.WriteLine("Parsing...");
                 Program p = Program.CreateFromFile("~tmp.i");
 
-                //Now do politeness checking.  No point until we have 
+                //Now do politeness checking.  No point until we have
                 //at least three statements in the program.
+                //
+                //Note that componentization affects politeness: a program that is
+                //polite as a whole may fail when broken into components, since this
+                //compiler enforces politeness per component.  Use /noplease to skip.
                 Trace.WriteLine("Analyzing Politeness...");
-                if (p.StatementCount > 3)
+                if (!c.skipPoliteness && p.StatementCount > 3)
                 {
                     //less than 1/5 politeness level is not polite enough
                     if (p.Politeness < MinimumPoliteness)
@@ -491,6 +503,22 @@ namespace INTERCAL
                 c.program = p;
                 c.assemblyName = Path.GetFileNameWithoutExtension(sources[0]);
                 c.sourceFile = Path.GetFullPath(sources[0]);
+
+                // Check for label conflicts between local program and referenced assemblies
+                if (c.references != null)
+                {
+                    foreach (var e in c.references)
+                    {
+                        foreach (var a in e.entryPoints)
+                        {
+                            if (p[a.Label].GetEnumerator().MoveNext())
+                            {
+                                Abort(string.Format("E2005 LABEL {0} IS DEFINED LOCALLY AND ALSO EXPORTED BY {1}.  AMBIGUITY IS NOT POLITE",
+                                    a.Label, Path.GetFileName(e.assemblyFile)));
+                            }
+                        }
+                    }
+                }
 
                 Trace.WriteLine("Emitting C#...");
                 p.EmitCSharp(c);

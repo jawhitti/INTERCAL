@@ -17,7 +17,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 3;
             ctx[".2"] = 4;
-            syslib64.DO_ADD16(ctx);
+            syslib64_native.DO_ADD16(new ComponentCall(ctx));
             Assert.Equal(7UL, ctx[".3"]);
         }
 
@@ -27,7 +27,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 0;
             ctx[".2"] = 0;
-            syslib64.DO_ADD16(ctx);
+            syslib64_native.DO_ADD16(new ComponentCall(ctx));
             Assert.Equal(0UL, ctx[".3"]);
         }
 
@@ -37,7 +37,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 65534;
             ctx[".2"] = 1;
-            syslib64.DO_ADD16(ctx);
+            syslib64_native.DO_ADD16(new ComponentCall(ctx));
             Assert.Equal(65535UL, ctx[".3"]);
         }
 
@@ -47,7 +47,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 65535;
             ctx[".2"] = 1;
-            Assert.Throws<IntercalException>(() => syslib64.DO_ADD16(ctx));
+            Assert.Throws<IntercalException>(() => syslib64_native.DO_ADD16(new ComponentCall(ctx)));
         }
 
         // ================================================================
@@ -60,7 +60,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[":1"] = 100000;
             ctx[":2"] = 200000;
-            syslib64.DO_ADD32(ctx);
+            syslib64_native.DO_ADD32(new ComponentCall(ctx));
             Assert.Equal(300000UL, ctx[":3"]);
         }
 
@@ -70,7 +70,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[":1"] = uint.MaxValue;
             ctx[":2"] = 1;
-            Assert.Throws<IntercalException>(() => syslib64.DO_ADD32(ctx));
+            Assert.Throws<IntercalException>(() => syslib64_native.DO_ADD32(new ComponentCall(ctx)));
         }
 
         // ================================================================
@@ -83,7 +83,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx["::1"] = 1000000000000UL;
             ctx["::2"] = 2000000000000UL;
-            syslib64.DO_ADD64(ctx);
+            syslib64_native.DO_ADD64(new ComponentCall(ctx));
             Assert.Equal(3000000000000UL, ctx["::3"]);
         }
 
@@ -93,7 +93,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx["::1"] = ulong.MaxValue - 1;
             ctx["::2"] = 1;
-            syslib64.DO_ADD64(ctx);
+            syslib64_native.DO_ADD64(new ComponentCall(ctx));
             Assert.Equal(ulong.MaxValue, ctx["::3"]);
         }
 
@@ -103,7 +103,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx["::1"] = ulong.MaxValue;
             ctx["::2"] = 1;
-            Assert.Throws<IntercalException>(() => syslib64.DO_ADD64(ctx));
+            Assert.Throws<IntercalException>(() => syslib64_native.DO_ADD64(new ComponentCall(ctx)));
         }
 
         // ================================================================
@@ -116,7 +116,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 10;
             ctx[".2"] = 3;
-            syslib64.DO_MINUS16(ctx);
+            syslib64_native.DO_MINUS16(new ComponentCall(ctx));
             Assert.Equal(7UL, ctx[".3"]);
         }
 
@@ -126,7 +126,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 42;
             ctx[".2"] = 42;
-            syslib64.DO_MINUS16(ctx);
+            syslib64_native.DO_MINUS16(new ComponentCall(ctx));
             Assert.Equal(0UL, ctx[".3"]);
         }
 
@@ -136,7 +136,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 3;
             ctx[".2"] = 10;
-            Assert.Throws<IntercalException>(() => syslib64.DO_MINUS16(ctx));
+            Assert.Throws<IntercalException>(() => syslib64_native.DO_MINUS16(new ComponentCall(ctx)));
         }
 
         // ================================================================
@@ -149,7 +149,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[":1"] = 1000000;
             ctx[":2"] = 999999;
-            syslib64.DO_MINUS32(ctx);
+            syslib64_native.DO_MINUS32(new ComponentCall(ctx));
             Assert.Equal(1UL, ctx[":3"]);
         }
 
@@ -159,7 +159,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[":1"] = 0;
             ctx[":2"] = 1;
-            Assert.Throws<IntercalException>(() => syslib64.DO_MINUS32(ctx));
+            Assert.Throws<IntercalException>(() => syslib64_native.DO_MINUS32(new ComponentCall(ctx)));
         }
 
         // ================================================================
@@ -172,7 +172,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx["::1"] = 5000000000000UL;
             ctx["::2"] = 3000000000000UL;
-            syslib64.DO_MINUS64(ctx);
+            syslib64_native.DO_MINUS64(new ComponentCall(ctx));
             Assert.Equal(2000000000000UL, ctx["::3"]);
         }
 
@@ -182,7 +182,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx["::1"] = 0;
             ctx["::2"] = 1;
-            Assert.Throws<IntercalException>(() => syslib64.DO_MINUS64(ctx));
+            Assert.Throws<IntercalException>(() => syslib64_native.DO_MINUS64(new ComponentCall(ctx)));
         }
 
         // ================================================================
@@ -195,7 +195,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 6;
             ctx[".2"] = 7;
-            syslib64.DO_TIMES16(ctx);
+            syslib64_native.DO_TIMES16(new ComponentCall(ctx));
             Assert.Equal(42UL, ctx[":3"]);
         }
 
@@ -205,7 +205,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 65535;
             ctx[".2"] = 65535;
-            syslib64.DO_TIMES16(ctx);
+            syslib64_native.DO_TIMES16(new ComponentCall(ctx));
             Assert.Equal((ulong)65535 * 65535, ctx[":3"]);
         }
 
@@ -215,7 +215,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 12345;
             ctx[".2"] = 0;
-            syslib64.DO_TIMES16(ctx);
+            syslib64_native.DO_TIMES16(new ComponentCall(ctx));
             Assert.Equal(0UL, ctx[":3"]);
         }
 
@@ -229,7 +229,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[":1"] = 100000;
             ctx[":2"] = 200000;
-            syslib64.DO_TIMES32(ctx);
+            syslib64_native.DO_TIMES32(new ComponentCall(ctx));
             Assert.Equal(20000000000UL, ctx["::3"]);
         }
 
@@ -239,7 +239,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[":1"] = uint.MaxValue;
             ctx[":2"] = uint.MaxValue;
-            syslib64.DO_TIMES32(ctx);
+            syslib64_native.DO_TIMES32(new ComponentCall(ctx));
             Assert.Equal((ulong)uint.MaxValue * uint.MaxValue, ctx["::3"]);
         }
 
@@ -253,7 +253,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx["::1"] = 1000000UL;
             ctx["::2"] = 1000000UL;
-            syslib64.DO_TIMES64(ctx);
+            syslib64_native.DO_TIMES64(new ComponentCall(ctx));
             Assert.Equal(1000000000000UL, ctx["::3"]);
         }
 
@@ -263,7 +263,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx["::1"] = ulong.MaxValue;
             ctx["::2"] = 0;
-            syslib64.DO_TIMES64(ctx);
+            syslib64_native.DO_TIMES64(new ComponentCall(ctx));
             Assert.Equal(0UL, ctx["::3"]);
         }
 
@@ -273,7 +273,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx["::1"] = 123456789UL;
             ctx["::2"] = 1;
-            syslib64.DO_TIMES64(ctx);
+            syslib64_native.DO_TIMES64(new ComponentCall(ctx));
             Assert.Equal(123456789UL, ctx["::3"]);
         }
 
@@ -287,7 +287,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 42;
             ctx[".2"] = 7;
-            syslib64.DO_DIVIDE16(ctx);
+            syslib64_native.DO_DIVIDE16(new ComponentCall(ctx));
             Assert.Equal(6UL, ctx[".3"]);
             Assert.Equal(0UL, ctx[".4"]);
         }
@@ -298,7 +298,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 10;
             ctx[".2"] = 3;
-            syslib64.DO_DIVIDE16(ctx);
+            syslib64_native.DO_DIVIDE16(new ComponentCall(ctx));
             Assert.Equal(3UL, ctx[".3"]);
             Assert.Equal(1UL, ctx[".4"]);
         }
@@ -309,7 +309,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 3;
             ctx[".2"] = 10;
-            syslib64.DO_DIVIDE16(ctx);
+            syslib64_native.DO_DIVIDE16(new ComponentCall(ctx));
             Assert.Equal(0UL, ctx[".3"]);
             Assert.Equal(3UL, ctx[".4"]);
         }
@@ -320,7 +320,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 65535;
             ctx[".2"] = 1;
-            syslib64.DO_DIVIDE16(ctx);
+            syslib64_native.DO_DIVIDE16(new ComponentCall(ctx));
             Assert.Equal(65535UL, ctx[".3"]);
             Assert.Equal(0UL, ctx[".4"]);
         }
@@ -331,7 +331,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 42;
             ctx[".2"] = 0;
-            Assert.Throws<IntercalException>(() => syslib64.DO_DIVIDE16(ctx));
+            Assert.Throws<IntercalException>(() => syslib64_native.DO_DIVIDE16(new ComponentCall(ctx)));
         }
 
         [Fact]
@@ -340,7 +340,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 0;
             ctx[".2"] = 5;
-            syslib64.DO_DIVIDE16(ctx);
+            syslib64_native.DO_DIVIDE16(new ComponentCall(ctx));
             Assert.Equal(0UL, ctx[".3"]);
             Assert.Equal(0UL, ctx[".4"]);
         }
@@ -351,7 +351,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 15;
             ctx[".2"] = 3;
-            syslib64.DO_DIVIDE16(ctx);
+            syslib64_native.DO_DIVIDE16(new ComponentCall(ctx));
             Assert.Equal(5UL, ctx[".3"]);
             Assert.Equal(0UL, ctx[".4"]);
         }
@@ -362,7 +362,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 15;
             ctx[".2"] = 5;
-            syslib64.DO_DIVIDE16(ctx);
+            syslib64_native.DO_DIVIDE16(new ComponentCall(ctx));
             Assert.Equal(3UL, ctx[".3"]);
             Assert.Equal(0UL, ctx[".4"]);
         }
@@ -377,7 +377,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[":1"] = 1000000;
             ctx[":2"] = 1000;
-            syslib64.DO_DIVIDE32(ctx);
+            syslib64_native.DO_DIVIDE32(new ComponentCall(ctx));
             Assert.Equal(1000UL, ctx[":3"]);
             Assert.Equal(0UL, ctx[":4"]);
         }
@@ -388,7 +388,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[":1"] = 1000001;
             ctx[":2"] = 1000;
-            syslib64.DO_DIVIDE32(ctx);
+            syslib64_native.DO_DIVIDE32(new ComponentCall(ctx));
             Assert.Equal(1000UL, ctx[":3"]);
             Assert.Equal(1UL, ctx[":4"]);
         }
@@ -399,7 +399,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[":1"] = 42;
             ctx[":2"] = 0;
-            Assert.Throws<IntercalException>(() => syslib64.DO_DIVIDE32(ctx));
+            Assert.Throws<IntercalException>(() => syslib64_native.DO_DIVIDE32(new ComponentCall(ctx)));
         }
 
         [Fact]
@@ -408,7 +408,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[":1"] = uint.MaxValue;
             ctx[":2"] = 2;
-            syslib64.DO_DIVIDE32(ctx);
+            syslib64_native.DO_DIVIDE32(new ComponentCall(ctx));
             Assert.Equal((ulong)(uint.MaxValue / 2), ctx[":3"]);
             Assert.Equal(1UL, ctx[":4"]);
         }
@@ -423,7 +423,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx["::1"] = 1000000000000UL;
             ctx["::2"] = 1000000UL;
-            syslib64.DO_DIVIDE64(ctx);
+            syslib64_native.DO_DIVIDE64(new ComponentCall(ctx));
             Assert.Equal(1000000UL, ctx["::3"]);
             Assert.Equal(0UL, ctx["::4"]);
         }
@@ -434,7 +434,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx["::1"] = 7UL;
             ctx["::2"] = 2UL;
-            syslib64.DO_DIVIDE64(ctx);
+            syslib64_native.DO_DIVIDE64(new ComponentCall(ctx));
             Assert.Equal(3UL, ctx["::3"]);
             Assert.Equal(1UL, ctx["::4"]);
         }
@@ -445,7 +445,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx["::1"] = 42;
             ctx["::2"] = 0;
-            Assert.Throws<IntercalException>(() => syslib64.DO_DIVIDE64(ctx));
+            Assert.Throws<IntercalException>(() => syslib64_native.DO_DIVIDE64(new ComponentCall(ctx)));
         }
 
         // ================================================================
@@ -458,7 +458,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 10;
             ctx[".2"] = 3;
-            syslib64.DO_MODULO16(ctx);
+            syslib64_native.DO_MODULO16(new ComponentCall(ctx));
             Assert.Equal(1UL, ctx[".3"]);
         }
 
@@ -468,7 +468,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 15;
             ctx[".2"] = 5;
-            syslib64.DO_MODULO16(ctx);
+            syslib64_native.DO_MODULO16(new ComponentCall(ctx));
             Assert.Equal(0UL, ctx[".3"]);
         }
 
@@ -478,7 +478,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = 42;
             ctx[".2"] = 0;
-            Assert.Throws<IntercalException>(() => syslib64.DO_MODULO16(ctx));
+            Assert.Throws<IntercalException>(() => syslib64_native.DO_MODULO16(new ComponentCall(ctx)));
         }
 
         // ================================================================
@@ -491,7 +491,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[":1"] = 1000001;
             ctx[":2"] = 1000;
-            syslib64.DO_MODULO32(ctx);
+            syslib64_native.DO_MODULO32(new ComponentCall(ctx));
             Assert.Equal(1UL, ctx[":3"]);
         }
 
@@ -505,7 +505,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx["::1"] = 1000000000001UL;
             ctx["::2"] = 1000000UL;
-            syslib64.DO_MODULO64(ctx);
+            syslib64_native.DO_MODULO64(new ComponentCall(ctx));
             Assert.Equal(1UL, ctx["::3"]);
         }
 
@@ -517,7 +517,7 @@ namespace intercal.tests
         public void RANDOM16_ProducesValue()
         {
             var ctx = new ExecutionContext();
-            syslib64.DO_RANDOM16(ctx);
+            syslib64_native.DO_RANDOM16(new ComponentCall(ctx));
             // Result should be in 16-bit range
             Assert.True(ctx[".1"] <= 65535);
         }
@@ -527,12 +527,12 @@ namespace intercal.tests
         {
             // Call it several times, at least one should differ
             var ctx = new ExecutionContext();
-            syslib64.DO_RANDOM16(ctx);
+            syslib64_native.DO_RANDOM16(new ComponentCall(ctx));
             ulong first = ctx[".1"];
             bool differs = false;
             for (int i = 0; i < 100; i++)
             {
-                syslib64.DO_RANDOM16(ctx);
+                syslib64_native.DO_RANDOM16(new ComponentCall(ctx));
                 if (ctx[".1"] != first) { differs = true; break; }
             }
             Assert.True(differs);
@@ -546,7 +546,7 @@ namespace intercal.tests
         public void RANDOM32_ProducesValue()
         {
             var ctx = new ExecutionContext();
-            syslib64.DO_RANDOM32(ctx);
+            syslib64_native.DO_RANDOM32(new ComponentCall(ctx));
             Assert.True(ctx[":1"] <= uint.MaxValue);
         }
 
@@ -554,12 +554,12 @@ namespace intercal.tests
         public void RANDOM32_NotAlwaysSame()
         {
             var ctx = new ExecutionContext();
-            syslib64.DO_RANDOM32(ctx);
+            syslib64_native.DO_RANDOM32(new ComponentCall(ctx));
             ulong first = ctx[":1"];
             bool differs = false;
             for (int i = 0; i < 100; i++)
             {
-                syslib64.DO_RANDOM32(ctx);
+                syslib64_native.DO_RANDOM32(new ComponentCall(ctx));
                 if (ctx[":1"] != first) { differs = true; break; }
             }
             Assert.True(differs);
@@ -573,7 +573,7 @@ namespace intercal.tests
         public void RANDOM64_ProducesValue()
         {
             var ctx = new ExecutionContext();
-            syslib64.DO_RANDOM64(ctx);
+            syslib64_native.DO_RANDOM64(new ComponentCall(ctx));
             // Just verify it doesn't throw
             Assert.True(true);
         }
@@ -582,12 +582,12 @@ namespace intercal.tests
         public void RANDOM64_NotAlwaysSame()
         {
             var ctx = new ExecutionContext();
-            syslib64.DO_RANDOM64(ctx);
+            syslib64_native.DO_RANDOM64(new ComponentCall(ctx));
             ulong first = ctx["::1"];
             bool differs = false;
             for (int i = 0; i < 100; i++)
             {
-                syslib64.DO_RANDOM64(ctx);
+                syslib64_native.DO_RANDOM64(new ComponentCall(ctx));
                 if (ctx["::1"] != first) { differs = true; break; }
             }
             Assert.True(differs);
@@ -612,7 +612,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[".1"] = (ulong)a;
             ctx[".2"] = (ulong)b;
-            syslib64.DO_DIVIDE16(ctx);
+            syslib64_native.DO_DIVIDE16(new ComponentCall(ctx));
             ulong quotient = ctx[".3"];
             ulong remainder = ctx[".4"];
             Assert.Equal((ulong)a, quotient * (ulong)b + remainder);
@@ -629,7 +629,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx[":1"] = a;
             ctx[":2"] = b;
-            syslib64.DO_DIVIDE32(ctx);
+            syslib64_native.DO_DIVIDE32(new ComponentCall(ctx));
             ulong quotient = ctx[":3"];
             ulong remainder = ctx[":4"];
             Assert.Equal((ulong)a, quotient * (ulong)b + remainder);
@@ -645,7 +645,7 @@ namespace intercal.tests
             var ctx = new ExecutionContext();
             ctx["::1"] = a;
             ctx["::2"] = b;
-            syslib64.DO_DIVIDE64(ctx);
+            syslib64_native.DO_DIVIDE64(new ComponentCall(ctx));
             ulong quotient = ctx["::3"];
             ulong remainder = ctx["::4"];
             Assert.Equal(a, quotient * b + remainder);

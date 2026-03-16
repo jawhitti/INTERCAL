@@ -478,10 +478,9 @@ namespace INTERCAL
                     }
 
 
-                    ctx.EmitRaw("public bool DO_" + s.Label.Substring(1, s.Label.Length - 2) + "(ExecutionContext context)\r\n{\r\n");
-                    ctx.EmitRaw("   var frame = new ExecutionFrame(context, Eval, " + s.Label.Substring(1, s.Label.Length - 2) + "L);\r\n");
+                    ctx.EmitRaw("public void DO_" + s.Label.Substring(1, s.Label.Length - 2) + "(ComponentCall call)\r\n{\r\n");
+                    ctx.EmitRaw("   var frame = new ExecutionFrame(call.Context, Eval, " + s.Label.Substring(1, s.Label.Length - 2) + "L, call);\r\n");
                     ctx.EmitRaw("   Eval(frame);\r\n");
-                    ctx.EmitRaw("   return context.Done;\r\n");
                     ctx.EmitRaw("}\r\n\r\n");
                 }
             }

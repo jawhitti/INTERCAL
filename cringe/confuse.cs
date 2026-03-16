@@ -448,28 +448,16 @@ namespace INTERCAL
 							if(a.Label == this.Target)
 							{
 								Type t = e.assembly.GetType(a.ClassName);
-								MethodInfo m = t.GetMethod(a.MethodName, new Type[] { typeof(ExecutionContext) } );
-								
+								MethodInfo m = t.GetMethod(a.MethodName, new Type[] { typeof(ComponentCall) } );
+
 								if(m != null)
 								{
                                     if (m.IsStatic)
                                     {
-                                        //ctx.EmitRaw(a.ClassName + "." + a.MethodName + "(frame.ExecutionContext);");
-
                                         ctx.EmitRaw("{\r\n");
-                                        ctx.EmitRaw(string.Format("   bool shouldTerminate = {0}.{1}(frame.ExecutionContext);\r\n", a.ClassName, a.MethodName));
-                                        ctx.EmitRaw("   if (shouldTerminate)\r\n");
-                                        ctx.EmitRaw("   {\r\n");
-                                        ctx.EmitRaw("       goto exit;\r\n");
-                                        ctx.EmitRaw("   }\r\n");
-
-                                        if (ctx.debugBuild) {
-                                            ctx.EmitRaw("   else\r\n");
-                                            ctx.EmitRaw("   {\r\n");
-                                            ctx.EmitRaw(string.Format("      Trace.WriteLine(\"Resuming execution at {0}\");", StatementNumber));
-                                            ctx.EmitRaw("   }\r\n");
-                                        }
-
+                                        ctx.EmitRaw(string.Format("   var _call = new ComponentCall(frame.ExecutionContext);\r\n"));
+                                        ctx.EmitRaw(string.Format("   {0}.{1}(_call);\r\n", a.ClassName, a.MethodName));
+                                        ctx.EmitRaw("   if (frame.ExecutionContext.Done) goto exit;\r\n");
                                         ctx.EmitRaw("}\r\n");
 
                                     }
@@ -479,18 +467,15 @@ namespace INTERCAL
                                             ctx.ExternalReferences.Add(a.ClassName);
 
                                         ctx.EmitRaw("{\r\n");
-                                        ctx.EmitRaw("   bool shouldTerminate = " + ctx.GeneratePropertyName(a.ClassName) + "." + a.MethodName + "(frame.ExecutionContext);\r\n");
-                                        ctx.EmitRaw("   if (shouldTerminate) goto exit;\r\n");
-                                        // Handle cross-component RESUME depth propagation
-                                        ctx.EmitRaw("   int _rd = frame.ExecutionContext.ResumeDepth;\r\n");
-                                        ctx.EmitRaw("   frame.ExecutionContext.ResumeDepth = 0;\r\n");
+                                        ctx.EmitRaw("   var _call = new ComponentCall(frame.ExecutionContext);\r\n");
+                                        ctx.EmitRaw("   " + ctx.GeneratePropertyName(a.ClassName) + "." + a.MethodName + "(_call);\r\n");
+                                        ctx.EmitRaw("   if (frame.ExecutionContext.Done) goto exit;\r\n");
+                                        ctx.EmitRaw("   int _rd = _call.NextStackDepth;\r\n");
                                         ctx.EmitRaw("   if (_rd > 0) {\r\n");
                                         ctx.EmitRaw("      int _retLabel = 0;\r\n");
                                         ctx.EmitRaw("      int _popped = 0;\r\n");
                                         ctx.EmitRaw("      while (_popped < _rd && _nextStack.Count > 0) { _retLabel = _nextStack.Pop(); _popped++; }\r\n");
-                                        ctx.EmitRaw("      int _remaining = _rd - _popped;\r\n");
-                                        ctx.EmitRaw("      if (_retLabel > 0 && _remaining == 0) { switch(_retLabel) { /*RESUME_DISPATCH_PLACEHOLDER*/ } }\r\n");
-                                        ctx.EmitRaw("      frame.ExecutionContext.ResumeDepth = _remaining;\r\n");
+                                        ctx.EmitRaw("      if (_retLabel > 0) { switch(_retLabel) { /*RESUME_DISPATCH_PLACEHOLDER*/ } }\r\n");
                                         ctx.EmitRaw("      goto exit;\r\n");
                                         ctx.EmitRaw("   }\r\n");
                                         ctx.EmitRaw("}\r\n");
@@ -500,56 +485,7 @@ namespace INTERCAL
 
 								else
 								{
-									//look for the dynamic one.
-									m = t.GetMethod(a.MethodName, new Type[] { typeof(ExecutionContext) });
-									if(m != null)
-									{
-										if(m.IsStatic)
-                                        {
-                                            ctx.EmitRaw("{\r\n");
-                                            ctx.EmitRaw(string.Format("   bool shouldTerminate = {0}.{1}(frame.ExecutionContext);\r\n", a.ClassName, a.MethodName));
-                                            ctx.EmitRaw("   if (shouldTerminate)\r\n");
-                                            ctx.EmitRaw("   {\r\n");
-                                            ctx.EmitRaw("       goto exit;\r\n");
-                                            ctx.EmitRaw("   }\r\n");
-
-                                            if (ctx.debugBuild)
-                                            {
-                                                ctx.EmitRaw("   else\r\n");
-                                                ctx.EmitRaw("   {\r\n");
-                                                ctx.EmitRaw(string.Format("      Trace.WriteLine(\"Resuming execution at {0}\");", StatementNumber));
-                                                ctx.EmitRaw("   }\r\n");
-                                            }
-
-                                            ctx.EmitRaw("}\r\n");
-                                        }
-										else
-										{
-											if(!ctx.ExternalReferences.Contains(a.ClassName))
-												ctx.ExternalReferences.Add(a.ClassName);
-
-                                            ctx.EmitRaw("{\r\n");
-                                            ctx.EmitRaw("   bool shouldTerminate = " + ctx.GeneratePropertyName(a.ClassName) + "." + a.MethodName + "(frame.ExecutionContext);\r\n");
-                                            ctx.EmitRaw("   if (shouldTerminate) goto exit;\r\n");
-                                            ctx.EmitRaw("   int _rd = frame.ExecutionContext.ResumeDepth;\r\n");
-                                            ctx.EmitRaw("   frame.ExecutionContext.ResumeDepth = 0;\r\n");
-                                            ctx.EmitRaw("   if (_rd > 0) {\r\n");
-                                            ctx.EmitRaw("      int _retLabel = 0;\r\n");
-                                            ctx.EmitRaw("      int _popped = 0;\r\n");
-                                            ctx.EmitRaw("      while (_popped < _rd && _nextStack.Count > 0) { _retLabel = _nextStack.Pop(); _popped++; }\r\n");
-                                            ctx.EmitRaw("      int _remaining = _rd - _popped;\r\n");
-                                            ctx.EmitRaw("      if (_retLabel > 0 && _remaining == 0) { switch(_retLabel) { /*RESUME_DISPATCH_PLACEHOLDER*/ } }\r\n");
-                                            ctx.EmitRaw("      frame.ExecutionContext.ResumeDepth = _remaining;\r\n");
-                                            ctx.EmitRaw("      goto exit;\r\n");
-                                            ctx.EmitRaw("   }\r\n");
-
-                                            ctx.EmitRaw("}\r\n");
-
-                                        }
-                                    }
-									else
-										throw new CompilationException(String.Format(Messages.E2004, a.ClassName, a.MethodName));
-
+									throw new CompilationException(String.Format(Messages.E2004, a.ClassName, a.MethodName));
 								}
 								return;
 							}
@@ -666,7 +602,8 @@ namespace INTERCAL
                 ctx.EmitRaw("         int _popped = 0;\r\n");
                 ctx.EmitRaw("         while (_popped < depth && _nextStack.Count > 0) { _retLabel = _nextStack.Pop(); _popped++; }\r\n");
                 ctx.EmitRaw("         int _remaining = depth - _popped;\r\n");
-                ctx.EmitRaw("         if (_retLabel == 0) { frame.ExecutionContext.ResumeDepth = _remaining; goto exit; }\r\n");
+                ctx.EmitRaw("         if (_retLabel == 0 && frame.Call != null) { frame.Call.NextStackDepth = _remaining; goto exit; }\r\n");
+                ctx.EmitRaw("         if (_retLabel == 0) { goto exit; }\r\n");
                 ctx.EmitRaw("         if (_retLabel > 0) { switch(_retLabel) { /*RESUME_DISPATCH_PLACEHOLDER*/ } }\r\n");
 
                 ctx.EmitRaw("      }\r\n");

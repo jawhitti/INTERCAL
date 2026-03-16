@@ -19,7 +19,8 @@ namespace intercal.tests
         {
             var method = typeof(testlib).GetMethod("DO_" + label);
             Assert.NotNull(method);
-            method.Invoke(lib, new object[] { ctx });
+            var call = new ComponentCall(ctx);
+            method.Invoke(lib, new object[] { call });
         }
 
         // ================================================================
