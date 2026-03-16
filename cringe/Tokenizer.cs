@@ -164,9 +164,10 @@ namespace INTERCAL
                     pos++;
                     return new Token(TokenType.BinaryOp, c.ToString(), startPos);
 
-                case '"': case '\'': case '+':
+                case '"': case '\'': case '!': case '+':
                     pos++;
-                    return new Token(TokenType.Separator, c.ToString(), startPos);
+                    // ! is an alternate spark (') in classic INTERCAL
+                    return new Token(TokenType.Separator, c == '!' ? "'" : c.ToString(), startPos);
 
                 case '%':
                     pos++;
