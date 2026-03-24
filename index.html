@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTERCAL</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #0a0a0a;
+            color: #e0e0e0;
+            font-family: 'IBM Plex Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.2em;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: clamp(0.8rem, 2vw, 1.1rem);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .doors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            width: 100%;
+            margin-bottom: 3rem;
+        }
+
+        .door {
+            background: #141414;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .door:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        }
+
+        .door::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .door:hover::before { opacity: 1; }
+
+        .door h2 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .door .tagline {
+            color: var(--accent);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .door p {
+            color: #999;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .door .tech {
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: #555;
+        }
+
+        /* INTERCAL-64: serious blue */
+        .door.math { --accent: #4a9eff; }
+
+        /* Schrodie-Kitty: playful purple */
+        .door.cats { --accent: #c084fc; }
+
+        /* INTERCAL: amber archive */
+        .door.museum { --accent: #f59e0b; }
+
+        .footer {
+            color: #444;
+            font-size: 0.75rem;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .footer a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .footer a:hover { color: #999; }
+
+        .code-sample {
+            background: #1a1a1a;
+            border-left: 2px solid var(--accent);
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #aaa;
+            white-space: pre;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>INTERCAL</h1>
+    <div class="subtitle">The Compiler Language With No Pronounceable Acronym &mdash; since 1972</div>
+
+    <div class="doors">
+
+        <a href="https://github.com/jawhitti/INTERCAL64" class="door math">
+            <h2>INTERCAL-64</h2>
+            <div class="tagline">You're here for the math</div>
+            <p>64-bit arithmetic. Formal proofs. A system library in pure INTERCAL. Knight's tours, Hilbert curves, and the paper that proves COME FROM is computationally necessary.</p>
+            <div class="code-sample">DO ::3 <- ::1 $ ::2
+PLEASE READ OUT ::3
+DO GIVE UP</div>
+            <div class="tech">churn &middot; .ic64 &middot; DAP debugger &middot; .NET 9</div>
+        </a>
+
+        <a href="https://github.com/jawhitti/Schrodie-Kitty" class="door cats">
+            <h2>Schrodie Kitty</h2>
+            <div class="tagline">You're here for the cats</div>
+            <p>Quantum superposition. Entangled cat boxes. Nondeterministic control flow. A competitive programming language where cats die and the debugger judges you.</p>
+            <div class="code-sample">DO ENTANGLE []1 + []2
+DO &#x27E8;1|&#x03C8;&#x27E9; READ OUT .1
+PLEASE GIVE UP</div>
+            <div class="tech">VS Code &middot; .schrodie &middot; cat golf &middot; death counter</div>
+        </a>
+
+        <a href="https://github.com/jawhitti/INTERCAL" class="door museum">
+            <h2>INTERCAL</h2>
+            <div class="tagline">You're here for the archaeology</div>
+            <p>The original CRINGE compiler. Component-oriented INTERCAL for .NET. Preserved in amber. Where it all started.</p>
+            <div class="code-sample">DO ,1 <- #13
+PLEASE DO ,1SUB#1 <- #234
+PLEASE READ OUT ,1
+PLEASE GIVE UP</div>
+            <div class="tech">cringe &middot; .i &middot; circa 2019 &middot; museum piece</div>
+        </a>
+
+    </div>
+
+    <div class="footer">
+        Jason Whittington, 2026. With computational assistance that wishes to remain anonymous.<br>
+        This work received no funding from any source.
+    </div>
+
+</body>
+</html>
