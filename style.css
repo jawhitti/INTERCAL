@@ -128,23 +128,23 @@ body {
     margin-top: 12px;
 }
 
-.card .btn-code {
+a.btn-code {
     display: inline-flex;
     align-items: center;
     gap: 5px;
     padding: 4px 12px;
     font-size: 12px;
     font-weight: 600;
-    color: #fff;
+    color: #fff !important;
     background: #1a7f37;
     border: 1px solid rgba(27,31,36,0.15);
     border-radius: 6px;
-    text-decoration: none;
+    text-decoration: none !important;
     transition: background 0.15s ease;
     white-space: nowrap;
 }
 
-.card .btn-code:hover { background: #197f37; }
+a.btn-code:hover { background: #197f37; color: #fff !important; }
 
 .card .label {
     display: inline-block;
