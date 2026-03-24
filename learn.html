@@ -5,6 +5,171 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learn INTERCAL - INTERCAL::64</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .showcase {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-top: 24px;
+            margin-bottom: 48px;
+        }
+
+        .showcase-card {
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            overflow: hidden;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .showcase-card:hover {
+            border-color: #0969da;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .showcase-banner {
+            padding: 24px 32px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+        }
+
+        .showcase-icon {
+            font-size: 36px;
+            color: #0969da;
+            flex-shrink: 0;
+            width: 48px;
+            text-align: center;
+            padding-top: 2px;
+        }
+
+        .showcase-content { flex: 1; }
+
+        .showcase-content h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2328;
+            margin-bottom: 4px;
+        }
+
+        .showcase-content .subtitle {
+            font-size: 13px;
+            color: #0969da;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .showcase-content p {
+            font-size: 14px;
+            color: #656d76;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        .showcase-code {
+            background: #0d1117;
+            color: #e6edf3;
+            padding: 16px 32px;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre;
+            overflow-x: auto;
+            border-top: 1px solid #d1d9e0;
+        }
+
+        .showcase-footer {
+            background: #f6f8fa;
+            border-top: 1px solid #d1d9e0;
+            padding: 12px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .btn-code {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            background: #1a7f37;
+            border: 1px solid rgba(27,31,36,0.15);
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .btn-code:hover { background: #197f37; color: #fff; }
+
+        /* Lesson grid — more compact than problems */
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+            margin-bottom: 48px;
+        }
+
+        .lesson-card {
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            padding: 16px 20px;
+            text-decoration: none;
+            color: inherit;
+            transition: border-color 0.15s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .lesson-card:hover { border-color: #0969da; }
+
+        .lesson-num {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0969da;
+            background: #ddf4ff;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .lesson-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2328;
+            margin-bottom: 2px;
+        }
+
+        .lesson-info p {
+            font-size: 12px;
+            color: #656d76;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .difficulty-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 12px;
+            margin-right: 4px;
+        }
+
+        .difficulty-tag.beginner { background: #dafbe1; color: #1a7f37; }
+        .difficulty-tag.intermediate { background: #fff8c5; color: #9a6700; }
+        .difficulty-tag.advanced { background: #ffebe9; color: #cf222e; }
+        .difficulty-tag.expert { background: #fbefff; color: #8250df; }
+    </style>
 </head>
 <body>
 
@@ -27,49 +192,342 @@
 
     <h2>Learn INTERCAL in 17 Steps</h2>
 
-    <p>The <code>samples/learn-intercal/</code> folder contains 17 tiny programs, one per language feature. Each is heavily commented and designed to be stepped through in the debugger. Open a file, set a breakpoint on the first line, press F5, and start stepping.</p>
+    <p>Each lesson is a tiny program designed to be stepped through in the debugger. Open the file, set a breakpoint on line 1, press F5, and watch the variables panel.</p>
 
     <div class="note">
-        <strong>Tip:</strong> Open the Variables panel and Watch panel side by side. The comments in each program tell you what to look for as you step.
+        <strong>Tip:</strong> Open the Variables panel and Watch panel side by side. The <code>DO NOTE</code> comments in each program tell you exactly what to look for as you step.
     </div>
 
-    <h2>Lessons</h2>
+    <div class="lesson-grid">
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/01-hello.i" class="lesson-card">
+            <div class="lesson-num">01</div>
+            <div class="lesson-info">
+                <h4>Hello World</h4>
+                <p>Turing tape output encoding</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/02-variables.i" class="lesson-card">
+            <div class="lesson-num">02</div>
+            <div class="lesson-info">
+                <h4>Variables &amp; Constants</h4>
+                <p>Spots, two-spots, four-spots, meshes, fences, stockades</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/03-mingle.i" class="lesson-card">
+            <div class="lesson-num">03</div>
+            <div class="lesson-info">
+                <h4>Mingle ($)</h4>
+                <p>Bit interleaving — the core operator</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/04-select.i" class="lesson-card">
+            <div class="lesson-num">04</div>
+            <div class="lesson-info">
+                <h4>Select (~)</h4>
+                <p>Bit extraction with masks</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/05-unary.i" class="lesson-card">
+            <div class="lesson-num">05</div>
+            <div class="lesson-info">
+                <h4>Unary Operators</h4>
+                <p>AND, OR, XOR on adjacent bit pairs</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/06-calculate.i" class="lesson-card">
+            <div class="lesson-num">06</div>
+            <div class="lesson-info">
+                <h4>Calculate</h4>
+                <p>Assignment and nested expressions</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/07-next-resume.i" class="lesson-card">
+            <div class="lesson-num">07</div>
+            <div class="lesson-info">
+                <h4>NEXT &amp; RESUME</h4>
+                <p>Subroutine calls and returns</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/08-forget.i" class="lesson-card">
+            <div class="lesson-num">08</div>
+            <div class="lesson-info">
+                <h4>FORGET</h4>
+                <p>Dropping the return address</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/09-abstain-reinstate.i" class="lesson-card">
+            <div class="lesson-num">09</div>
+            <div class="lesson-info">
+                <h4>ABSTAIN &amp; REINSTATE</h4>
+                <p>Disabling and re-enabling statements</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/10-come-from.i" class="lesson-card">
+            <div class="lesson-num">10</div>
+            <div class="lesson-info">
+                <h4>COME FROM</h4>
+                <p>The opposite of GOTO</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/11-stash-retrieve.i" class="lesson-card">
+            <div class="lesson-num">11</div>
+            <div class="lesson-info">
+                <h4>STASH &amp; RETRIEVE</h4>
+                <p>Saving and restoring state</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/12-ignore-remember.i" class="lesson-card">
+            <div class="lesson-num">12</div>
+            <div class="lesson-info">
+                <h4>IGNORE &amp; REMEMBER</h4>
+                <p>Read-only variables</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/13-please.i" class="lesson-card">
+            <div class="lesson-num">13</div>
+            <div class="lesson-info">
+                <h4>Politeness</h4>
+                <p>The compiler demands manners</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/14-arrays.i" class="lesson-card">
+            <div class="lesson-num">14</div>
+            <div class="lesson-info">
+                <h4>Arrays</h4>
+                <p>Tails, hybrids, and SUB indexing</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/15-syslib.i" class="lesson-card">
+            <div class="lesson-num">15</div>
+            <div class="lesson-info">
+                <h4>System Library</h4>
+                <p>ADD, MINUS, TIMES, DIVIDE via NEXT</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/16-write-in.i" class="lesson-card">
+            <div class="lesson-num">16</div>
+            <div class="lesson-info">
+                <h4>Input</h4>
+                <p>WRITE IN reads. Yes, really.</p>
+            </div>
+        </a>
+        <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/17-come-from-loop.i" class="lesson-card">
+            <div class="lesson-num">17</div>
+            <div class="lesson-info">
+                <h4>COME FROM Loops</h4>
+                <p>The fundamental iteration pattern</p>
+            </div>
+        </a>
+    </div>
 
-    <table>
-        <tr><th>#</th><th>File</th><th>What You'll Learn</th></tr>
-        <tr><td>01</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/01-hello.i">hello.i</a></td><td>Hello World — how INTERCAL outputs text via the Turing tape model</td></tr>
-        <tr><td>02</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/02-variables.i">variables.i</a></td><td>Spots, two-spots, four-spots, meshes, fences, stockades</td></tr>
-        <tr><td>03</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/03-mingle.i">mingle.i</a></td><td>The mingle operator (<code>$</code>) — bit interleaving</td></tr>
-        <tr><td>04</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/04-select.i">select.i</a></td><td>The select operator (<code>~</code>) — bit extraction with masks</td></tr>
-        <tr><td>05</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/05-unary.i">unary.i</a></td><td>Unary AND, OR, XOR on adjacent bit pairs</td></tr>
-        <tr><td>06</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/06-calculate.i">calculate.i</a></td><td>Assignment (<code>&lt;-</code>) and nested expressions with sparks and ears</td></tr>
-        <tr><td>07</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/07-next-resume.i">next-resume.i</a></td><td>Subroutine calls with NEXT and RESUME</td></tr>
-        <tr><td>08</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/08-forget.i">forget.i</a></td><td>FORGET — dropping the return address (one-way trip)</td></tr>
-        <tr><td>09</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/09-abstain-reinstate.i">abstain-reinstate.i</a></td><td>Disabling and re-enabling statements</td></tr>
-        <tr><td>10</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/10-come-from.i">come-from.i</a></td><td>COME FROM — the opposite of GOTO</td></tr>
-        <tr><td>11</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/11-stash-retrieve.i">stash-retrieve.i</a></td><td>Saving and restoring variable state</td></tr>
-        <tr><td>12</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/12-ignore-remember.i">ignore-remember.i</a></td><td>Read-only variables</td></tr>
-        <tr><td>13</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/13-please.i">please.i</a></td><td>Politeness requirements (yes, really)</td></tr>
-        <tr><td>14</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/14-arrays.i">arrays.i</a></td><td>Tails, hybrids, and SUB indexing</td></tr>
-        <tr><td>15</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/15-syslib.i">syslib.i</a></td><td>Arithmetic via the system library</td></tr>
-        <tr><td>16</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/16-write-in.i">write-in.i</a></td><td>User input (yes, WRITE IN reads and READ OUT writes)</td></tr>
-        <tr><td>17</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/17-come-from-loop.i">come-from-loop.i</a></td><td>Looping with COME FROM</td></tr>
-    </table>
+    <h2>Common INTERCAL Idioms</h2>
 
-    <h2>What's Next After the Lessons</h2>
+    <p>Once you understand the individual statements, you need to learn how they combine. INTERCAL has no <code>if</code>, no <code>while</code>, no <code>for</code>. These idioms are how you build those constructs from the primitives.</p>
 
-    <p>Once you've completed the 17 lessons, try these programs in order of increasing difficulty:</p>
+    <div class="showcase">
 
-    <table>
-        <tr><th>Program</th><th>Difficulty</th><th>What It Demonstrates</th></tr>
-        <tr><td><code>fizzbuzz.i</code></td><td>Beginner</td><td>ABSTAIN/REINSTATE for conditional logic</td></tr>
-        <tr><td><code>collatz.i</code></td><td>Beginner</td><td>Conditional branching with syslib arithmetic</td></tr>
-        <tr><td><code>rot13.i</code></td><td>Intermediate</td><td>Bit manipulation via mingle and select</td></tr>
-        <tr><td><code>beer.i</code></td><td>Intermediate</td><td>The double-NEXT trampoline pattern</td></tr>
-        <tr><td><code>primes.i</code></td><td>Advanced</td><td>Iterative division — syslib stress test</td></tr>
-        <tr><td><code>stable_marriage.i</code></td><td>Advanced</td><td>Nested COME FROM loops, trampolines</td></tr>
-        <tr><td><code>warnsdorff/</code></td><td>Expert</td><td>Bitboards, 64-bit arithmetic, full algorithm</td></tr>
-    </table>
+        <!-- Mingle + Unary = Binary Logic -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-link"></i></div>
+                <div class="showcase-content">
+                    <h3>Mingle + Unary = Binary Logic</h3>
+                    <div class="subtitle">The key insight that makes INTERCAL operators make sense</div>
+                    <p>The unary operators (<code>&amp;</code> <code>V</code> <code>?</code>) seem pointless when applied to a single value. They make sense when you realize they're meant to be used on <strong>mingled pairs</strong>. Mingle two values to interleave their bits into adjacent pairs. Then apply a unary operator — it performs the binary operation on each pair. Mingle is the setup. Unary is the execution.</p>
+                </div>
+            </div>
+            <div class="showcase-code">DO NOTE Binary AND of .1 and .2:
+DO :1 <- .1 $ .2          DO NOTE mingle: bits are now in adjacent pairs
+DO .3 <- '&:1' ~ '#0$#0'  DO NOTE unary AND on pairs, select result bits
+
+DO NOTE This is how the syslib implements all binary logic.
+DO NOTE Mingle = "set up the operation". Unary = "execute it".</div>
+        </div>
+
+        <!-- Zero Test -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-equals"></i></div>
+                <div class="showcase-content">
+                    <h3>The Zero Test</h3>
+                    <div class="subtitle">INTERCAL has no comparison operators. This is how you test for zero.</div>
+                    <p>Subtract two values using the syslib. If the result is zero, the values are equal. But how do you <em>branch</em> on zero? You can't — there's no <code>if</code>. Instead, use the result as a RESUME depth. Zero means RESUME #0 (illegal), non-zero means RESUME #N (pops N entries). The trick is setting up the NEXT stack so the right thing happens either way.</p>
+                </div>
+            </div>
+            <div class="showcase-code">DO NOTE Is .1 equal to .2?
+DO (1010) NEXT           DO NOTE .3 = .1 - .2
+DO NOTE .3 is 0 if equal, nonzero if different.
+DO NOTE Use .3 to index into a dispatch table or as a RESUME depth.</div>
+        </div>
+
+        <!-- Double-NEXT Trampoline -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-arrows-split-up-and-left"></i></div>
+                <div class="showcase-content">
+                    <h3>The Double-NEXT Trampoline</h3>
+                    <div class="subtitle">Conditional branching inside COME FROM loops</div>
+                    <p>INTERCAL has no <code>if/else</code>. The double-NEXT trampoline provides it. Push two return addresses onto the NEXT stack, then RESUME to one of them based on a computed value. The "unused" address is cleaned up by a FORGET. This pattern was discovered during the beer.i implementation and became the standard for all conditional branching in COME FROM loops.</p>
+                </div>
+            </div>
+            <div class="showcase-code">    DO (1000) NEXT           DO NOTE call syslib, result in .3
+    DO (110) NEXT            DO NOTE push "true" return address
+    DO (120) NEXT            DO NOTE push "false" return address
+    DO RESUME .3             DO NOTE .3 = 1 → true path, .3 = 2 → false path
+
+(110) DO FORGET #1           DO NOTE true path: discard false address
+      DO NOTE ... true branch code ...
+      DO RESUME #1
+
+(120) DO FORGET #1           DO NOTE false path: discard true address
+      DO NOTE ... false branch code ...
+      DO RESUME #1</div>
+        </div>
+
+        <!-- COME FROM Loop -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-rotate-left"></i></div>
+                <div class="showcase-content">
+                    <h3>The COME FROM Loop</h3>
+                    <div class="subtitle">Stack-free iteration that doesn't corrupt the NEXT stack</div>
+                    <p>COME FROM creates a back-edge: after the target line executes, control jumps to the COME FROM statement. Combined with ABSTAIN to break, this is INTERCAL's <code>while</code> loop. Unlike NEXT/RESUME loops, COME FROM loops don't touch the NEXT stack — so they can run for any number of iterations without hitting the 79-entry stack limit.</p>
+                </div>
+            </div>
+            <div class="showcase-code">(10) DO COME FROM (20)      DO NOTE loop back-edge
+     DO NOTE ... loop body ...
+     DO NOTE To exit: DO ABSTAIN FROM (10)
+(20) DO NOTE COME FROM fires after this line
+
+     DO NOTE Execution continues here only after ABSTAIN</div>
+        </div>
+
+        <!-- ABSTAIN as Conditional -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-toggle-off"></i></div>
+                <div class="showcase-content">
+                    <h3>ABSTAIN as Conditional Execution</h3>
+                    <div class="subtitle">INTERCAL's <code>if</code> statement: disable the code you don't want to run</div>
+                    <p>ABSTAIN a statement to skip it. REINSTATE to re-enable it. This is how INTERCAL implements conditional output, optional computation, and loop exit. ABSTAIN a READ OUT and the value is silently not printed. ABSTAIN a COME FROM and the loop stops. REINSTATE it and it starts again.</p>
+                </div>
+            </div>
+            <div class="showcase-code">DO NOTE Print .1 only if some condition is met:
+    DO ABSTAIN FROM (50)     DO NOTE disable the print
+    DO NOTE ... check condition, REINSTATE (50) if true ...
+(50) PLEASE READ OUT .1      DO NOTE only fires if reinstated
+
+DO NOTE This is COME FROM + ABSTAIN = conditional loop pattern.
+DO NOTE It's what for(...) { if(...) print(...); } looks like in INTERCAL.</div>
+        </div>
+
+        <!-- Select as Right-Shift -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-arrow-right"></i></div>
+                <div class="showcase-content">
+                    <h3>Select as Right-Shift</h3>
+                    <div class="subtitle">INTERCAL has no shift operator. It doesn't need one.</div>
+                    <p>Select with a contiguous high-bit mask extracts the top N bits and right-justifies them. That's a logical right-shift. <code>.1 ~ #65280</code> selects the top 8 bits of a 16-bit value and packs them into bits 0-7. Discovered during the Knight's Tour implementation.</p>
+                </div>
+            </div>
+            <div class="showcase-code">DO NOTE Right-shift .1 by 8 positions:
+DO .2 <- .1 ~ #65280      DO NOTE select top 8 bits, right-justified
+DO NOTE #65280 = 0xFF00 = 1111111100000000 binary
+DO NOTE The selected bits pack to the right automatically.</div>
+        </div>
+
+    </div>
+
+    <h2>What's Next</h2>
+
+    <p>After the lessons and idioms, try these programs in order of increasing difficulty:</p>
+
+    <div class="showcase">
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><span class="difficulty-tag beginner">Beginner</span></div>
+                <div class="showcase-content">
+                    <h3>FizzBuzz</h3>
+                    <div class="subtitle">ABSTAIN/REINSTATE for conditional logic</div>
+                    <p>The classic interview problem. If INTERCAL can do FizzBuzz, it can do anything. (It can barely do FizzBuzz.)</p>
+                </div>
+            </div>
+            <div class="showcase-footer">
+                <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/fizzbuzz.i" class="btn-code"><i class="fas fa-code"></i> Code</a>
+            </div>
+        </div>
+
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><span class="difficulty-tag beginner">Beginner</span></div>
+                <div class="showcase-content">
+                    <h3>Collatz Conjecture</h3>
+                    <div class="subtitle">Conditional branching with syslib arithmetic</div>
+                    <p>Apply 3n+1 until you reach 1. Simple loop, real arithmetic, good debugger practice.</p>
+                </div>
+            </div>
+            <div class="showcase-footer">
+                <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/collatz.i" class="btn-code"><i class="fas fa-code"></i> Code</a>
+            </div>
+        </div>
+
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><span class="difficulty-tag intermediate">Intermediate</span></div>
+                <div class="showcase-content">
+                    <h3>ROT13</h3>
+                    <div class="subtitle">Bit manipulation via mingle and select</div>
+                    <p>Character transformation using the mingle+unary pattern. Real bit surgery.</p>
+                </div>
+            </div>
+            <div class="showcase-footer">
+                <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/rot13.i" class="btn-code"><i class="fas fa-code"></i> Code</a>
+            </div>
+        </div>
+
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><span class="difficulty-tag intermediate">Intermediate</span></div>
+                <div class="showcase-content">
+                    <h3>99 Bottles of Beer</h3>
+                    <div class="subtitle">The double-NEXT trampoline pattern</div>
+                    <p>This is where the trampoline was invented. The program that changed how INTERCAL loops work.</p>
+                </div>
+            </div>
+            <div class="showcase-footer">
+                <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/beer.i" class="btn-code"><i class="fas fa-code"></i> Code</a>
+            </div>
+        </div>
+
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><span class="difficulty-tag advanced">Advanced</span></div>
+                <div class="showcase-content">
+                    <h3>Prime Sieve</h3>
+                    <div class="subtitle">Iterative division — syslib stress test</div>
+                    <p>Trial division for every candidate. Exercises the full syslib arithmetic pipeline.</p>
+                </div>
+            </div>
+            <div class="showcase-footer">
+                <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/primes.i" class="btn-code"><i class="fas fa-code"></i> Code</a>
+            </div>
+        </div>
+
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><span class="difficulty-tag expert">Expert</span></div>
+                <div class="showcase-content">
+                    <h3>Knight's Tour</h3>
+                    <div class="subtitle">Bitboards, 64-bit arithmetic, the full algorithm</div>
+                    <p>The most complex INTERCAL program ever written. If you can read this, you can read anything.</p>
+                </div>
+            </div>
+            <div class="showcase-footer">
+                <a href="https://github.com/jawhitti/INTERCAL64/tree/develop/samples/warnsdorff" class="btn-code"><i class="fas fa-code"></i> Code</a>
+            </div>
+        </div>
+    </div>
 
     <h2>Quick Reference</h2>
 
@@ -95,11 +553,11 @@
     <h3>Operators</h3>
     <table>
         <tr><th>Operator</th><th>Name</th><th>What It Does</th></tr>
-        <tr><td><code>$</code></td><td>mingle</td><td>Interleave bits of two values</td></tr>
-        <tr><td><code>~</code></td><td>select</td><td>Extract bits using a mask</td></tr>
-        <tr><td><code>&amp;</code></td><td>AND</td><td>Unary AND of adjacent bit pairs</td></tr>
-        <tr><td><code>V</code></td><td>OR</td><td>Unary OR of adjacent bit pairs</td></tr>
-        <tr><td><code>?</code></td><td>XOR</td><td>Unary XOR of adjacent bit pairs</td></tr>
+        <tr><td><code>$</code></td><td>mingle</td><td>Interleave bits of two values. <em>Sets up</em> a binary operation.</td></tr>
+        <tr><td><code>~</code></td><td>select</td><td>Extract bits using a mask. Right-justifies the result.</td></tr>
+        <tr><td><code>&amp;</code></td><td>AND</td><td>Unary AND of adjacent bit pairs. Apply to mingled value for binary AND.</td></tr>
+        <tr><td><code>V</code></td><td>OR</td><td>Unary OR of adjacent bit pairs. Apply to mingled value for binary OR.</td></tr>
+        <tr><td><code>?</code></td><td>XOR</td><td>Unary XOR of adjacent bit pairs. Apply to mingled value for binary XOR.</td></tr>
     </table>
 
 </div>
