@@ -5,6 +5,160 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Papers - INTERCAL::64</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .showcase {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-top: 24px;
+            margin-bottom: 48px;
+        }
+
+        .showcase-card {
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            overflow: hidden;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .showcase-card:hover {
+            border-color: #0969da;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .showcase-banner {
+            padding: 24px 32px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+        }
+
+        .showcase-icon {
+            font-size: 36px;
+            color: #0969da;
+            flex-shrink: 0;
+            width: 48px;
+            text-align: center;
+            padding-top: 2px;
+        }
+
+        .showcase-content { flex: 1; }
+
+        .showcase-content h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2328;
+            margin-bottom: 2px;
+        }
+
+        .showcase-content .authors {
+            font-size: 13px;
+            color: #656d76;
+            margin-bottom: 8px;
+        }
+
+        .showcase-content .subtitle {
+            font-size: 13px;
+            color: #0969da;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .showcase-content p {
+            font-size: 14px;
+            color: #656d76;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        .showcase-content ul {
+            font-size: 14px;
+            color: #656d76;
+            line-height: 1.6;
+            margin-top: 8px;
+            padding-left: 1.5em;
+        }
+
+        .showcase-content li { margin-bottom: 4px; }
+        .showcase-content li strong { color: #1f2328; }
+
+        .showcase-discovery {
+            background: #f6f8fa;
+            border-top: 1px solid #d1d9e0;
+            padding: 16px 32px;
+            font-size: 13px;
+            color: #1f2328;
+        }
+
+        .showcase-discovery strong { color: #0550ae; }
+
+        .showcase-footer {
+            background: #f6f8fa;
+            border-top: 1px solid #d1d9e0;
+            padding: 12px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .showcase-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .showcase-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 12px;
+            background: #ddf4ff;
+            color: #0969da;
+        }
+
+        .showcase-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-code {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            background: #1a7f37;
+            border: 1px solid rgba(27,31,36,0.15);
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .btn-code:hover { background: #197f37; color: #fff; }
+
+        .btn-paper {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1f2328;
+            background: #f6f8fa;
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .btn-paper:hover { background: #eaeef2; color: #1f2328; }
+    </style>
 </head>
 <body>
 
@@ -29,77 +183,205 @@
 
     <p>Yes, there are academic papers about INTERCAL. No, we are not joking. These are real results with real proofs. The language just happens to be absurd.</p>
 
-    <h2>COME FROM Considered Helpful</h2>
+    <div class="showcase">
 
-    <p><strong>Jason Whittington and Claude (Anthropic), 2026</strong></p>
+        <!-- COME FROM Considered Helpful -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-square-root-variable"></i></div>
+                <div class="showcase-content">
+                    <h3>COME FROM Considered Helpful</h3>
+                    <div class="authors">Jason Whittington and Claude (Anthropic), 2026</div>
+                    <p>The COME FROM statement has been INTERCAL's most ridiculed feature for over thirty years. This paper proves it is computationally necessary. A deliberate riff on Dijkstra's "Go To Statement Considered Harmful" — arguing that the statement Dijkstra would have despised most is the one INTERCAL actually needs.</p>
+                    <ul>
+                        <li><strong>Lemma 1:</strong> FORGET in a callable subroutine destroys the caller's return address</li>
+                        <li><strong>Lemma 2:</strong> NEXT/RESUME loops accumulate residual stack entries (79 max)</li>
+                        <li><strong>Theorem:</strong> No INTERCAL-72 control flow can implement arbitrary-length loops in callable subroutines</li>
+                        <li><strong>Corollary:</strong> Bubble sort limited to 13 elements (78 comparisons ≤ 79 stack depth)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="showcase-discovery">
+                <strong>Main result:</strong> INTERCAL-72's NEXT/RESUME control flow cannot express callable subroutines containing arbitrary-length loops. The NEXT stack imposes a hard limit of 79 iterations. COME FROM removes this limitation entirely.
+            </div>
+            <div class="showcase-footer">
+                <div class="showcase-tags">
+                    <span class="showcase-tag">formal proof</span>
+                    <span class="showcase-tag">TLA+ model</span>
+                    <span class="showcase-tag">control flow</span>
+                </div>
+                <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/COME_FROM_Considered_Helpful.md" class="btn-code"><i class="fas fa-scroll"></i> Read Paper</a>
+            </div>
+        </div>
 
-    <p>The COME FROM statement has been INTERCAL's most ridiculed feature for over thirty years. This paper proves it is computationally necessary.</p>
+        <!-- SIGBOVIK -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-award"></i></div>
+                <div class="showcase-content">
+                    <h3>SIGBOVIK 2026 Submission</h3>
+                    <div class="authors">Jason Whittington and Claude (Anthropic), 2026</div>
+                    <p>A condensed version of the COME FROM proof submitted to SIGBOVIK, the annual conference for research that is technically correct but probably shouldn't exist. Includes the TLA+ model, the 15-line Lemma 1 reproducer, and cross-validation results on both SCHRODIE and C-INTERCAL.</p>
+                </div>
+            </div>
+            <div class="showcase-footer">
+                <div class="showcase-tags">
+                    <span class="showcase-tag">SIGBOVIK</span>
+                    <span class="showcase-tag">conference submission</span>
+                </div>
+                <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/sigbovik%202026%20final%20submission.pdf" class="btn-code"><i class="fas fa-file-pdf"></i> Read PDF</a>
+            </div>
+        </div>
 
-    <div class="note">
-        <strong>Main result:</strong> INTERCAL-72's NEXT/RESUME control flow cannot express callable subroutines containing arbitrary-length loops. The NEXT stack imposes a hard limit of 79 iterations. COME FROM removes this limitation entirely.
+        <!-- Hilbert -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-earth-americas"></i></div>
+                <div class="showcase-content">
+                    <h3>Hilbert Curve Geographic Indexing</h3>
+                    <div class="authors">Jason Whittington and Claude (Anthropic), 2026</div>
+                    <p>Discovery that INTERCAL's mingle operator IS the standard Morton code algorithm used in production geospatial databases. Documents COME FROM + ABSTAIN as the general-purpose conditional loop pattern. 178 lines down from 661 unrolled.</p>
+                </div>
+            </div>
+            <div class="showcase-discovery">
+                <strong>Key discovery:</strong> Mingle is Morton coding. COME FROM + ABSTAIN/REINSTATE is the general-purpose conditional loop pattern for INTERCAL.
+            </div>
+            <div class="showcase-footer">
+                <div class="showcase-tags">
+                    <span class="showcase-tag">mingle = Morton code</span>
+                    <span class="showcase-tag">spatial indexing</span>
+                </div>
+                <div class="showcase-buttons">
+                    <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/hilbertGeo.md" class="btn-code"><i class="fas fa-scroll"></i> Read Paper</a>
+                    <a href="https://github.com/jawhitti/INTERCAL64/tree/develop/samples/hilbertGeo" class="btn-paper"><i class="fas fa-code"></i> Code</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warnsdorff -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-chess-knight"></i></div>
+                <div class="showcase-content">
+                    <h3>Warnsdorff Implementation Notes</h3>
+                    <div class="authors">Jason Whittington and Claude (Anthropic), 2026</div>
+                    <p>Technical writeup of the first complete Knight's Tour in INTERCAL. Select with contiguous masks implements logical right-shift. Bitboard representation on a single 64-bit value. ~570 lines, 64/64 squares.</p>
+                </div>
+            </div>
+            <div class="showcase-discovery">
+                <strong>Key discovery:</strong> Select (<code>~</code>) with contiguous high-bit masks is a logical right-shift. INTERCAL doesn't need a shift operator.
+            </div>
+            <div class="showcase-footer">
+                <div class="showcase-tags">
+                    <span class="showcase-tag">bitboard</span>
+                    <span class="showcase-tag">graph traversal</span>
+                </div>
+                <div class="showcase-buttons">
+                    <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/warnsdorff_implementation.md" class="btn-code"><i class="fas fa-scroll"></i> Read Paper</a>
+                    <a href="https://github.com/jawhitti/INTERCAL64/tree/develop/samples/warnsdorff" class="btn-paper"><i class="fas fa-code"></i> Code</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stable Marriage -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-heart"></i></div>
+                <div class="showcase-content">
+                    <h3>Stable Marriage Design</h3>
+                    <div class="authors">Jason Whittington and Claude (Anthropic), 2026</div>
+                    <p>Gale-Shapley stable matching in INTERCAL. Demonstrates that COME FROM is necessary for any nontrivial nested-loop algorithm. Linearized preference arrays, dispatch subroutines for indirect indexing.</p>
+                </div>
+            </div>
+            <div class="showcase-discovery">
+                <strong>Key discovery:</strong> Gale-Shapley's nested loop structure is the exact pattern the COME FROM proof shows is impossible in INTERCAL-72.
+            </div>
+            <div class="showcase-footer">
+                <div class="showcase-tags">
+                    <span class="showcase-tag">combinatorial optimization</span>
+                    <span class="showcase-tag">nested COME FROM</span>
+                </div>
+                <div class="showcase-buttons">
+                    <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/stable_marriage.md" class="btn-code"><i class="fas fa-scroll"></i> Read Paper</a>
+                    <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/stable_marriage.i" class="btn-paper"><i class="fas fa-code"></i> Code</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hardware -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-microchip"></i></div>
+                <div class="showcase-content">
+                    <h3>Hardware Accelerator Proposal</h3>
+                    <div class="authors">Jason Whittington and Claude (Anthropic), 2026</div>
+                    <p>Feasibility study for a dedicated INTERCAL processor with native mingle, select, and unary operations. FPGA prototype at ~$25 BOM. ASIC path via Skywater 130nm. Would be the first hardware implementation of any esoteric programming language.</p>
+                </div>
+            </div>
+            <div class="showcase-discovery">
+                <strong>Key insight:</strong> INTERCAL's instruction set maps to real bit-manipulation primitives — Morton codes, spatial hashing, GPU texture swizzling. A mingle instruction is a pdep/pext equivalent. DIVIDE32 runs 7,000x faster in hardware.
+            </div>
+            <div class="showcase-footer">
+                <div class="showcase-tags">
+                    <span class="showcase-tag">FPGA</span>
+                    <span class="showcase-tag">Lattice iCE40</span>
+                    <span class="showcase-tag">Skywater 130nm</span>
+                </div>
+                <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/hardware_proposal.md" class="btn-code"><i class="fas fa-scroll"></i> Read Proposal</a>
+            </div>
+        </div>
+
+        <!-- COME FROM Research Notes -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-flask"></i></div>
+                <div class="showcase-content">
+                    <h3>COME FROM Research Notes</h3>
+                    <div class="authors">Jason Whittington and Claude (Anthropic), 2026</div>
+                    <p>The failed approaches, cross-compiler testing, and debugging sessions that led to the COME FROM proof. Documents the discovery of the double-NEXT trampoline pattern and every dead end along the way.</p>
+                </div>
+            </div>
+            <div class="showcase-footer">
+                <div class="showcase-tags">
+                    <span class="showcase-tag">research notes</span>
+                    <span class="showcase-tag">cross-compiler</span>
+                    <span class="showcase-tag">C-INTERCAL</span>
+                </div>
+                <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/come_from_findings.md" class="btn-code"><i class="fas fa-scroll"></i> Read Notes</a>
+            </div>
+        </div>
+
     </div>
-
-    <p>The proof uses TLA+ model checking to verify that no arrangement of NEXT, RESUME, and FORGET can implement a general loop within a callable subroutine without corrupting the NEXT stack. The paper then demonstrates that COME FROM loops — combined with the double-NEXT trampoline pattern — provide stack-free iteration with preserved return addresses.</p>
-
-    <h3>Key Results</h3>
-
-    <ul>
-        <li><strong>Lemma 1:</strong> FORGET in a callable subroutine destroys the caller's return address. A subroutine that loops via NEXT/FORGET cannot return correctly.</li>
-        <li><strong>Lemma 2:</strong> NEXT/RESUME loops accumulate residual stack entries. After 79 iterations, E123 (NEXT stack overflow) terminates the program.</li>
-        <li><strong>Theorem:</strong> No arrangement of INTERCAL-72 control flow statements can implement a callable subroutine containing an arbitrary-length loop.</li>
-        <li><strong>Corollary:</strong> Bubble sort is limited to arrays of 13 elements. 13 x 12 / 2 = 78 ≤ 79.</li>
-    </ul>
-
-    <p>The paper is a deliberate riff on Dijkstra's "Go To Statement Considered Harmful" (1968), arguing that the statement Dijkstra would have despised most is the one INTERCAL actually needs.</p>
-
-    <p><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/COME_FROM_Considered_Helpful.md">Read the full paper</a></p>
-
-    <h2>SIGBOVIK 2026 Submission</h2>
-
-    <p><strong>Jason Whittington and Claude (Anthropic), 2026</strong></p>
-
-    <p>A condensed version of the COME FROM proof submitted to SIGBOVIK, the annual conference for research that is technically correct but probably shouldn't exist. The submission includes the TLA+ model, the 15-line Lemma 1 reproducer, and cross-validation results on both SCHRODIE and C-INTERCAL.</p>
-
-    <p><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/sigbovik%202026%20final%20submission.pdf">Read the submission (PDF)</a></p>
-
-    <h2>Technical Notes</h2>
-
-    <p>The following documents are not formal papers but contain significant technical findings:</p>
-
-    <table>
-        <tr><th>Document</th><th>Finding</th></tr>
-        <tr>
-            <td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/hilbertGeo.md">Hilbert Curve Geographic Indexing</a></td>
-            <td>Discovery that INTERCAL's mingle operator IS the standard Morton code algorithm. COME FROM + ABSTAIN as the general-purpose conditional loop pattern.</td>
-        </tr>
-        <tr>
-            <td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/warnsdorff_implementation.md">Warnsdorff Implementation Notes</a></td>
-            <td>Select with contiguous masks implements logical right-shift. First complete Knight's Tour in INTERCAL.</td>
-        </tr>
-        <tr>
-            <td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/stable_marriage.md">Stable Marriage Design</a></td>
-            <td>Gale-Shapley in INTERCAL. Demonstrates COME FROM is necessary for any nontrivial nested-loop algorithm.</td>
-        </tr>
-        <tr>
-            <td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/hardware_proposal.md">Hardware Accelerator Proposal</a></td>
-            <td>FPGA design for native mingle/select. DIVIDE32 runs 7,000x faster in hardware.</td>
-        </tr>
-        <tr>
-            <td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/come_from_findings.md">COME FROM Research Notes</a></td>
-            <td>Failed approaches, cross-compiler testing, the discovery of the double-NEXT trampoline.</td>
-        </tr>
-    </table>
 
     <h2>TLA+ Models</h2>
 
-    <p>The formal proofs are backed by TLA+ models verified with the TLC model checker. Source and traces are in the <a href="https://github.com/jawhitti/INTERCAL64/tree/develop/Analysis">Analysis</a> directory.</p>
+    <p>The formal proofs are backed by TLA+ models verified with the TLC model checker.</p>
 
-    <table>
-        <tr><th>Model</th><th>What It Proves</th></tr>
-        <tr><td><code>IntercalStack.tla</code></td><td>NEXT stack exhaustion under all possible NEXT/RESUME/FORGET sequences</td></tr>
-        <tr><td><code>ComeFromTrampoline.tla</code></td><td>COME FROM loop with double-NEXT trampoline preserves stack invariants</td></tr>
-        <tr><td><code>TrampolineSearch.tla</code></td><td>Exhaustive search for viable trampoline patterns</td></tr>
-    </table>
+    <div class="showcase">
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-check-double"></i></div>
+                <div class="showcase-content">
+                    <h3>Formal Verification Suite</h3>
+                    <div class="subtitle">TLA+ models and TLC model checker traces</div>
+                    <p>Three models covering NEXT stack exhaustion, COME FROM trampoline correctness, and exhaustive trampoline pattern search. All traces and counterexamples are included.</p>
+                    <ul>
+                        <li><strong>IntercalStack.tla</strong> — NEXT stack exhaustion under all possible NEXT/RESUME/FORGET sequences</li>
+                        <li><strong>ComeFromTrampoline.tla</strong> — COME FROM loop with double-NEXT trampoline preserves stack invariants</li>
+                        <li><strong>TrampolineSearch.tla</strong> — Exhaustive search for viable trampoline patterns</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="showcase-footer">
+                <div class="showcase-tags">
+                    <span class="showcase-tag">TLA+</span>
+                    <span class="showcase-tag">TLC model checker</span>
+                    <span class="showcase-tag">formal verification</span>
+                </div>
+                <a href="https://github.com/jawhitti/INTERCAL64/tree/develop/Analysis" class="btn-code"><i class="fas fa-code"></i> Models</a>
+            </div>
+        </div>
+    </div>
 
 </div>
 
