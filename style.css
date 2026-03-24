@@ -110,6 +110,11 @@ body {
     color: #0969da;
 }
 
+.card h3 i {
+    margin-right: 8px;
+    color: #656d76;
+}
+
 .card p {
     font-size: 14px;
     color: #656d76;
