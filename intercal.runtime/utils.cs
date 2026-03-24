@@ -113,6 +113,14 @@ namespace INTERCAL
             /*An extension function referenced with /r had the wrong prototype*/
             public const string E2004 = "E2004 SQUARE PEG, ROUND HOLE\nON THE WAY TO {0}.{1}";
 
+            //The following error messages are specific to quantum box (cat box) operations
+            /* Hunger counter hit 0 (starvation) or 11 (obesity) — you'll never know which */
+            public const string E2007 = "E2007 THE CAT IS DEAD";
+            /* Mismatched types in double-worm (=) operator */
+            public const string E2010 = "E2010 THE CAT IS BOTH DEAD AND A DIFFERENT SIZE";
+            /* Superposition exceeded 99 values */
+            public const string E2012 = "E2012 THE CAT HAS POOPED IN THE BOX";
+
         }
 
         //Intercal libraries use this assembly attribute to 
@@ -186,6 +194,9 @@ namespace INTERCAL
         public class ExecutionContext : AsyncDispatcher
         {
             #region Fields and constuctors
+
+            // When true, disables cat death from hunger (--please-peta)
+            public bool PleasePeta { get; set; } = false;
 
             public static ExecutionContext CreateExecutionContext()
             {
@@ -475,7 +486,84 @@ namespace INTERCAL
                 }
             }
 
-            //This dictionary maps simple identifiers to their values.  All non-array values are 
+            // Quantum cat box variable — holds a superposition of values.
+            // The cat is in the box. Feed it or it dies.
+            [Serializable]
+            class BoxVariable : Variable
+            {
+                static Random random = new Random();
+                public const int MAX_VALUES = 99;
+
+                public List<ulong> Values = new List<ulong>();
+                public int Hunger = 5;
+                public bool Stashed = false;
+
+                protected Stack<(List<ulong> values, int hunger)> StashStack
+                    = new Stack<(List<ulong>, int)>();
+
+                public BoxVariable(ExecutionContext ctx, string name, ulong val1, ulong val2)
+                    : base(ctx, name)
+                {
+                    Values.Add(val1);
+                    Values.Add(val2);
+                }
+
+                public ulong Collapse()
+                {
+                    CheckHungerDeath(-1);
+                    ulong chosen = Values[random.Next(Values.Count)];
+                    Values.Clear();
+                    Values.Add(chosen);
+                    return chosen;
+                }
+
+                public void Grow(ulong val)
+                {
+                    if (Values.Count >= MAX_VALUES)
+                        Lib.Fail(Messages.E2012);
+                    Values.Add(val);
+                }
+
+                public void Feed()
+                {
+                    CheckHungerDeath(1);
+                }
+
+                void CheckHungerDeath(int delta)
+                {
+                    Hunger += delta;
+                    if (!owner.PleasePeta && (Hunger <= 0 || Hunger >= 11))
+                        Lib.Fail(Messages.E2007);
+                }
+
+                public override void Stash()
+                {
+                    StashStack.Push((new List<ulong>(Values), Hunger));
+                    Stashed = true;
+                }
+
+                public override void Retrieve()
+                {
+                    if (StashStack.Count > 0)
+                    {
+                        var (values, hunger) = StashStack.Pop();
+                        Values = values;
+                        Hunger = hunger;
+                        Stashed = false;
+                    }
+                    else
+                    {
+                        Lib.Fail(Messages.E436);
+                    }
+                }
+
+                public override string ToString()
+                {
+                    return Collapse().ToString();
+                }
+            }
+
+            //This dictionary maps simple identifiers to their values.  All non-array values are
             //stored here.  Entries in arrays are stored in the Arrays hash table below.
             Dictionary<string, Variable> Variables = new Dictionary<string, Variable>();
 
@@ -544,6 +632,14 @@ namespace INTERCAL
                         Variable v = new ArrayVariable(this, varname);
                         Variables[varname] = v;
                         retval = v;
+                    }
+                }
+                else if (varname.StartsWith("[]"))
+                {
+                    // Cat boxes are NOT auto-created — they must be created via CreateBox
+                    if (!Variables.TryGetValue(varname, out retval))
+                    {
+                        Lib.Fail(Messages.E200 + " (" + varname + ")");
                     }
                 }
                 else
@@ -686,6 +782,99 @@ namespace INTERCAL
                             Lib.Fail(String.Format(Messages.E579, input));
                         }
                  }
+            }
+
+            #endregion
+
+            #region QUANTUM BOX (CAT BOX) OPERATIONS
+
+            public void CreateBox(string name, ulong val1, ulong val2)
+            {
+                var box = new BoxVariable(this, name, val1, val2);
+                Variables[name] = box;
+            }
+
+            public ulong CollapseBox(string name)
+            {
+                if (!Variables.ContainsKey(name))
+                    Lib.Fail(Messages.E200 + " (" + name + ")");
+
+                var box = Variables[name] as BoxVariable;
+                if (box == null)
+                    Lib.Fail(Messages.E241);
+
+                return box.Collapse();
+            }
+
+            public void GrowBox(string name, ulong val)
+            {
+                var box = GetVariable(name) as BoxVariable;
+                box.Grow(val);
+            }
+
+            public void MergeBoxes(string dest, string box1, string box2)
+            {
+                var b1 = GetVariable(box1) as BoxVariable;
+                var b2 = GetVariable(box2) as BoxVariable;
+
+                var merged = new List<ulong>(b1.Values);
+                merged.AddRange(b2.Values);
+
+                if (merged.Count > BoxVariable.MAX_VALUES)
+                    Lib.Fail(Messages.E2012);
+
+                var destBox = new BoxVariable(this, dest, merged[0], merged[1]);
+                destBox.Values.Clear();
+                destBox.Values.AddRange(merged);
+                Variables[dest] = destBox;
+            }
+
+            public void MingleBoxes(string dest, string box1, string box2)
+            {
+                var b1 = GetVariable(box1) as BoxVariable;
+                var b2 = GetVariable(box2) as BoxVariable;
+
+                var products = new List<ulong>();
+                foreach (ulong a in b1.Values)
+                {
+                    foreach (ulong b in b2.Values)
+                    {
+                        products.Add(Lib.Mingle(a, b));
+                    }
+                }
+
+                if (products.Count > BoxVariable.MAX_VALUES)
+                    Lib.Fail(Messages.E2012);
+
+                var destBox = new BoxVariable(this, dest, products[0], products[1]);
+                destBox.Values.Clear();
+                destBox.Values.AddRange(products);
+                Variables[dest] = destBox;
+            }
+
+            public List<ulong> GetBoxValues(string name)
+            {
+                var box = GetVariable(name) as BoxVariable;
+                return new List<ulong>(box.Values);
+            }
+
+            public int GetBoxHunger(string name)
+            {
+                var box = GetVariable(name) as BoxVariable;
+                return box.Hunger;
+            }
+
+            public void FeedBox(string name)
+            {
+                var box = GetVariable(name) as BoxVariable;
+                box.Feed();
+            }
+
+            public void PetBox(string name)
+            {
+                // Identical to FeedBox. Documented as different.
+                // The programmer will never know.
+                FeedBox(name);
             }
 
             #endregion

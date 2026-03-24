@@ -30,14 +30,16 @@ namespace INTERCAL
         {
             "ABSTAINING", "REINSTATING", "NEXTING", "STASHING",
             "RESUMING", "FORGETTING", "IGNORING", "REMEMBERING",
-            "RETRIEVING", "CALCULATING"
+            "RETRIEVING", "CALCULATING",
+            "BOXING", "FEEDING", "PETTING"
         };
 
         // Single-word statements
         static readonly HashSet<string> SingleStatements = new HashSet<string>
         {
             "REINSTATE", "NEXT", "STASH", "RESUME", "FORGET",
-            "IGNORE", "REMEMBER", "RETRIEVE"
+            "IGNORE", "REMEMBER", "RETRIEVE",
+            "FEED", "PET"
         };
 
         // Prefixes
@@ -141,6 +143,15 @@ namespace INTERCAL
                     }
                     return new Token(TokenType.Var, "#", startPos);
 
+                case '[':
+                    pos++;
+                    if (pos < input.Length && input[pos] == ']')
+                    {
+                        pos++;
+                        return new Token(TokenType.Var, "[]", startPos);
+                    }
+                    return new Token(TokenType.Word, c.ToString(), startPos);
+
                 case '.': case ',':
                     pos++;
                     return new Token(TokenType.Var, c.ToString(), startPos);
@@ -149,7 +160,7 @@ namespace INTERCAL
                     pos++;
                     return new Token(TokenType.UnaryOp, c.ToString(), startPos);
 
-                case '$': case '~':
+                case '$': case '~': case '=':
                     pos++;
                     return new Token(TokenType.BinaryOp, c.ToString(), startPos);
 

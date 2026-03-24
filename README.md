@@ -330,8 +330,120 @@ string will magically appear.
 
 
 ### The standard library (syslib.i)
-The standard distribution holds a compiled version of **syslib.i** in *intercal.runtime.dll*. 
+The standard distribution holds a compiled version of **syslib.i** in *intercal.runtime.dll*.
 This assembly is reference by default for all programs compiled with sick.exe.
+
+## Quantum Cat Boxes
+
+This implementation extends INTERCAL with quantum superposition via the **cat box** variable
+type `[]`. A cat box holds multiple possible values simultaneously. Assigning a cat box to
+a scalar variable collapses the superposition, selecting one value at random. The cat is in
+the box. You are responsible for it.
+
+### Character Naming
+
+The following characters are introduced for quantum operations:
+
+| Character | Name | Purpose |
+|-----------|------|---------|
+| `[` | correct horse battery staple | opens a cat box |
+| `]` | incorrect horse battery staple | closes a cat box |
+| `[]` | cat box | quantum variable prefix |
+| `=` | double worm | quantum superposition operator |
+
+### Creating a superposition
+
+The double worm (`=`) operator creates a superposition of two values:
+```
+DO []1 <- #1 = #2
+```
+Cat box one now holds both 1 and 2 simultaneously. The double worm is the `=` character, which
+INTERCAL has steadfastly avoided for over fifty years. It does not mean equals. It does not mean
+assignment. It means quantum superposition. Every programmer who reads it will assume they know
+what it means. They are wrong.
+
+Additional values may be superimposed onto an existing box:
+```
+DO []1 <- []1 = #3
+DO []1 <- []1 = #4
+```
+Cat box one now holds {1, 2, 3, 4}. The maximum superposition depth is implementation-dependent.
+
+### Collapsing the wavefunction
+
+Assigning a cat box to a scalar variable collapses the superposition:
+```
+DO .1 <- []1
+```
+One value is chosen uniformly at random. The box retains the chosen value (it is now in a
+known state). Subsequent assignments from the same box will yield the same value until
+the box is placed back into superposition with the double worm.
+
+`READ OUT []1` also collapses the box and prints the chosen value.
+
+### Cartesian products
+
+Binary operations on two cat boxes produce a new cat box containing the cartesian product:
+```
+DO []1 <- #1 = #2
+DO []2 <- #3 = #4
+DO []3 <- []1 $ []2
+```
+Cat box three now holds {1$3, 1$4, 2$3, 2$4} — four mingled values.
+
+### Cat maintenance
+
+Cat boxes contain cats. Cats require feeding. Each cat box has an internal hunger counter
+whose initial value and boundaries are implementation-dependent. Any use of the box as a
+value decrements the counter. The following statements increment it:
+
+```
+PLEASE FEED []1
+PLEASE PET []1
+```
+
+FEED and PET are entirely different operations with distinct effects on the cat. They are
+documented separately and implemented identically. If the hunger counter reaches its lower
+bound (starvation) or upper bound (obesity), the program terminates with:
+
+**E2007 THE CAT IS DEAD**
+
+The error message is the same for both conditions. You will never know which one you did wrong.
+The `--please-peta` compiler flag disables cat mortality for debugging purposes.
+
+STASH places the cat in suspended animation. The hunger counter pauses. RETRIEVE wakes the
+cat and resumes the counter from where it left off.
+
+### Gerunds
+
+- ABSTAIN FROM BOXING — prevents creation of new superpositions
+- ABSTAIN FROM FEEDING — the cat is on a death clock with no way to stop it (also blocks PET)
+- REINSTATE BOXING / REINSTATE FEEDING — restores operations
+
+### Error messages
+
+| Code | Message | Cause |
+|------|---------|-------|
+| E2007 | THE CAT IS DEAD | Hunger counter exceeded bounds |
+| E2010 | THE CAT IS BOTH DEAD AND A DIFFERENT SIZE | Mismatched types in `=` |
+| E2012 | THE CAT HAS POOPED IN THE BOX | Superposition exceeded maximum depth |
+
+### Example: Quantum die
+
+```
+DO []1 <- #1 = #2
+DO []1 <- []1 = #3
+DO []1 <- []1 = #4
+DO []1 <- []1 = #5
+DO []1 <- []1 = #6
+PLEASE FEED []1
+DO .1 <- []1
+PLEASE READ OUT .1
+PLEASE GIVE UP
+```
+
+This program outputs a random number from 1 to 6. The output changes on every execution.
+It is the world's most over-engineered die.
 
 # OTher resources
 * The [C-INTERCAL Git Repe](https://github.com/calvinmetcalf/intercal) contains a wealth of code. The [pit](https://github.com/calvinmetcalf/intercal/tree/master/pit) is probably the most complete collection of intercal code and docs anywhere. The "libs" folder in particular holds floating point and other useful bits. 

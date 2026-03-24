@@ -226,6 +226,8 @@ namespace INTERCAL
 						case "REMEMBER":	retval = new RememberStatement(s);	break;
 						case "RETRIEVE":	retval = new RetrieveStatement(s);	break;
 						case "GIVE UP":		retval = new GiveUpStatement(s);	break;
+						case "FEED":		retval = new FeedStatement(s);		break;
+						case "PET":			retval = new PetStatement(s);		break;
 					}
 				}
 				else if(s.Current.Type == TokenType.Label)
@@ -304,18 +306,34 @@ namespace INTERCAL
 			
 			public override void Emit(CompilationContext ctx)
 			{
+				string lval = destination.Name;
+
+				// Quantum box assignment: DO []1 <- expr1 = expr2
+				if(destination.IsBox)
+				{
+					EmitBoxAssignment(ctx, lval);
+					return;
+				}
+
+				// Scalar assignment from a box: DO .1 <- []1 (collapse)
+				if(expression is Expression.BoxExpression)
+				{
+					var boxExpr = expression as Expression.BoxExpression;
+					ctx.EmitRaw("frame.ExecutionContext[\"" + lval + "\"] = frame.ExecutionContext.CollapseBox(\"" + boxExpr.Name + "\");\n");
+					return;
+				}
+
 				//Basically we expect to see <lvalue> <- <Expression>
 				if(!IsArrayRedimension)
 				{
 					if(ctx.debugBuild)
 					{
-             
+
 						ctx.EmitRaw(string.Format("Trace.WriteLine(string.Format(\"       {0} <- {{0}}\",", destination.Name));
-						expression.Emit(ctx); 
+						expression.Emit(ctx);
 						ctx.EmitRaw("));\r\n");
 					}
 
-					string lval = destination.Name;
 					if(!destination.Subscripted)
 					{
 						ctx.EmitRaw("frame.ExecutionContext[\"" + lval + "\"] = ");
@@ -324,14 +342,11 @@ namespace INTERCAL
 					}
 					else
 					{
-						//ctx[lval, destination.Subscripts(ctx)] = expression.Evaluate(ctx);
 						ctx.EmitRaw("frame.ExecutionContext[\"" + destination.Name + "\", ");
 						destination.EmitSubscripts(ctx);
 						ctx.EmitRaw("] = ");
 						expression.Emit(ctx);
 						ctx.EmitRaw(";\n");
-
-						//Debug.Assert(false);
 					}
 				}
 				else
@@ -341,6 +356,64 @@ namespace INTERCAL
 					ctx.EmitRaw(");\n");
 				}
 
+			}
+
+			void EmitBoxAssignment(CompilationContext ctx, string lval)
+			{
+				// Check for box mingle: DO []3 <- []1 $ []2
+				var binExpr = expression as Expression.BinaryExpression;
+				if(binExpr != null && binExpr.Left is Expression.BoxExpression && binExpr.Right is Expression.BoxExpression)
+				{
+					var leftBox = binExpr.Left as Expression.BoxExpression;
+					var rightBox = binExpr.Right as Expression.BoxExpression;
+
+					if(binExpr.ReturnType == null)
+					{
+						// Double worm: = operator
+						if(leftBox.Name == lval)
+						{
+							// DO []1 <- []1 = []2  →  MergeBoxes
+							ctx.EmitRaw("frame.ExecutionContext.MergeBoxes(\"" + lval + "\", \"" + leftBox.Name + "\", \"" + rightBox.Name + "\");\n");
+						}
+						else
+						{
+							// DO []3 <- []1 = []2  →  MergeBoxes
+							ctx.EmitRaw("frame.ExecutionContext.MergeBoxes(\"" + lval + "\", \"" + leftBox.Name + "\", \"" + rightBox.Name + "\");\n");
+						}
+					}
+					else
+					{
+						// Mingle or other binary op on two boxes → cartesian product
+						ctx.EmitRaw("frame.ExecutionContext.MingleBoxes(\"" + lval + "\", \"" + leftBox.Name + "\", \"" + rightBox.Name + "\");\n");
+					}
+					return;
+				}
+
+				// Double worm with scalar operands
+				if(binExpr != null && binExpr.ReturnType == null)
+				{
+					var leftBox = binExpr.Left as Expression.BoxExpression;
+
+					if(leftBox != null && leftBox.Name == lval)
+					{
+						// DO []1 <- []1 = #3  →  GrowBox
+						ctx.EmitRaw("frame.ExecutionContext.GrowBox(\"" + lval + "\", ");
+						binExpr.Right.Emit(ctx);
+						ctx.EmitRaw(");\n");
+					}
+					else
+					{
+						// DO []1 <- #1 = #2  →  CreateBox
+						ctx.EmitRaw("frame.ExecutionContext.CreateBox(\"" + lval + "\", ");
+						binExpr.Left.Emit(ctx);
+						ctx.EmitRaw(", ");
+						binExpr.Right.Emit(ctx);
+						ctx.EmitRaw(");\n");
+					}
+					return;
+				}
+
+				throw new CompilationException("Box assignment requires double-worm (=) operator or box expression");
 			}
 
 		}
@@ -703,6 +776,46 @@ namespace INTERCAL
 				}
 			}
 
+		}
+
+		// PLEASE FEED []1 — keep the cat alive
+		public class FeedStatement : Statement
+		{
+			protected List<LValue> lvals = new List<LValue>();
+
+			public FeedStatement(Scanner s)
+			{
+				s.MoveNext();
+				lvals.Add(new LValue(s));
+				while (s.PeekNext.Value == "+")
+				{
+					s.MoveNext();
+					s.MoveNext();
+					lvals.Add(new LValue(s));
+				}
+			}
+
+			public override void Emit(CompilationContext ctx)
+			{
+				foreach (LValue lval in lvals)
+				{
+					ctx.Emit("frame.ExecutionContext.FeedBox(\"" + lval.Name + "\")");
+				}
+			}
+		}
+
+		// PLEASE PET []1 — identical to FEED. The programmer will never know.
+		public class PetStatement : FeedStatement
+		{
+			public PetStatement(Scanner s) : base(s) { }
+
+			public override void Emit(CompilationContext ctx)
+			{
+				foreach (LValue lval in lvals)
+				{
+					ctx.Emit("frame.ExecutionContext.PetBox(\"" + lval.Name + "\")");
+				}
+			}
 		}
 
 		public class AbstainStatement : Statement

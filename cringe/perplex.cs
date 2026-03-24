@@ -70,6 +70,9 @@ namespace INTERCAL
 				case ";;":
 					retval = new ArrayExpression(s, delimeter);
 					break;
+				case "[]":
+					retval = new BoxExpression(s);
+					break;
 
 				default:
 					throw new ParseException(String.Format("line {0}: Invalid expression {1}", s.LineNumber, s.Current.Value));
@@ -78,7 +81,7 @@ namespace INTERCAL
 			//After we've read a valid expression if the next char is a
 			//binary operator then we read the other expression and cojoin it
 			//with this one.   
-			if(s.PeekNext.Value == "$" || s.PeekNext.Value == "~")
+			if(s.PeekNext.Value == "$" || s.PeekNext.Value == "~" || s.PeekNext.Value == "=")
 			{
 				s.MoveNext();
 				string op = s.Current.Value;
@@ -558,12 +561,41 @@ namespace INTERCAL
 			}
 		}
 
-		
+		// A box expression references a quantum cat box variable.
+		// When used in a scalar context, it collapses the superposition.
+		public class BoxExpression : Expression
+		{
+			public string Name { get; set; }
+
+			public BoxExpression(Scanner s)
+			{
+				string typeid = s.Current.Value; // "[]"
+				s.MoveNext();
+				this.Name = typeid + Statement.ReadGroupValue(s, "digits");
+				// Box expressions have a special "box" return type
+				// We use null to signal "this is a box" since there's no
+				// System.Type for quantum superposition
+				this.returnType = null;
+			}
+
+			public override ulong Evaluate(ExecutionContext ctx)
+			{
+				return ctx.CollapseBox(Name);
+			}
+
+			public override void Emit(CompilationContext ctx)
+			{
+				ctx.EmitRaw("frame.ExecutionContext.CollapseBox(\"" + Name + "\")");
+			}
+
+			public bool IsBox { get { return true; } }
+		}
+
 		//This expression might return different types at different times...
-		class BinaryExpression : Expression
+		internal class BinaryExpression : Expression
 		{
 			string op;
-			Expression Left; Expression Right;
+			internal Expression Left; internal Expression Right;
 
 			public BinaryExpression(Scanner s, string op, Expression left, Expression right)
 			{
@@ -583,6 +615,12 @@ namespace INTERCAL
 						throw new CompilationException(Messages.E533);
 
 					returnType = typeof(UInt32);
+				}
+				else if(op == "=")
+				{
+					// Double worm: quantum superposition operator.
+					// Result is a box (returnType = null signals box type).
+					returnType = null;
 				}
 				else if(op == "~")
 				{
@@ -629,6 +667,10 @@ namespace INTERCAL
 					case "$":
 						return Lib.Mingle(a, b);
 
+					case "=":
+						// Double worm in interpreter mode: just pick one at random
+						return (new Random().Next(2) == 0) ? a : b;
+
 					case "~":
 					{
 						if(returnType == typeof(UInt64))
@@ -657,6 +699,14 @@ namespace INTERCAL
 						ctx.EmitRaw(", ");
 						Right.Emit(ctx);
 						ctx.EmitRaw(")");
+					}break;
+
+					case "=":
+					{
+						// Double worm: this should not be emitted as a standalone expression.
+						// CalculateStatement handles box assignment emission.
+						// If we get here, something went wrong.
+						Lib.Fail("E774 RANDOM COMPILER BUG (double worm in wrong context)");
 					}break;
 
 					case "~":
@@ -793,6 +843,10 @@ namespace INTERCAL
 				  else
 					  return false;
 			    }
+		}
+		public bool IsBox
+		{
+			get { return Name.StartsWith("[]"); }
 		}
 		public bool Subscripted{ get { if(subscripts == null) return false; else return true; }}
 		public string Name { get { return VarName; }}		
