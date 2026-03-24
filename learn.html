@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn INTERCAL - INTERCAL::64</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <h1><a href="index.html">INTERCAL::64</a></h1>
+        <nav>
+            <a href="features.html">Features</a>
+            <a href="debugger.html">Debugger</a>
+            <a href="problems.html">Problems</a>
+            <a href="learn.html" class="active">Learn</a>
+            <a href="https://github.com/jawhitti/INTERCAL64">GitHub</a>
+        </nav>
+    </div>
+</header>
+
+<div class="container page-content">
+
+    <h2>Learn INTERCAL in 17 Steps</h2>
+
+    <p>The <code>samples/learn-intercal/</code> folder contains 17 tiny programs, one per language feature. Each is heavily commented and designed to be stepped through in the debugger. Open a file, set a breakpoint on the first line, press F5, and start stepping.</p>
+
+    <div class="note">
+        <strong>Tip:</strong> Open the Variables panel and Watch panel side by side. The comments in each program tell you what to look for as you step.
+    </div>
+
+    <h2>Lessons</h2>
+
+    <table>
+        <tr><th>#</th><th>File</th><th>What You'll Learn</th></tr>
+        <tr><td>01</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/01-hello.i">hello.i</a></td><td>Hello World — how INTERCAL outputs text via the Turing tape model</td></tr>
+        <tr><td>02</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/02-variables.i">variables.i</a></td><td>Spots, two-spots, four-spots, meshes, fences, stockades</td></tr>
+        <tr><td>03</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/03-mingle.i">mingle.i</a></td><td>The mingle operator (<code>$</code>) — bit interleaving</td></tr>
+        <tr><td>04</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/04-select.i">select.i</a></td><td>The select operator (<code>~</code>) — bit extraction with masks</td></tr>
+        <tr><td>05</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/05-unary.i">unary.i</a></td><td>Unary AND, OR, XOR on adjacent bit pairs</td></tr>
+        <tr><td>06</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/06-calculate.i">calculate.i</a></td><td>Assignment (<code>&lt;-</code>) and nested expressions with sparks and ears</td></tr>
+        <tr><td>07</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/07-next-resume.i">next-resume.i</a></td><td>Subroutine calls with NEXT and RESUME</td></tr>
+        <tr><td>08</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/08-forget.i">forget.i</a></td><td>FORGET — dropping the return address (one-way trip)</td></tr>
+        <tr><td>09</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/09-abstain-reinstate.i">abstain-reinstate.i</a></td><td>Disabling and re-enabling statements</td></tr>
+        <tr><td>10</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/10-come-from.i">come-from.i</a></td><td>COME FROM — the opposite of GOTO</td></tr>
+        <tr><td>11</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/11-stash-retrieve.i">stash-retrieve.i</a></td><td>Saving and restoring variable state</td></tr>
+        <tr><td>12</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/12-ignore-remember.i">ignore-remember.i</a></td><td>Read-only variables</td></tr>
+        <tr><td>13</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/13-please.i">please.i</a></td><td>Politeness requirements (yes, really)</td></tr>
+        <tr><td>14</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/14-arrays.i">arrays.i</a></td><td>Tails, hybrids, and SUB indexing</td></tr>
+        <tr><td>15</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/15-syslib.i">syslib.i</a></td><td>Arithmetic via the system library</td></tr>
+        <tr><td>16</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/16-write-in.i">write-in.i</a></td><td>User input (yes, WRITE IN reads and READ OUT writes)</td></tr>
+        <tr><td>17</td><td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/learn-intercal/17-come-from-loop.i">come-from-loop.i</a></td><td>Looping with COME FROM</td></tr>
+    </table>
+
+    <h2>What's Next After the Lessons</h2>
+
+    <p>Once you've completed the 17 lessons, try these programs in order of increasing difficulty:</p>
+
+    <table>
+        <tr><th>Program</th><th>Difficulty</th><th>What It Demonstrates</th></tr>
+        <tr><td><code>fizzbuzz.i</code></td><td>Beginner</td><td>ABSTAIN/REINSTATE for conditional logic</td></tr>
+        <tr><td><code>collatz.i</code></td><td>Beginner</td><td>Conditional branching with syslib arithmetic</td></tr>
+        <tr><td><code>rot13.i</code></td><td>Intermediate</td><td>Bit manipulation via mingle and select</td></tr>
+        <tr><td><code>beer.i</code></td><td>Intermediate</td><td>The double-NEXT trampoline pattern</td></tr>
+        <tr><td><code>primes.i</code></td><td>Advanced</td><td>Iterative division — syslib stress test</td></tr>
+        <tr><td><code>stable_marriage.i</code></td><td>Advanced</td><td>Nested COME FROM loops, trampolines</td></tr>
+        <tr><td><code>warnsdorff/</code></td><td>Expert</td><td>Bitboards, 64-bit arithmetic, full algorithm</td></tr>
+    </table>
+
+    <h2>Quick Reference</h2>
+
+    <h3>Statements</h3>
+    <table>
+        <tr><th>Statement</th><th>What It Does</th></tr>
+        <tr><td><code>DO .1 &lt;- #42</code></td><td>Assign (CALCULATE)</td></tr>
+        <tr><td><code>DO (100) NEXT</code></td><td>Call subroutine at label 100</td></tr>
+        <tr><td><code>DO RESUME #1</code></td><td>Return from subroutine</td></tr>
+        <tr><td><code>DO FORGET #1</code></td><td>Drop return address</td></tr>
+        <tr><td><code>DO COME FROM (100)</code></td><td>Hijack control after label 100</td></tr>
+        <tr><td><code>DO ABSTAIN FROM (100)</code></td><td>Disable statement at label 100</td></tr>
+        <tr><td><code>DO REINSTATE (100)</code></td><td>Re-enable statement at label 100</td></tr>
+        <tr><td><code>DO STASH .1</code></td><td>Save .1 on its stash stack</td></tr>
+        <tr><td><code>DO RETRIEVE .1</code></td><td>Restore .1 from its stash stack</td></tr>
+        <tr><td><code>DO IGNORE .1</code></td><td>Make .1 read-only</td></tr>
+        <tr><td><code>DO REMEMBER .1</code></td><td>Make .1 writable again</td></tr>
+        <tr><td><code>DO READ OUT .1</code></td><td>Print value (yes, READ OUT writes)</td></tr>
+        <tr><td><code>DO WRITE IN .1</code></td><td>Read input (yes, WRITE IN reads)</td></tr>
+        <tr><td><code>PLEASE GIVE UP</code></td><td>Exit program</td></tr>
+    </table>
+
+    <h3>Operators</h3>
+    <table>
+        <tr><th>Operator</th><th>Name</th><th>What It Does</th></tr>
+        <tr><td><code>$</code></td><td>mingle</td><td>Interleave bits of two values</td></tr>
+        <tr><td><code>~</code></td><td>select</td><td>Extract bits using a mask</td></tr>
+        <tr><td><code>&amp;</code></td><td>AND</td><td>Unary AND of adjacent bit pairs</td></tr>
+        <tr><td><code>V</code></td><td>OR</td><td>Unary OR of adjacent bit pairs</td></tr>
+        <tr><td><code>?</code></td><td>XOR</td><td>Unary XOR of adjacent bit pairs</td></tr>
+    </table>
+
+</div>
+
+<footer class="site-footer">
+    <div class="container">
+        <a href="index.html">INTERCAL::64</a> &middot; Jason Whittington, 2026
+    </div>
+</footer>
+
+</body>
+</html>

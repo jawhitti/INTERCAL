@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problems Solved - INTERCAL::64</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <h1><a href="index.html">INTERCAL::64</a></h1>
+        <nav>
+            <a href="features.html">Features</a>
+            <a href="debugger.html">Debugger</a>
+            <a href="problems.html" class="active">Problems</a>
+            <a href="learn.html">Learn</a>
+            <a href="https://github.com/jawhitti/INTERCAL64">GitHub</a>
+        </nav>
+    </div>
+</header>
+
+<div class="container page-content">
+
+    <h2>What Can You Actually Do With INTERCAL?</h2>
+
+    <p>More than anyone expected. INTERCAL-64 has been used to solve real algorithmic problems — graph traversal, spatial indexing, combinatorial optimization. Along the way, we proved a fundamental result about INTERCAL's control flow that explains why these problems were impossible before.</p>
+
+    <h2>Knight's Tour (Warnsdorff's Algorithm)</h2>
+
+    <p>A complete solution to the Knight's Tour on an 8x8 chessboard using Warnsdorff's heuristic with Arnd Roth tiebreaking. Visits all 64 squares. Believed to be the most complex algorithmic implementation in INTERCAL to date.</p>
+
+    <ul>
+        <li>Bitboard representation — the board is a single 64-bit value</li>
+        <li>Precomputed attack masks, clear masks, and center distance tables</li>
+        <li>COME FROM loop with ABSTAIN/REINSTATE control flow</li>
+        <li>~570 lines across 6 source files</li>
+        <li>Executes in ~30 seconds on modern hardware</li>
+    </ul>
+
+    <p><strong>Key discovery:</strong> The select operator (<code>~</code>) with contiguous high-bit masks implements logical right-shift. INTERCAL has no shift operator, but it doesn't need one.</p>
+
+    <h2>Hilbert Curve Geographic Indexing</h2>
+
+    <p>Geographic range queries using Hilbert space-filling curves. Indexes 10 European cities by latitude/longitude, converts to Hilbert indices via Morton code intermediates, sorts, and performs range queries.</p>
+
+    <p><strong>Key discovery:</strong> INTERCAL's mingle operator (<code>$</code>) IS the standard Morton code algorithm used in production geospatial databases. Bit interleaving is exactly what Morton coding does. This wasn't a port — it was discovering that INTERCAL already had the primitive the geospatial industry independently invented.</p>
+
+    <pre><code>DO NOTE Morton code: interleave X and Y coordinates
+DO :1 <- .1 $ .2
+DO NOTE That's it. That's the whole algorithm.</code></pre>
+
+    <h2>Stable Marriage (Gale-Shapley)</h2>
+
+    <p>The Gale-Shapley stable matching algorithm with n=5. Men propose, women reject, stability emerges. This is the kind of nested-loop, conditional-branch algorithm that INTERCAL was never supposed to handle.</p>
+
+    <ul>
+        <li>COME FROM loops for both inner and outer iterations</li>
+        <li>Double-NEXT trampoline pattern for conditional branching</li>
+        <li>Linearized 25-element preference arrays</li>
+        <li>Dispatch subroutines for indirect indexing</li>
+    </ul>
+
+    <h2>COME FROM Considered Helpful</h2>
+
+    <div class="note">
+        <strong>Formal result:</strong> INTERCAL-72 cannot express callable subroutines containing arbitrary-length loops. The maximum loop iteration count is 79, bounded by the NEXT stack depth. COME FROM removes this limitation entirely.
+    </div>
+
+    <p>The paper "<a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/COME_FROM_Considered_Helpful.md">COME FROM Considered Helpful</a>" proves that the COME FROM statement — widely regarded as INTERCAL's most absurd feature — is computationally necessary for nontrivial programs. The proof uses TLA+ model checking.</p>
+
+    <p><strong>Practical consequence:</strong> Bubble sort on an array of N elements requires N(N-1)/2 iterations in the worst case. As a callable subroutine in INTERCAL-72, bubble sort is limited to arrays of at most 13 elements: 13 x 12 / 2 = 78 ≤ 79. COME FROM lifts this restriction.</p>
+
+    <p>The paper also introduces the <strong>double-NEXT trampoline</strong> — a pattern for conditional branching inside COME FROM loops that has become the standard technique for all subsequent INTERCAL programs.</p>
+
+    <h2>Hardware Accelerator</h2>
+
+    <p>A feasibility study for a dedicated INTERCAL processor with native mingle, select, and unary operations. FPGA prototype estimated at ~$25 BOM. The analysis shows DIVIDE32 would run 7,000x faster in hardware versus the pure-INTERCAL software implementation.</p>
+
+    <p>This would be the first hardware implementation of any esoteric programming language.</p>
+
+</div>
+
+<footer class="site-footer">
+    <div class="container">
+        <a href="index.html">INTERCAL::64</a> &middot; Jason Whittington, 2026
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debugger - INTERCAL::64</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <h1><a href="index.html">INTERCAL::64</a></h1>
+        <nav>
+            <a href="features.html">Features</a>
+            <a href="debugger.html" class="active">Debugger</a>
+            <a href="problems.html">Problems</a>
+            <a href="learn.html">Learn</a>
+            <a href="https://github.com/jawhitti/INTERCAL64">GitHub</a>
+        </nav>
+    </div>
+</header>
+
+<div class="container page-content">
+
+    <h2>The First INTERCAL Debugger</h2>
+
+    <p>In over fifty years of INTERCAL's existence, no one has been able to step through a program and watch it execute. Until now. INTERCAL-64 ships with a full Debug Adapter Protocol (DAP) debugger for Visual Studio Code.</p>
+
+    <div class="screenshot">Screenshot: Debugger paused on a breakpoint with variables panel open<br><em>(coming soon)</em></div>
+
+    <h2>Features</h2>
+
+    <h3>Breakpoints and Stepping</h3>
+    <p>Set breakpoints on any INTERCAL statement. Step In, Step Over, Continue. The debugger maps generated code back to your source lines so you always know where you are.</p>
+
+    <h3>Variables Panel</h3>
+    <p>Every spot, two-spot, four-spot, and array variable updates in real time as you step. Watch values change after each assignment. See arrays expand as you dimension them.</p>
+
+    <div class="screenshot">Screenshot: Variables panel showing spots, two-spots, and arrays<br><em>(coming soon)</em></div>
+
+    <h3>Watch Expressions</h3>
+    <p>Type any INTERCAL expression in the watch panel and see it evaluate against the current program state. Finally understand what <code>'?"'.3~.3'~#1"$#1'~#3</code> actually produces.</p>
+
+    <h3>ABSTAIN Tracking</h3>
+    <p>The Gerund State panel shows which statements are currently abstained and which are active. Watch statements go dark as you ABSTAIN FROM CALCULATING and light back up when you REINSTATE.</p>
+
+    <h3>COME FROM Visualization</h3>
+    <p>The debugger marks COME FROM targets in your source. When a trapdoor fires and control jumps to a COME FROM, the debugger shows you exactly where you came from and where you're going.</p>
+
+    <div class="screenshot">Screenshot: COME FROM firing, debugger showing the jump<br><em>(coming soon)</em></div>
+
+    <h2>The AI Agent</h2>
+
+    <div class="note">
+        <strong>Note:</strong> The "AI Agent" is not artificial intelligence. It is a collection of carefully curated opinions embedded in the debugger. It cannot help you. It can only judge you.
+    </div>
+
+    <p>The debugger watches what you do and comments on it. Evaluate a simple expression and it says <strong>"EVEN A COMPILER COULD DO THAT"</strong>. Write something deeply nested and it says <strong>"THE COMPILER WEEPS"</strong>. Trigger a COME FROM and it says <strong>"YOU DIDN'T JUMP. YOU WERE PULLED."</strong></p>
+
+    <p>The commentary scales with complexity:</p>
+
+    <table>
+        <tr><th>Complexity</th><th>Example Response</th></tr>
+        <tr><td>Simple (variable lookup)</td><td>CONGRATULATIONS ON READING A SINGLE VALUE</td></tr>
+        <tr><td>Moderate (1-2 operators)</td><td>I WOULDN'T HAVE DONE IT THAT WAY BUT YOU DO YOU</td></tr>
+        <tr><td>Complex (deeply nested)</td><td>ABANDON ALL HOPE YE WHO PARSE THIS</td></tr>
+        <tr><td>COME FROM fires</td><td>CONTROL FLOW IS A SUGGESTION</td></tr>
+        <tr><td>ABSTAIN FROM gerund</td><td>YOU JUST DISABLED SOMETHING. I HOPE IT WASN'T IMPORTANT.</td></tr>
+        <tr><td>REINSTATE gerund</td><td>OH SO NOW YOU WANT IT BACK</td></tr>
+        <tr><td>1-in-50 easter egg</td><td>HAVE YOU CONSIDERED A CAREER IN MANAGEMENT</td></tr>
+    </table>
+
+    <p>The agent cannot be disabled. This is a feature.</p>
+
+    <h2>Debug Console</h2>
+
+    <p>Program output appears in the debug console in real time. WRITE IN works — you can interact with your running program. READ OUT values appear as they're computed.</p>
+
+    <h2>Getting Started</h2>
+
+    <p>Install the VS Code extension, open any <code>.i</code> or <code>.ic64</code> file, set a breakpoint, and press F5. The <a href="learn.html">learn-intercal</a> samples are designed specifically for this — open lesson 01, hit F5, and start stepping.</p>
+
+</div>
+
+<footer class="site-footer">
+    <div class="container">
+        <a href="index.html">INTERCAL::64</a> &middot; Jason Whittington, 2026
+    </div>
+</footer>
+
+</body>
+</html>

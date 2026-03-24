@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features - INTERCAL::64</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <h1><a href="index.html">INTERCAL::64</a></h1>
+        <nav>
+            <a href="features.html" class="active">Features</a>
+            <a href="debugger.html">Debugger</a>
+            <a href="problems.html">Problems</a>
+            <a href="learn.html">Learn</a>
+            <a href="https://github.com/jawhitti/INTERCAL64">GitHub</a>
+        </nav>
+    </div>
+</header>
+
+<div class="container page-content">
+
+    <h2>64-Bit Arithmetic</h2>
+
+    <p>INTERCAL-64 extends the language from 16-bit and 32-bit to full 64-bit precision. Three new types join the family:</p>
+
+    <table>
+        <tr><th>Prefix</th><th>Name</th><th>Width</th></tr>
+        <tr><td><code>.</code></td><td>spot</td><td>16-bit</td></tr>
+        <tr><td><code>:</code></td><td>two-spot</td><td>32-bit</td></tr>
+        <tr><td><code>::</code></td><td>double cateye</td><td>64-bit</td></tr>
+        <tr><td><code>,</code></td><td>tail</td><td>16-bit array</td></tr>
+        <tr><td><code>;</code></td><td>hybrid</td><td>32-bit array</td></tr>
+        <tr><td><code>;;</code></td><td>double hybrid</td><td>64-bit array</td></tr>
+    </table>
+
+    <p>Constants scale to match:</p>
+
+    <table>
+        <tr><th>Prefix</th><th>Name</th><th>Width</th></tr>
+        <tr><td><code>#</code></td><td>mesh</td><td>16-bit</td></tr>
+        <tr><td><code>##</code></td><td>fence</td><td>32-bit</td></tr>
+        <tr><td><code>####</code></td><td>stockade</td><td>64-bit</td></tr>
+    </table>
+
+    <p>The absence of a triple mesh (<code>###</code>) is intentional. Three meshes would imply 48-bit precision, which is not a thing.</p>
+
+    <h2>128-Bit Ephemeral Mingle</h2>
+
+    <p>Mingle two 64-bit values and you get a 128-bit result. It can't be stored — it exists only long enough to be consumed by a select operator. The value is briefly real and then gone, much like a good idea in a committee meeting.</p>
+
+    <pre><code>DO ::1 <- ####1000000
+DO ::2 <- ####2000000
+DO ::3 <- '::1 $ ::2' ~ '####FFFFFFFF $ ####FFFFFFFF'</code></pre>
+
+    <h2>Complete System Library</h2>
+
+    <p>The system library (<code>syslib64.i</code>) provides arithmetic at every width. All routines are implemented in pure INTERCAL. No cheating.</p>
+
+    <h3>16-Bit</h3>
+    <table>
+        <tr><th>Label</th><th>Operation</th></tr>
+        <tr><td><code>(1000)</code></td><td>.3 = .1 + .2</td></tr>
+        <tr><td><code>(1010)</code></td><td>.3 = .1 - .2</td></tr>
+        <tr><td><code>(1040)</code></td><td>:3 = .1 * .2 (full 32-bit result)</td></tr>
+        <tr><td><code>(1030)</code></td><td>.3 = .1 / .2, .4 = remainder</td></tr>
+    </table>
+
+    <h3>32-Bit</h3>
+    <table>
+        <tr><th>Label</th><th>Operation</th></tr>
+        <tr><td><code>(1500)</code></td><td>:3 = :1 + :2</td></tr>
+        <tr><td><code>(1510)</code></td><td>:3 = :1 - :2</td></tr>
+        <tr><td><code>(1540)</code></td><td>:3 = :1 * :2</td></tr>
+        <tr><td><code>DIVIDE32</code></td><td>:3 = :1 / :2, :4 = remainder</td></tr>
+    </table>
+
+    <h3>64-Bit</h3>
+    <table>
+        <tr><th>Name</th><th>Operation</th></tr>
+        <tr><td><code>ADD64</code></td><td>::3 = ::1 + ::2</td></tr>
+        <tr><td><code>MINUS64</code></td><td>::3 = ::1 - ::2</td></tr>
+        <tr><td><code>TIMES64</code></td><td>::3 = ::1 * ::2</td></tr>
+    </table>
+
+    <p>Plus AND64, OR64, XOR64, NOT64, RANDOM16/32/64, and POPCOUNT. Routine labels are computed by interpreting the name as a big-endian 64-bit integer. The programmer who finds this inconvenient is reminded that convenience has never been a design goal.</p>
+
+    <h2>64-Bit Labels</h2>
+
+    <p>Labels have been extended to 64 bits. Programs exceeding 119 lines are now assured of having enough. All new library routines use labels with values greater than <code>INT_MAX</code> to avoid collisions. Users are encouraged to prefer labels like <code>(744073709551615)</code> over <code>(10)</code>.</p>
+
+    <h2>Component Architecture</h2>
+
+    <p>INTERCAL-64 compiles to .NET assemblies. Libraries can be compiled separately and linked via <code>-r:library.dll</code>. Cross-component NEXT/RESUME/FORGET is fully supported. You can even call INTERCAL from C# — though no evidence of anyone doing this voluntarily has been found.</p>
+
+</div>
+
+<footer class="site-footer">
+    <div class="container">
+        <a href="index.html">INTERCAL::64</a> &middot; Jason Whittington, 2026
+    </div>
+</footer>
+
+</body>
+</html>
