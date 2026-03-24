@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papers - INTERCAL::64</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <h1><a href="index.html">INTERCAL::64</a></h1>
+        <nav>
+            <a href="features.html">Features</a>
+            <a href="debugger.html">Debugger</a>
+            <a href="problems.html">Problems</a>
+            <a href="papers.html" class="active">Papers</a>
+            <a href="learn.html">Learn</a>
+            <a href="community.html">Community</a>
+            <a href="https://github.com/jawhitti/INTERCAL64">GitHub</a>
+        </nav>
+    </div>
+</header>
+
+<div class="container page-content">
+
+    <h2>Papers</h2>
+
+    <p>Yes, there are academic papers about INTERCAL. No, we are not joking. These are real results with real proofs. The language just happens to be absurd.</p>
+
+    <h2>COME FROM Considered Helpful</h2>
+
+    <p><strong>Jason Whittington and Claude (Anthropic), 2026</strong></p>
+
+    <p>The COME FROM statement has been INTERCAL's most ridiculed feature for over thirty years. This paper proves it is computationally necessary.</p>
+
+    <div class="note">
+        <strong>Main result:</strong> INTERCAL-72's NEXT/RESUME control flow cannot express callable subroutines containing arbitrary-length loops. The NEXT stack imposes a hard limit of 79 iterations. COME FROM removes this limitation entirely.
+    </div>
+
+    <p>The proof uses TLA+ model checking to verify that no arrangement of NEXT, RESUME, and FORGET can implement a general loop within a callable subroutine without corrupting the NEXT stack. The paper then demonstrates that COME FROM loops — combined with the double-NEXT trampoline pattern — provide stack-free iteration with preserved return addresses.</p>
+
+    <h3>Key Results</h3>
+
+    <ul>
+        <li><strong>Lemma 1:</strong> FORGET in a callable subroutine destroys the caller's return address. A subroutine that loops via NEXT/FORGET cannot return correctly.</li>
+        <li><strong>Lemma 2:</strong> NEXT/RESUME loops accumulate residual stack entries. After 79 iterations, E123 (NEXT stack overflow) terminates the program.</li>
+        <li><strong>Theorem:</strong> No arrangement of INTERCAL-72 control flow statements can implement a callable subroutine containing an arbitrary-length loop.</li>
+        <li><strong>Corollary:</strong> Bubble sort is limited to arrays of 13 elements. 13 x 12 / 2 = 78 ≤ 79.</li>
+    </ul>
+
+    <p>The paper is a deliberate riff on Dijkstra's "Go To Statement Considered Harmful" (1968), arguing that the statement Dijkstra would have despised most is the one INTERCAL actually needs.</p>
+
+    <p><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/COME_FROM_Considered_Helpful.md">Read the full paper</a></p>
+
+    <h2>SIGBOVIK 2026 Submission</h2>
+
+    <p><strong>Jason Whittington and Claude (Anthropic), 2026</strong></p>
+
+    <p>A condensed version of the COME FROM proof submitted to SIGBOVIK, the annual conference for research that is technically correct but probably shouldn't exist. The submission includes the TLA+ model, the 15-line Lemma 1 reproducer, and cross-validation results on both SCHRODIE and C-INTERCAL.</p>
+
+    <p><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/sigbovik%202026%20final%20submission.pdf">Read the submission (PDF)</a></p>
+
+    <h2>Technical Notes</h2>
+
+    <p>The following documents are not formal papers but contain significant technical findings:</p>
+
+    <table>
+        <tr><th>Document</th><th>Finding</th></tr>
+        <tr>
+            <td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/hilbertGeo.md">Hilbert Curve Geographic Indexing</a></td>
+            <td>Discovery that INTERCAL's mingle operator IS the standard Morton code algorithm. COME FROM + ABSTAIN as the general-purpose conditional loop pattern.</td>
+        </tr>
+        <tr>
+            <td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/warnsdorff_implementation.md">Warnsdorff Implementation Notes</a></td>
+            <td>Select with contiguous masks implements logical right-shift. First complete Knight's Tour in INTERCAL.</td>
+        </tr>
+        <tr>
+            <td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/stable_marriage.md">Stable Marriage Design</a></td>
+            <td>Gale-Shapley in INTERCAL. Demonstrates COME FROM is necessary for any nontrivial nested-loop algorithm.</td>
+        </tr>
+        <tr>
+            <td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/hardware_proposal.md">Hardware Accelerator Proposal</a></td>
+            <td>FPGA design for native mingle/select. DIVIDE32 runs 7,000x faster in hardware.</td>
+        </tr>
+        <tr>
+            <td><a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/come_from_findings.md">COME FROM Research Notes</a></td>
+            <td>Failed approaches, cross-compiler testing, the discovery of the double-NEXT trampoline.</td>
+        </tr>
+    </table>
+
+    <h2>TLA+ Models</h2>
+
+    <p>The formal proofs are backed by TLA+ models verified with the TLC model checker. Source and traces are in the <a href="https://github.com/jawhitti/INTERCAL64/tree/develop/Analysis">Analysis</a> directory.</p>
+
+    <table>
+        <tr><th>Model</th><th>What It Proves</th></tr>
+        <tr><td><code>IntercalStack.tla</code></td><td>NEXT stack exhaustion under all possible NEXT/RESUME/FORGET sequences</td></tr>
+        <tr><td><code>ComeFromTrampoline.tla</code></td><td>COME FROM loop with double-NEXT trampoline preserves stack invariants</td></tr>
+        <tr><td><code>TrampolineSearch.tla</code></td><td>Exhaustive search for viable trampoline patterns</td></tr>
+    </table>
+
+</div>
+
+<footer class="site-footer">
+    <div class="container">
+        <a href="index.html">INTERCAL::64</a> &middot; Jason Whittington, 2026
+    </div>
+</footer>
+
+</body>
+</html>
