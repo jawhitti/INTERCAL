@@ -5,6 +5,161 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Problems Solved - INTERCAL::64</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .showcase {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-top: 24px;
+            margin-bottom: 48px;
+        }
+
+        .showcase-card {
+            border: 1px solid #d1d9e0;
+            border-radius: 6px;
+            overflow: hidden;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .showcase-card:hover {
+            border-color: #0969da;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .showcase-banner {
+            padding: 32px 32px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+        }
+
+        .showcase-icon {
+            font-size: 48px;
+            color: #0969da;
+            flex-shrink: 0;
+            width: 64px;
+            text-align: center;
+            padding-top: 4px;
+        }
+
+        .showcase-icon img {
+            width: 64px;
+            height: 64px;
+            border-radius: 4px;
+        }
+
+        .showcase-content {
+            flex: 1;
+        }
+
+        .showcase-content h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2328;
+            margin-bottom: 4px;
+        }
+
+        .showcase-content .subtitle {
+            font-size: 14px;
+            color: #0969da;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .showcase-content p {
+            font-size: 14px;
+            color: #656d76;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .showcase-discovery {
+            background: #f6f8fa;
+            border-top: 1px solid #d1d9e0;
+            padding: 16px 32px;
+            font-size: 13px;
+            color: #1f2328;
+        }
+
+        .showcase-discovery strong {
+            color: #0550ae;
+        }
+
+        .showcase-stats {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .showcase-stat {
+            font-size: 12px;
+            color: #656d76;
+        }
+
+        .showcase-stat strong {
+            color: #1f2328;
+        }
+
+        .showcase-footer {
+            background: #f6f8fa;
+            border-top: 1px solid #d1d9e0;
+            padding: 12px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .showcase-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .showcase-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 12px;
+            background: #ddf4ff;
+            color: #0969da;
+        }
+
+        .btn-code {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            background: #1a7f37;
+            border: 1px solid rgba(27,31,36,0.15);
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .btn-code:hover {
+            background: #197f37;
+            color: #fff;
+        }
+
+        .showcase-code {
+            background: #0d1117;
+            color: #e6edf3;
+            padding: 16px 32px;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre;
+            overflow-x: auto;
+            border-top: 1px solid #d1d9e0;
+        }
+    </style>
 </head>
 <body>
 
@@ -27,60 +182,168 @@
 
     <h2>Solving (or Creating) Bigger Problems With 64 Bits</h2>
 
-    <p>More than anyone expected. INTERCAL-64 has been used to solve real algorithmic problems — graph traversal, spatial indexing, combinatorial optimization. Along the way, we proved a fundamental result about INTERCAL's control flow that explains why these problems were impossible before.</p>
+    <p>INTERCAL-64 has been used to solve real algorithmic problems — graph traversal, spatial indexing, combinatorial optimization. Along the way, we proved a fundamental result about the language's control flow that explains why these problems were impossible before.</p>
 
-    <h2>Knight's Tour (Warnsdorff's Algorithm)</h2>
+    <div class="showcase">
 
-    <p>A complete solution to the Knight's Tour on an 8x8 chessboard using Warnsdorff's heuristic with Arnd Roth tiebreaking. Visits all 64 squares. Believed to be the most complex algorithmic implementation in INTERCAL to date.</p>
+        <!-- Knight's Tour -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-chess-knight"></i></div>
+                <div class="showcase-content">
+                    <h3>Knight's Tour</h3>
+                    <div class="subtitle">Warnsdorff's Algorithm with Arnd Roth Tiebreaking</div>
+                    <p>A complete solution to the Knight's Tour on an 8x8 chessboard. Visits all 64 squares. Believed to be the most complex algorithmic implementation in INTERCAL to date.</p>
+                    <div class="showcase-stats">
+                        <span class="showcase-stat"><strong>64/64</strong> squares visited</span>
+                        <span class="showcase-stat"><strong>~570</strong> lines</span>
+                        <span class="showcase-stat"><strong>6</strong> source files</span>
+                        <span class="showcase-stat"><strong>~30s</strong> execution</span>
+                    </div>
+                </div>
+            </div>
+            <div class="showcase-code">DO NOTE The board is a single 64-bit value. One bit per square.
+DO ::1 <- ####18446744073709551615
+DO NOTE All squares unvisited. Let the tour begin.</div>
+            <div class="showcase-discovery">
+                <strong>Key discovery:</strong> The select operator (<code>~</code>) with contiguous high-bit masks implements logical right-shift. INTERCAL has no shift operator, but it doesn't need one.
+            </div>
+            <div class="showcase-footer">
+                <div class="showcase-tags">
+                    <span class="showcase-tag">bitboard</span>
+                    <span class="showcase-tag">COME FROM loop</span>
+                    <span class="showcase-tag">ABSTAIN control flow</span>
+                </div>
+                <a href="https://github.com/jawhitti/INTERCAL64/tree/develop/samples/warnsdorff" class="btn-code"><i class="fas fa-code"></i> Code</a>
+            </div>
+        </div>
 
-    <ul>
-        <li>Bitboard representation — the board is a single 64-bit value</li>
-        <li>Precomputed attack masks, clear masks, and center distance tables</li>
-        <li>COME FROM loop with ABSTAIN/REINSTATE control flow</li>
-        <li>~570 lines across 6 source files</li>
-        <li>Executes in ~30 seconds on modern hardware</li>
-    </ul>
-
-    <p><strong>Key discovery:</strong> The select operator (<code>~</code>) with contiguous high-bit masks implements logical right-shift. INTERCAL has no shift operator, but it doesn't need one.</p>
-
-    <h2>Hilbert Curve Geographic Indexing</h2>
-
-    <p>Geographic range queries using Hilbert space-filling curves. Indexes 10 European cities by latitude/longitude, converts to Hilbert indices via Morton code intermediates, sorts, and performs range queries.</p>
-
-    <p><strong>Key discovery:</strong> INTERCAL's mingle operator (<code>$</code>) IS the standard Morton code algorithm used in production geospatial databases. Bit interleaving is exactly what Morton coding does. This wasn't a port — it was discovering that INTERCAL already had the primitive the geospatial industry independently invented.</p>
-
-    <pre><code>DO NOTE Morton code: interleave X and Y coordinates
+        <!-- Hilbert Curve -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-earth-americas"></i></div>
+                <div class="showcase-content">
+                    <h3>Hilbert Curve Geographic Indexing</h3>
+                    <div class="subtitle">Space-Filling Curves for Range Queries</div>
+                    <p>Geographic range queries using Hilbert space-filling curves. Indexes 10 European cities by latitude/longitude, converts to Hilbert indices via Morton code intermediates, sorts, and answers "which cities are near Madrid?"</p>
+                    <div class="showcase-stats">
+                        <span class="showcase-stat"><strong>10</strong> cities indexed</span>
+                        <span class="showcase-stat"><strong>178</strong> lines (down from 661 unrolled)</span>
+                        <span class="showcase-stat"><strong>12</strong> source files</span>
+                    </div>
+                </div>
+            </div>
+            <div class="showcase-code">DO NOTE Morton code: interleave X and Y coordinates
 DO :1 <- .1 $ .2
-DO NOTE That's it. That's the whole algorithm.</code></pre>
+DO NOTE That's it. That's the whole algorithm.</div>
+            <div class="showcase-discovery">
+                <strong>Key discovery:</strong> INTERCAL's mingle operator (<code>$</code>) IS the standard Morton code algorithm used in production geospatial databases. Bit interleaving is exactly what Morton coding does. This wasn't a port — it was discovering that INTERCAL already had the primitive the industry independently invented.
+            </div>
+            <div class="showcase-footer">
+                <div class="showcase-tags">
+                    <span class="showcase-tag">mingle = Morton code</span>
+                    <span class="showcase-tag">state machine</span>
+                    <span class="showcase-tag">COME FROM loop</span>
+                </div>
+                <a href="https://github.com/jawhitti/INTERCAL64/tree/develop/samples/hilbertGeo" class="btn-code"><i class="fas fa-code"></i> Code</a>
+            </div>
+        </div>
 
-    <h2>Stable Marriage (Gale-Shapley)</h2>
+        <!-- Stable Marriage -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-heart"></i></div>
+                <div class="showcase-content">
+                    <h3>Stable Marriage</h3>
+                    <div class="subtitle">Gale-Shapley Stable Matching (n=5)</div>
+                    <p>The Gale-Shapley stable matching algorithm. Men propose, women reject, stability emerges. This is the kind of nested-loop, conditional-branch algorithm that INTERCAL was never supposed to handle.</p>
+                    <div class="showcase-stats">
+                        <span class="showcase-stat"><strong>n=5</strong> participants</span>
+                        <span class="showcase-stat"><strong>25</strong>-element preference arrays</span>
+                        <span class="showcase-stat"><strong>2</strong> nested COME FROM loops</span>
+                    </div>
+                </div>
+            </div>
+            <div class="showcase-code">DO NOTE Outer loop: while any man is unmatched
+DO NOTE   Inner loop: man proposes down his preference list
+DO NOTE     If woman prefers new suitor: rematch
+DO NOTE     Else: reject, try next</div>
+            <div class="showcase-discovery">
+                <strong>Key discovery:</strong> Gale-Shapley requires nested loops with conditional branching — the exact structure that the COME FROM paper proves is impossible in INTERCAL-72. This implementation validates the theory.
+            </div>
+            <div class="showcase-footer">
+                <div class="showcase-tags">
+                    <span class="showcase-tag">nested loops</span>
+                    <span class="showcase-tag">double-NEXT trampoline</span>
+                    <span class="showcase-tag">dispatch subroutines</span>
+                </div>
+                <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/samples/stable_marriage.i" class="btn-code"><i class="fas fa-code"></i> Code</a>
+            </div>
+        </div>
 
-    <p>The Gale-Shapley stable matching algorithm with n=5. Men propose, women reject, stability emerges. This is the kind of nested-loop, conditional-branch algorithm that INTERCAL was never supposed to handle.</p>
+        <!-- COME FROM Proof -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-square-root-variable"></i></div>
+                <div class="showcase-content">
+                    <h3>COME FROM Considered Helpful</h3>
+                    <div class="subtitle">A Formal Proof of Computational Necessity</div>
+                    <p>INTERCAL's most ridiculed feature is computationally necessary. INTERCAL-72 cannot express callable subroutines containing arbitrary-length loops. The NEXT stack imposes a hard limit of 79 iterations. COME FROM removes this limitation entirely.</p>
+                    <div class="showcase-stats">
+                        <span class="showcase-stat"><strong>79</strong> iteration limit (proven)</span>
+                        <span class="showcase-stat"><strong>TLA+</strong> model checked</span>
+                        <span class="showcase-stat"><strong>2</strong> compilers validated</span>
+                    </div>
+                </div>
+            </div>
+            <div class="showcase-code">DO NOTE Bubble sort: max 13 elements as a callable subroutine
+DO NOTE   13 x 12 / 2 = 78 comparisons ≤ 79 NEXT stack depth
+DO NOTE   14 x 13 / 2 = 91 > 79  →  E123 PROGRAM HAS DISAPPEARED INTO THE BLACK LAGOON</div>
+            <div class="showcase-discovery">
+                <strong>Practical consequence:</strong> Bubble sort is limited to 13 elements. Any algorithm requiring more than 79 loop iterations in a callable subroutine is impossible in INTERCAL-72. COME FROM is the only way out.
+            </div>
+            <div class="showcase-footer">
+                <div class="showcase-tags">
+                    <span class="showcase-tag">formal proof</span>
+                    <span class="showcase-tag">TLA+ model</span>
+                    <span class="showcase-tag">SIGBOVIK 2026</span>
+                </div>
+                <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/COME_FROM_Considered_Helpful.md" class="btn-code"><i class="fas fa-code"></i> Paper</a>
+            </div>
+        </div>
 
-    <ul>
-        <li>COME FROM loops for both inner and outer iterations</li>
-        <li>Double-NEXT trampoline pattern for conditional branching</li>
-        <li>Linearized 25-element preference arrays</li>
-        <li>Dispatch subroutines for indirect indexing</li>
-    </ul>
+        <!-- Hardware -->
+        <div class="showcase-card">
+            <div class="showcase-banner">
+                <div class="showcase-icon"><i class="fas fa-microchip"></i></div>
+                <div class="showcase-content">
+                    <h3>Hardware Accelerator</h3>
+                    <div class="subtitle">FPGA Processor Design for Native Mingle/Select</div>
+                    <p>A feasibility study for a dedicated INTERCAL processor with native mingle, select, and unary operations. This would be the first hardware implementation of any esoteric programming language.</p>
+                    <div class="showcase-stats">
+                        <span class="showcase-stat"><strong>~$25</strong> BOM (FPGA prototype)</span>
+                        <span class="showcase-stat"><strong>7,000x</strong> faster DIVIDE32</span>
+                        <span class="showcase-stat"><strong>Skywater 130nm</strong> ASIC path</span>
+                    </div>
+                </div>
+            </div>
+            <div class="showcase-code">DO NOTE Native mingle: 1 clock cycle instead of 200+ INTERCAL statements
+DO NOTE Native select: 1 clock cycle instead of bit-by-bit extraction loops
+DO NOTE DIVIDE32: from 30 seconds to 4 microseconds</div>
+            <div class="showcase-discovery">
+                <strong>Key insight:</strong> INTERCAL's instruction set maps directly to useful bit-manipulation primitives — Morton codes, spatial hashing, GPU texture swizzling. A mingle instruction isn't a joke. It's a pdep/pext equivalent.
+            </div>
+            <div class="showcase-footer">
+                <div class="showcase-tags">
+                    <span class="showcase-tag">FPGA</span>
+                    <span class="showcase-tag">Lattice iCE40</span>
+                    <span class="showcase-tag">Skywater 130nm</span>
+                </div>
+                <a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/hardware_proposal.md" class="btn-code"><i class="fas fa-code"></i> Proposal</a>
+            </div>
+        </div>
 
-    <h2>COME FROM Considered Helpful</h2>
-
-    <div class="note">
-        <strong>Formal result:</strong> INTERCAL-72 cannot express callable subroutines containing arbitrary-length loops. The maximum loop iteration count is 79, bounded by the NEXT stack depth. COME FROM removes this limitation entirely.
     </div>
-
-    <p>The paper "<a href="https://github.com/jawhitti/INTERCAL64/blob/develop/doc/COME_FROM_Considered_Helpful.md">COME FROM Considered Helpful</a>" proves that the COME FROM statement — widely regarded as INTERCAL's most absurd feature — is computationally necessary for nontrivial programs. The proof uses TLA+ model checking.</p>
-
-    <p><strong>Practical consequence:</strong> Bubble sort on an array of N elements requires N(N-1)/2 iterations in the worst case. As a callable subroutine in INTERCAL-72, bubble sort is limited to arrays of at most 13 elements: 13 x 12 / 2 = 78 ≤ 79. COME FROM lifts this restriction.</p>
-
-    <p>The paper also introduces the <strong>double-NEXT trampoline</strong> — a pattern for conditional branching inside COME FROM loops that has become the standard technique for all subsequent INTERCAL programs.</p>
-
-    <h2>Hardware Accelerator</h2>
-
-    <p>A feasibility study for a dedicated INTERCAL processor with native mingle, select, and unary operations. FPGA prototype estimated at ~$25 BOM. The analysis shows DIVIDE32 would run 7,000x faster in hardware versus the pure-INTERCAL software implementation.</p>
-
-    <p>This would be the first hardware implementation of any esoteric programming language.</p>
 
 </div>
 
