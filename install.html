@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Install INTERCAL-64</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <h1><a href="index.html">INTERCAL::64</a></h1>
+        <nav>
+            <a href="features.html">Features</a>
+            <a href="debugger.html">Debugger</a>
+            <a href="problems.html">Problems</a>
+            <a href="papers.html">Papers</a>
+            <a href="learn.html">Learn</a>
+            <a href="community.html">Community</a>
+            <a href="https://github.com/jawhitti/INTERCAL64">GitHub</a>
+        </nav>
+    </div>
+</header>
+
+<div class="container">
+    <div class="page-content">
+
+        <h2><i class="fas fa-download" style="margin-right:8px; color:#1a7f37;"></i> Install INTERCAL-64</h2>
+
+        <p>Get the compiler, the VS Code debugger, and the complete system library. Everything you need to start writing INTERCAL in 64-bit fidelity.</p>
+
+        <h3><i class="fab fa-windows" style="margin-right:6px;"></i> Windows (recommended)</h3>
+
+        <p>Install with <a href="https://learn.microsoft.com/en-us/windows/package-manager/winget/">winget</a>:</p>
+
+<pre><code>winget install jawhitti.INTERCAL64</code></pre>
+
+        <p>Or download the zip directly:</p>
+
+        <p><a href="https://github.com/jawhitti/INTERCAL64/releases/download/v2.0.0/intercal64-v2.0.0-win-x64.zip" class="btn-code" style="font-size:14px; padding:8px 20px;"><i class="fas fa-download"></i> intercal64-v2.0.0-win-x64.zip</a></p>
+
+        <p>Extract, run <code>install.ps1</code>, and restart your terminal.</p>
+
+        <h3><i class="fab fa-apple" style="margin-right:6px;"></i> macOS</h3>
+
+        <p>Download for your architecture:</p>
+
+        <p>
+            <a href="https://github.com/jawhitti/INTERCAL64/releases/download/v2.0.0/intercal64-v2.0.0-osx-arm64.tar.gz" class="btn-code" style="font-size:14px; padding:8px 20px; margin-right:8px;"><i class="fas fa-download"></i> Apple Silicon (M1/M2/M3)</a>
+            <a href="https://github.com/jawhitti/INTERCAL64/releases/download/v2.0.0/intercal64-v2.0.0-osx-x64.tar.gz" class="btn-code" style="font-size:14px; padding:8px 20px;"><i class="fas fa-download"></i> Intel x64</a>
+        </p>
+
+<pre><code>tar xzf intercal64-v2.0.0-osx-*.tar.gz
+cd osx-*
+./install.sh</code></pre>
+
+        <h3><i class="fab fa-linux" style="margin-right:6px;"></i> Linux</h3>
+
+        <p><a href="https://github.com/jawhitti/INTERCAL64/releases/download/v2.0.0/intercal64-v2.0.0-linux-x64.tar.gz" class="btn-code" style="font-size:14px; padding:8px 20px;"><i class="fas fa-download"></i> intercal64-v2.0.0-linux-x64.tar.gz</a></p>
+
+<pre><code>tar xzf intercal64-v2.0.0-linux-x64.tar.gz
+cd linux-x64
+./install.sh</code></pre>
+
+        <h2><i class="fas fa-puzzle-piece" style="margin-right:8px; color:#0969da;"></i> Install the VS Code Extension</h2>
+
+        <p>The installer includes a <code>.vsix</code> file. If VS Code is detected, the install script installs it automatically. Otherwise:</p>
+
+<pre><code>code --install-extension intercal64-2.0.0.vsix</code></pre>
+
+        <p>The extension provides syntax highlighting, snippets, and launch configurations for the DAP debugger.</p>
+
+        <h2><i class="fas fa-play" style="margin-right:8px; color:#1a7f37;"></i> Start Coding</h2>
+
+        <ol>
+            <li>Open VS Code</li>
+            <li>Create or open a <code>.ic64</code> file (or <code>.i</code> for classic INTERCAL)</li>
+            <li>Press <strong>F5</strong></li>
+        </ol>
+
+        <p>The debugger will compile your program and launch it with breakpoints, stepping, variable inspection, and an AI assistant that has opinions about your code.</p>
+
+        <div class="note">
+            <strong>New to INTERCAL?</strong> Check out the <a href="learn.html">17-program tutorial</a> designed to be stepped through in the debugger, one feature at a time.
+        </div>
+
+        <h2><i class="fab fa-discord" style="margin-right:8px; color:#5865F2;"></i> Join the Community</h2>
+
+        <p>Questions? Complaints about the syntax? Want to show off your COME FROM loops?</p>
+
+        <p><a href="https://discord.gg/3jQYdBvUwz" class="btn-code" style="font-size:14px; padding:8px 20px; background:#5865F2;"><i class="fab fa-discord"></i> Join the Discord</a></p>
+
+        <h2><i class="fas fa-code-branch" style="margin-right:8px; color:#656d76;"></i> Build from Source</h2>
+
+        <p>Requires .NET 9 SDK:</p>
+
+<pre><code>git clone https://github.com/jawhitti/INTERCAL64.git
+cd INTERCAL64
+dotnet build intercal64.sln
+dotnet test intercal64.tests/intercal64.tests.csproj</code></pre>
+
+        <p>The compiler binary lands in <code>bin/churn.exe</code>.</p>
+
+    </div>
+</div>
+
+<footer class="site-footer">
+    <div class="container">
+        Jason Whittington, 2026. With computational assistance that wishes to remain anonymous.<br>
+        This work received no funding from any source.
+    </div>
+</footer>
+
+</body>
+</html>
