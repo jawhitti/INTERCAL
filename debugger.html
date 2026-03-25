@@ -29,17 +29,22 @@
 
     <p>In over fifty years of INTERCAL's existence, no one has been able to step through a program and watch it execute. Until now. INTERCAL-64 ships with a full Debug Adapter Protocol (DAP) debugger for Visual Studio Code.</p>
 
-    <div class="screenshot">Screenshot: Debugger paused on a breakpoint with variables panel open<br><em>(coming soon)</em></div>
+    <div class="screenshot"><img src="intercal64-hero2.png" alt="INTERCAL-64 debugger in VS Code showing variables, watch expressions, call stack, breakpoints, and source code"></div>
+    <p style="text-align:center; font-size:13px; color:#656d76; margin-top:-8px;">The full debugging experience: variables, watch expressions, call stack, breakpoints, and source — all live.</p>
 
     <h2>Features</h2>
 
     <h3>Breakpoints and Stepping</h3>
     <p>Set breakpoints on any INTERCAL statement. Step In, Step Over, Continue. The debugger maps generated code back to your source lines so you always know where you are.</p>
 
+    <div class="screenshot"><img src="stopped_on_breakpoint.png" alt="Debugger paused on a breakpoint with a watch expression evaluating an INTERCAL expression"></div>
+    <p style="text-align:center; font-size:13px; color:#656d76; margin-top:-8px;">Paused on a breakpoint. The watch panel evaluates <code>'?'.1~.1'$#1"~#3</code> in real time.</p>
+
     <h3>Variables Panel</h3>
     <p>Every spot, two-spot, four-spot, and array variable updates in real time as you step. Watch values change after each assignment. See arrays expand as you dimension them.</p>
 
-    <div class="screenshot">Screenshot: Variables panel showing spots, two-spots, and arrays<br><em>(coming soon)</em></div>
+    <div class="screenshot"><img src="variables_window.png" alt="Variables panel showing spots and two-spots with their current values"></div>
+    <p style="text-align:center; font-size:13px; color:#656d76; margin-top:-8px;">Spots and two-spots update live as you step through the program.</p>
 
     <h3>Watch Expressions</h3>
     <p>Type any INTERCAL expression in the watch panel and see it evaluate against the current program state. Finally understand what <code>'?"'.3~.3'~#1"$#1'~#3</code> actually produces.</p>
@@ -50,7 +55,11 @@
     <h3>COME FROM Visualization</h3>
     <p>The debugger marks COME FROM targets in your source. When a trapdoor fires and control jumps to a COME FROM, the debugger shows you exactly where you came from and where you're going.</p>
 
-    <div class="screenshot">Screenshot: COME FROM firing, debugger showing the jump<br><em>(coming soon)</em></div>
+    <div class="screenshot"><img src="come_from_pending.png" alt="COME FROM pending notification in the debug console"></div>
+    <p style="text-align:center; font-size:13px; color:#656d76; margin-top:-8px;">"COME FROM pending — when this statement completes, control will transfer to line 6." You can see it coming but you can't stop it.</p>
+
+    <div class="screenshot"><img src="call_stack.png" alt="Call stack showing COME FROM annotation"></div>
+    <p style="text-align:center; font-size:13px; color:#656d76; margin-top:-8px;">The call stack shows the COME FROM target and the NEXT stack depth.</p>
 
     <h2>The AI Agent</h2>
 
@@ -81,8 +90,7 @@
 
     <h2>Getting Started</h2>
 
-    <p>Install the VS Code extension, open any <code>.i</code> or <code>.ic64</code> file, set a breakpoint, and press F5. The <a href="papers.html">Papers</a>
-            <a href="learn.html">learn-intercal</a> samples are designed specifically for this — open lesson 01, hit F5, and start stepping.</p>
+    <p>Install the VS Code extension, open any <code>.i</code> or <code>.ic64</code> file, set a breakpoint, and press F5. The <a href="learn.html">learn-intercal</a> samples are designed specifically for this — open lesson 01, hit F5, and start stepping.</p>
 
 </div>
 
